@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+         #
+#    By: octoross <octoross@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/13 16:58:31 by gtraiman          #+#    #+#              #
-#    Updated: 2025/05/13 16:58:32 by gtraiman         ###   ########.fr        #
+#    Updated: 2025/05/13 22:17:23 by octoross         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,11 +14,12 @@
 NAME        = ircserv
 
 CXX         = c++
-CXXFLAGS    = -std=c++98 -Wall -Wextra -Werror -Iinclude
+CXXFLAGS    = -std=c++98 -Wall -Wextra -Werror
+INCLUDE = include
 
 SRCS        = src/main.cpp \
               src/Server.cpp \
-              src/Client.cpp \
+              src/User.cpp \
               src/Channel.cpp \
               src/IRCMessage.cpp
 
@@ -30,7 +31,7 @@ $(NAME): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
 src/%.o: src/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -I$(INCLUDE) -c $< -o $@
 
 clean:
 	rm -f $(OBJS)
