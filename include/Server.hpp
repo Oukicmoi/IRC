@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/13 20:08:49 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/13 21:18:14 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define SERVER_HPP
 
 #include "lib.hpp"
+#include <sys/epoll.h>
 
 # define ALLOW_NOT_RECOMMENDED_PORT 1
 # define DEFAULT_PORT 6667
@@ -26,7 +27,9 @@ class Server
         unsigned int		_port;
 		struct sockaddr_in	_server_addr;
 		int					_socket_fd;
-		void	init_socket_address(struct sockaddr_in *server_addr);
+		int					_epoll_fd;
+		void	init_socket_address(void);
+		bool	init_socket(void);
 	
 
     public:
