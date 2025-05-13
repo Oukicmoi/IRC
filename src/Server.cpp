@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:12:54 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/13 21:19:54 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/13 22:25:51 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,22 @@ Server::Server() : _mdp(""), _port(DEFAULT_PORT) {}
 
 Server::Server(unsigned int port, const std::string& password) : _mdp(password)
 {
+	// _users;
 	_socket_fd = -1;
 	_epoll_fd = -1;
 	std::memset(&_server_addr, 0, sizeof(_server_addr)); // mise à 0 de tout l'espace de l'addresse serveur pour éviter des bugs futurs
     
-	if (ALLOW_NOT_RECOMMENDED_PORT && (port <= 1023))
+	if (!ALLOW_NOT_RECOMMENDED_PORT && (port <= 1023))
 		throw std::invalid_argument("Port integer is recommended to be between 1024 and 65535");
 	if ((port > 65535))
 		throw std::invalid_argument("Port integer should be inferior to 65535");
 	_port = port;
 }
 
-Server::~Server() {}
+Server::~Server()
+{
+	_users.clear();
+}
 
 // SETTERS
 
@@ -57,8 +61,13 @@ bool	Server::init_socket(void)
         std::cerr << "Erreur socket: " << strerror(errno) << std::endl;
         return (false);
     }
-	std::cout << "Server TP Socket created (IPv4)\n\tfd: " << _socket_fd << std::endl;
+	std::cout << "Server TP Socket created (IPv4), fd: " << _socket_fd << std::endl;
 	
+	// if (setsockopt(_server_socket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &optval, sizeof(optval)) < 0){
+	// 	std::cout << "Error:\tCreation socket failed." << std::endl;
+	// 	return ;
+	// }
+
 	int	flags = fcntl(_socket_fd, F_GETFL, 0);  // Récupère les flags actuels
 	if (flags == -1)
 	{
@@ -98,7 +107,7 @@ bool	Server::init(void)
     if (!init_socket())
 		return (false);
 
-	_epoll_fd = epoll_create1(EPOLL_CLOEXEC);
+	_epoll_fd = epoll_create1(0);
     if (_epoll_fd == -1)
 	{
 		close(_socket_fd);
@@ -112,12 +121,35 @@ bool	Server::init(void)
     event.data.fd = _socket_fd;
     if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, _socket_fd, &event) == -1)
 	{
-		
 		std::cerr << "Erreur epoll_ctl: " << strerror(errno) << std::endl;
         close(_epoll_fd);
 		close(_socket_fd);
         return (false);
     }
-
 	return (true);
+}
+
+void	Server::up()
+{
+	struct epoll_event events[MAX_WAITING_ROOM];
+	while (true)
+	{
+		int events_count = epoll_wait(_epoll_fd, events, MAX_WAITING_ROOM, -1);
+		if (events_count == -1)
+		{
+			std::cerr << "Erreur epoll_wait: " << strerror(errno) << std::endl;
+			break ;
+		}
+		int event_index = 0;
+		while (event_index < events_count)
+		{
+			if (events[event_index].events && (events[event_index].events == EPOLLIN))
+			{
+				std::cout << "New event: fd=" << events[event_index].data.fd << "; type=EPOLLIN" << std::endl;
+			}
+			event_index ++;
+		}
+	}
+	close(_epoll_fd);
+	close(_socket_fd);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   all.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:24:19 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/13 16:25:59 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/13 22:17:23 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #define ALL_HPP
 
 #include "Channel.hpp"
-#include "Client.hpp"
+#include "User.hpp"
 #include "IRCMessage.hpp"
 #include "RPL.hpp"
 #include "Server.hpp"
