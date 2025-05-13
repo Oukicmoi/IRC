@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:12:54 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/13 22:25:51 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/13 22:34:20 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,11 +102,8 @@ bool	Server::init_socket(void)
     return (true);
 }
 
-bool	Server::init(void)
+bool	Server::init_epoll(void)
 {
-    if (!init_socket())
-		return (false);
-
 	_epoll_fd = epoll_create1(0);
     if (_epoll_fd == -1)
 	{
@@ -117,7 +114,7 @@ bool	Server::init(void)
 
 	struct epoll_event	event;
     memset(&event, 0, sizeof(event));
-    event.events = EPOLLIN;  // Surveille les connexions entrantes
+    event.events = EPOLLIN;  // le server il ecoute que les user entrants
     event.data.fd = _socket_fd;
     if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, _socket_fd, &event) == -1)
 	{
@@ -127,6 +124,13 @@ bool	Server::init(void)
         return (false);
     }
 	return (true);
+}
+
+bool	Server::init(void)
+{
+    if (!init_socket())
+		return (false);
+	return (init_epoll());
 }
 
 void	Server::up()

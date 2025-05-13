@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/13 22:17:05 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/13 22:33:59 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ class Server
 
 		void	init_socket_address(void);
 		bool	init_socket(void);
+		bool	init_epoll(void);
 
     public:
         Server();
@@ -42,7 +43,6 @@ class Server
 
         void setmdp(const std::string& password);
         std::string getmdp() const;
-        void setport(const unsigned int& password);
         unsigned int getport() const;
 
 	
