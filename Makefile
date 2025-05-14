@@ -6,7 +6,7 @@
 #    By: octoross <octoross@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/13 16:58:31 by gtraiman          #+#    #+#              #
-#    Updated: 2025/05/13 22:17:23 by octoross         ###   ########.fr        #
+#    Updated: 2025/05/14 15:05:14 by octoross         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 NAME        = ircserv
 
 CXX         = c++
-CXXFLAGS    = -std=c++98 -Wall -Wextra -Werror
+CXXFLAGS    = -std=c++98 -Wall -Wextra -Werror -g3
 INCLUDE = include
 
 SRCS        = src/main.cpp \
