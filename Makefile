@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: octoross <octoross@student.42.fr>          +#+  +:+       +#+         #
+#    By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/13 16:58:31 by gtraiman          #+#    #+#              #
-#    Updated: 2025/05/14 15:05:14 by octoross         ###   ########.fr        #
+#    Updated: 2025/05/14 20:15:57 by gtraiman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,9 +19,9 @@ INCLUDE = include
 
 SRCS        = src/main.cpp \
               src/Server.cpp \
-              src/User.cpp \
               src/Channel.cpp \
               src/IRCMessage.cpp
+            #   src/User.cpp \
 
 OBJS        = $(SRCS:.cpp=.o)
 

@@ -3,14 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:57:35 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/14 13:20:35 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/14 21:20:40 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.hpp"
+
+volatile bool g_running = true;
+
+void signal_handler(int signal)
+{
+    if (signal == SIGINT || signal == SIGTERM || signal == SIGTSTP)
+    {
+        std::cout << "\nSIGNAL D'ARRET DU SERVEUR RECU, GOODBYE\n";
+        g_running = false;
+    }
+}
 
 void	show_limits(void)
 {
@@ -35,6 +46,14 @@ int main(int ac, char **av)
         std::cerr << "Usage: " << av[0] << " <port> <password>\n";
         return 1;
     }
+
+	struct sigaction sa;
+    sa.sa_handler = signal_handler;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+    sigaction(SIGINT, &sa, NULL);
+    sigaction(SIGTERM, &sa, NULL);
+    sigaction(SIGTSTP, &sa, NULL);
     try
     {
         char **end = NULL;

@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:12:54 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/14 15:31:42 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/14 21:21:38 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.hpp"
 
 Server::Server() : _mdp(""), _port(DEFAULT_PORT) {}
+
+
 
 Server::Server(unsigned int port, const std::string& password) : _mdp(password)
 {
@@ -30,7 +32,7 @@ Server::Server(unsigned int port, const std::string& password) : _mdp(password)
 
 Server::~Server()
 {
-	_users.clear();
+	// _users.clear();
 	if (_epoll_fd >= 0)
 		close(_epoll_fd);
 	if (_socket_fd)	
@@ -163,15 +165,17 @@ void	Server::addUsers(void)
     }
 }
 
+extern volatile bool g_running;
+
 void	Server::up()
 {
 	struct epoll_event events[MAX_WAITING_ROOM];
-	while (true)
+	while (g_running)
 	{
 		int events_count = epoll_wait(_epoll_fd, events, MAX_WAITING_ROOM, -1);
 		if (events_count == -1)
 		{
-			ERR_SYS("epoll_wait");
+			// ERR_SYS("epoll_wait");
 			break ;
 		}
 		int event_index = 0;

@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:22:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/13 16:23:32 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/14 20:43:18 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,6 @@
 #include <poll.h>       // poll
 #include <signal.h>     // signal, sigaction
 #include <sys/stat.h>   // fstat (si utilisé)
+
 
 #endif
