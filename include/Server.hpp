@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/14 13:49:52 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/14 15:29:24 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 # define DEFAULT_PORT 6667
 # define MAX_WAITING_ROOM SOMAXCONN
 
-#define ERR_SYS(msg) std::cerr << RED << B << "\terror " << msg << ": " << R << std::strerror(errno) << std::endl
+#define ERR_SYS(msg) std::cerr << RED << B << "error " << msg << ": " << R << std::strerror(errno) << std::endl
 
 class Server
 {
