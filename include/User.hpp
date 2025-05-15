@@ -22,6 +22,7 @@ class User
         static unsigned int _nextId;
         int             _port;
         int         _socket_fd;
+        char        _buffer[MAX_MSG_SIZE + 1];
         std::string _Nickname;
         std::string _Username;
         std::string _Host;

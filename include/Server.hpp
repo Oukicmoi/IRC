@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/14 21:19:28 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/15 23:06:22 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # define ALLOW_NOT_RECOMMENDED_PORT true
 # define DEFAULT_PORT 6667
 # define MAX_WAITING_ROOM SOMAXCONN
+# define MAX_MSG_SIZE 512
 
 #define ERR_SYS(msg) std::cerr << RED << B << "error " << msg << ": " << R << std::strerror(errno) << std::endl
 
@@ -43,7 +44,7 @@ class Server
 		struct sockaddr_in				_server_addr;
 		int								_socket_fd;
 		int								_epoll_fd;
-		// std::tr1::unordered_map<int, User>	_users;
+		std::map<int, User *>			_users;
 
 		void	init_socket_address(void);
 		bool	set_non_blocking_socket(int socket_fd);
