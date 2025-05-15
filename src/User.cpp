@@ -1,41 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
+/*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:55:10 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/14 23:58:10 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/15 22:20:10 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Client.hpp"
+#include "User.hpp"
 
-unsigned int Client::_nextId = 1;
+unsigned int User::_nextId = 1;
 
-Client::Client() : _Nickname(""), _id(_nextId++) {}
+User::User(int socket_fd) : _socket_fd(socket_fd), _Nickname(""), _id(_nextId++) {}
 
-Client::Client(const std::string& nick) : _Nickname(nick), _id(_nextId++) {}
+User::User(int socket_fd, const std::string& nick) : socket_fd(socket_fd), __Nickname(nick), _id(_nextId++) {}
 
-Client::~Client() {}
+User::~User()
+{
+    if (_socket_fd >= 0)
+        close(_socket_fd);
+}
 
-void Client::setNick(const std::string& nick)
+void User::setNick(const std::string& nick)
 {
     _Nickname = nick;
 }
 
-std::string Client::getNick() const
+std::string User::getNick() const
 {
     return _Nickname;
 }
 
-void Client::setId(unsigned int id)
+void User::setId(unsigned int id)
 {
     _id = id;
 }
 
-unsigned int Client::getId() const
+unsigned int User::getId() const
 {
     return _id;
 }
