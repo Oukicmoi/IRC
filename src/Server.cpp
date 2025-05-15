@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:12:54 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/14 21:21:38 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/16 00:09:37 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.hpp"
 
-Server::Server() : _mdp(""), _port(DEFAULT_PORT) {}
+Server::Server() : _mdp("admin"), _port(DEFAULT_PORT) {}
 
 
 
@@ -32,7 +32,7 @@ Server::Server(unsigned int port, const std::string& password) : _mdp(password)
 
 Server::~Server()
 {
-	// _users.clear();
+	_users.clear();
 	if (_epoll_fd >= 0)
 		close(_epoll_fd);
 	if (_socket_fd)	
@@ -149,20 +149,32 @@ bool	Server::init(void) // TODO mettre le init dans le constructor
 void	Server::addUsers(void)	
 {
 	socklen_t	addrlen = sizeof(_server_addr);
-    int client_fd = accept(_socket_fd, (struct sockaddr *)&_server_addr, &addrlen);
-	while (client_fd >= 0)
+	bool	acceptBool = true;
+	while (acceptBool)
 	{
 		std::cout << "\tnew " << B << "connection " << GREEN << "accepted" << R << " on " << B << "fd " << client_fd << R << std::endl;
 		client_fd = accept(_socket_fd, (struct sockaddr *)&_server_addr, &addrlen);
-	}
-    if (client_fd == -1)
-	{
-		if ((errno != EAGAIN) && (errno != EWOULDBLOCK))
+		if (client_fd >= 0)
 		{
-			std::cout << "\t";
-			ERR_SYS("accept");
+			User	*user = new User(client_fd)
+			_users[client_fd] = user;
+			sr
 		}
-    }
+		else
+		{
+			acceptBool = false;
+			if ((errno != EAGAIN) && (errno != EWOULDBLOCK))
+			{
+				std::cout << "\t";
+				ERR_SYS("accept");
+			}	
+		}
+	}
+}
+
+void	handleClient()
+{
+	
 }
 
 extern volatile bool g_running;
@@ -175,15 +187,17 @@ void	Server::up()
 		int events_count = epoll_wait(_epoll_fd, events, MAX_WAITING_ROOM, -1);
 		if (events_count == -1)
 		{
-			// ERR_SYS("epoll_wait");
+			ERR_SYS("epoll_wait");
 			break ;
 		}
 		int event_index = 0;
 		while (event_index < events_count)
 		{
-			std::cout << "New event: " << B "fd=" << events[event_index].data.fd << R << ", " << B << "type=" << events[event_index].events << R << std::endl;
-			if (events[event_index].events && (events[event_index].events == EPOLLIN))
+			std::cout << "New event: " << B << "fd=" << events[event_index].data.fd << R << ", " << B << "type=" << events[event_index].events << R << std::endl;
+			if (events[event_index].fd == _socket_fd) //requete sk server = nouvelle demande connexon (sinon client a deja sa propre socket et dans ce cas hanleClient)
 				addUsers();
+			else
+				handleClient();
 			event_index ++;
 		}
 		if (events_count)
