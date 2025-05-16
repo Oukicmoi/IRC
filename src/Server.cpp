@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:12:54 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/16 16:45:36 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/16 21:32:17 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@ Server::Server(unsigned int port, const std::string& password) : _mdp(password)
 
 Server::~Server()
 {
+	for (std::map<int, User *>::iterator it = _users.begin(); it != _users.end(); it++)
+		delete it->second;
+
 	_users.clear();
 	if (_epoll_fd >= 0)
 		close(_epoll_fd);
@@ -52,17 +55,14 @@ User* Server::getUser(int fd) const
 {
     std::map<int, User*>::const_iterator it = _users.find(fd);
     if (it == _users.end())
-        return NULL;
+        return (NULL);
     return it->second;
 }
 
-const std::map<int, User*>& Server::getUsers() const
-{
-    return _users;
-}
+const std::map<int, User*>& Server::getUsers() const { return (_users); }
 
 
-///////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 void	Server::init_socket_address(void)
@@ -77,12 +77,13 @@ bool	Server::set_non_blocking_socket(int socket_fd)
 	int	flags = fcntl(socket_fd, F_GETFL, 0);  // Récupère les flags actuels
 	if (flags == -1)
 	{
+		close(socket_fd);
 		ERR_SYS("ftnl (get flags)");
 	    return (false);
 	}
 	if (fcntl(socket_fd, F_SETFL, flags | O_NONBLOCK) < 0)
 	{
-		
+		close(socket_fd);
 		ERR_SYS("ftnl (set flags)");
         return (false);
 	}
@@ -124,7 +125,7 @@ bool	Server::init_socket(void)
 		ERR_SYS("listen");
 		return 1;
     }
-    std::cout << std::endl << "Serveur en écoute sur le port " << _port << "..." << std::endl << std::endl;
+    std::cout << std::endl << B << CYAN << "Server Socket" << R << B << " en écoute" << R << " sur le " << B << "port " << _port << R << "..." << std::endl << std::endl << std::endl;
     return (true);
 }
 
@@ -136,6 +137,7 @@ bool	Server::add_to_epoll(int socket_fd, uint32_t event_type)
     event.data.fd = socket_fd;
     if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, socket_fd, &event) == -1)
 	{
+		close(socket_fd);
 		ERR_SYS("epoll_ctl");
 		return (false);
     }
@@ -160,70 +162,32 @@ bool	Server::init(void) // TODO mettre le init dans le constructor
 	return (init_epoll());
 }	
 
-// void	Server::addUsers(void)	
-// {
-// 	socklen_t	addrlen = sizeof(_server_addr);
-// 	bool	acceptBool = true;
-// 	int	client_fd = 0; //temporary? idk
-// 	while (acceptBool)
-// 	{
-// 		client_fd = accept(_socket_fd, (struct sockaddr *)&_server_addr, &addrlen);
-// 		std::cout << "\tnew " << B << "connection " << GREEN << "accepted" << R << " on " << B << "fd " << client_fd << R << std::endl;
-// 		if (client_fd >= 0)
-// 		{
-// 			User	*user = new User(client_fd);
-// 			_users[client_fd] = user;
-// 			// sr
-// 		}
-// 		else
-// 		{
-// 			acceptBool = false;
-// 			if ((errno != EAGAIN) && (errno != EWOULDBLOCK))
-// 			{
-// 				std::cout << "\t";
-// 				ERR_SYS("accept");
-// 			}	
-// 		}
-// 	}
-// }
-
-void Server::addUsers(void)
+void	Server::addUsers(void)	
 {
-    socklen_t addrlen = sizeof(_server_addr);
-
-    while (true)
-    {
-        int client_fd = accept(_socket_fd,
-                               reinterpret_cast<struct sockaddr *>(&_server_addr),
-                               &addrlen);
-
-        if (client_fd < 0)
-        {
-            if (errno == EAGAIN || errno == EWOULDBLOCK)
-                break;
-
-            // vraie erreur
-            ERR_SYS("accept");
-            break;
-        }
-        std::cout << "\tnew connection accepted on fd " << client_fd << std::endl;
-
-        if (!set_non_blocking_socket(client_fd))
-        {
-            close(client_fd);
-            continue;
-        }
-        if (!add_to_epoll(client_fd, EPOLLIN | EPOLLET))
-        {
-            close(client_fd);
-            continue;
-        }
-        User* user = new User(client_fd);
-        _users[client_fd] = user;
-    }
+	socklen_t	addrlen = sizeof(_server_addr);
+	bool	acceptBool = true;
+	while (acceptBool)
+	{
+		int	client_fd = accept(_socket_fd, (struct sockaddr *)&_server_addr, &addrlen);
+		if (client_fd >= 0)
+		{
+			if (!set_non_blocking_socket(client_fd))
+				continue;
+			if (!add_to_epoll(client_fd, EPOLLIN | EPOLLET | EPOLLOUT))
+				continue;
+			User* user = new User(client_fd);
+			_users[client_fd] = user;
+			std::cout << "\tnew " << B << "connection " << GREEN << "accepted" << R << " on " << B << "fd " << client_fd << R << std::endl;
+		}
+		else
+			acceptBool = false;
+	}
+	if ((errno != EAGAIN) && (errno != EWOULDBLOCK))
+	{
+		std::cout << "\t";
+		ERR_SYS("accept");
+	}	
 }
-
-
 
 void Server::handleClient(const epoll_event& ev)
 {
@@ -233,7 +197,7 @@ void Server::handleClient(const epoll_event& ev)
         char buf[4096];
         while (true)
         {
-            int n = recv(fd, buf, sizeof(buf), 0);
+            int n = recv(fd, buf, 4096, 0);
             if (n > 0)
                 // On stocke dans un buffer associé à ce client
                 _users[ev.data.fd]->recvBuffer().append(buf, n);
