@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:22:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/16 10:39:15 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/16 13:53:28 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,8 @@
 # define DEFAULT_PORT 6667
 # define MAX_WAITING_ROOM SOMAXCONN
 # define MAX_MSG_SIZE 512
+
+#define ERR_SYS(msg) std::cerr << RED << B << "error " << msg << ": " << R << std::strerror(errno) << std::endl
+
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:55:10 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/16 12:46:59 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:07:42 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,13 @@
 
 unsigned int User::_nextId = 1;
 
-User::User(int socket_fd) : _socket_fd(socket_fd), _Nickname(""), _id(_nextId++)
+User::User(int socket_fd) : _id(_nextId++), _socket_fd(socket_fd), _Nickname("")
 {
     memset(_buffer, 0, sizeof(char) * (MAX_MSG_SIZE + 1));
 }
+User::User() {}
 
-User::User(int socket_fd, const std::string& nick) : _socket_fd(socket_fd), _Nickname(nick), _id(_nextId++) {}
+User::User(int socket_fd, const std::string& nick) :  _id(_nextId++), _socket_fd(socket_fd), _Nickname(nick) {}
 
 User::~User()
 {
@@ -47,45 +48,24 @@ unsigned int User::getId() const
     return _id;
 }
 
-int create_client_socket(const char* host, const char* port_str)
+std::string&  User::recvBuffer()
 {
-    // 1) Résolution de l'hôte + port (getaddrinfo) 
-    struct addrinfo hints;
-    struct addrinfo* res;
+    return clientBuffers;
+}
+const std::string& User::recvBuffer() const
+{
+    return clientBuffers;
+}
 
-    std::memset(&hints, 0, sizeof(hints));
-    hints.ai_family   = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-
-    int err = getaddrinfo(host, port_str, &hints, &res); //Traduit un nom d’hôte ("irc.example.com" ou "127.0.0.1") et un port ("6667") en liste d’adresses (IPv4/IPv6)
-    if (err != 0)
-    {
-        std::cerr << "getaddrinfo: " << gai_strerror(err) << "\n";
-        return -1;
-    }
-
-    int sockfd = -1;
-    for (addrinfo* p = res; p; p = p->ai_next)
-    {
-        // 2) Création de la socket
-        sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-        if (sockfd < 0) {
-            std::cerr << "socket(): " << strerror(errno) << "\n";
-            continue;
-        }
-
-        // 3) Tentative de connexion
-        if (connect(sockfd, p->ai_addr, p->ai_addrlen) == 0) {
-            // succès !
-            break;
-        }
-
-        // échec → fermer et essayer l’adresse suivante
-        std::cerr << "connect(): " << strerror(errno) << "\n";
-        close(sockfd);
-        sockfd = -1;
-    }
-
-    freeaddrinfo(res);
-    return sockfd;  // ≥0 sur succès, -1 sur échec
+void User::handleLine(int fd, std::string msg)
+{
+    (void)fd;
+	if(msg == "KICK")
+		return ; //KICK func
+	if(msg == "INVITE")
+		return ; //INVITE func
+	if(msg == "TOPIC")
+		return ; //TOPIC func
+	else
+		std::cerr << msg << std::endl;
 }

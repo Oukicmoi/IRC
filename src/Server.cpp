@@ -6,15 +6,13 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:12:54 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/16 12:47:32 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:15:46 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.hpp"
 
 Server::Server() : _mdp("admin"), _port(DEFAULT_PORT) {}
-
-
 
 Server::Server(unsigned int port, const std::string& password) : _mdp(password)
 {
@@ -47,6 +45,22 @@ void Server::setmdp(const std::string& password) { _mdp = password; }
 
 std::string Server::getmdp() const { return (_mdp); }
 unsigned int Server::getport() const { return (_port); }
+
+
+// Retourne l'utilisateur enregistré sous le descripteur fd, ou nullptr si absent
+User* Server::getUser(int fd) const
+{
+    std::map<int, User*>::const_iterator it = _users.find(fd);
+    if (it == _users.end())
+        return NULL;
+    return it->second;
+}
+
+const std::map<int, User*>& Server::getUsers() const
+{
+    return _users;
+}
+
 
 ///////////////////////////////////////////////////////////////
 
@@ -146,38 +160,74 @@ bool	Server::init(void) // TODO mettre le init dans le constructor
 	return (init_epoll());
 }	
 
-void	Server::addUsers(void)	
+// void	Server::addUsers(void)	
+// {
+// 	socklen_t	addrlen = sizeof(_server_addr);
+// 	bool	acceptBool = true;
+// 	int	client_fd = 0; //temporary? idk
+// 	while (acceptBool)
+// 	{
+// 		client_fd = accept(_socket_fd, (struct sockaddr *)&_server_addr, &addrlen);
+// 		std::cout << "\tnew " << B << "connection " << GREEN << "accepted" << R << " on " << B << "fd " << client_fd << R << std::endl;
+// 		if (client_fd >= 0)
+// 		{
+// 			User	*user = new User(client_fd);
+// 			_users[client_fd] = user;
+// 			// sr
+// 		}
+// 		else
+// 		{
+// 			acceptBool = false;
+// 			if ((errno != EAGAIN) && (errno != EWOULDBLOCK))
+// 			{
+// 				std::cout << "\t";
+// 				ERR_SYS("accept");
+// 			}	
+// 		}
+// 	}
+// }
+
+void Server::addUsers(void)
 {
-	socklen_t	addrlen = sizeof(_server_addr);
-	bool	acceptBool = true;
-	int	client_fd = 0; //temporary? idk
-	while (acceptBool)
-	{
-		client_fd = accept(_socket_fd, (struct sockaddr *)&_server_addr, &addrlen);
-		std::cout << "\tnew " << B << "connection " << GREEN << "accepted" << R << " on " << B << "fd " << client_fd << R << std::endl;
-		if (client_fd >= 0)
-		{
-			User	*user = new User(client_fd);
-			_users[client_fd] = user;
-			// sr
-		}
-		else
-		{
-			acceptBool = false;
-			if ((errno != EAGAIN) && (errno != EWOULDBLOCK))
-			{
-				std::cout << "\t";
-				ERR_SYS("accept");
-			}	
-		}
-	}
+    socklen_t addrlen = sizeof(_server_addr);
+
+    while (true)
+    {
+        int client_fd = accept(_socket_fd,
+                               reinterpret_cast<struct sockaddr *>(&_server_addr),
+                               &addrlen);
+
+        if (client_fd < 0)
+        {
+            if (errno == EAGAIN || errno == EWOULDBLOCK)
+                break;
+
+            // vraie erreur
+            ERR_SYS("accept");
+            break;
+        }
+        std::cout << "\tnew connection accepted on fd " << client_fd << std::endl;
+
+        if (!set_non_blocking_socket(client_fd))
+        {
+            close(client_fd);
+            continue;
+        }
+        if (!add_to_epoll(client_fd, EPOLLIN | EPOLLET))
+        {
+            close(client_fd);
+            continue;
+        }
+        User* user = new User(client_fd);
+        _users[client_fd] = user;
+    }
 }
 
 
-void handleClient(const epoll_event& ev)
+
+void Server::handleClient(const epoll_event& ev)
 {
     int fd = ev.data.fd;
-	std::string clientBuffers[4096];
     if (ev.events & EPOLLIN)
     {
         char buf[4096];
@@ -185,15 +235,13 @@ void handleClient(const epoll_event& ev)
         {
             int n = recv(fd, buf, sizeof(buf), 0);
             if (n > 0)
-			{
                 // On stocke dans un buffer associé à ce client
-                clientBuffers[fd].append(buf, n);
-            }
+                _users[ev.data.fd]->recvBuffer().append(buf, n);
             else if (n == 0)
 			{
                 // le client a fermé la connexion
                 close(fd);
-                clientBuffers[fd].erase();
+                _users[ev.data.fd]->recvBuffer().erase();
                 return;
             }
             else
@@ -205,38 +253,27 @@ void handleClient(const epoll_event& ev)
                     // vraie erreur
                     ERR_SYS("recv");
                     close(fd);
-                    clientBuffers[fd].erase();
+                    _users[ev.data.fd]->recvBuffer().erase();
                     return;
                 }
             }
         }
-
-        std::string& buffer = clientBuffers[fd];
-        size_t pos;
-        while ((pos = buffer.find("\r\n")) != std::string::npos)
-		{
-            std::string line = buffer.substr(0, pos);
-            buffer.erase(0, pos + 2);
-            // traitez 'line' comme une commande IRC complète
-            // handleLine(fd, line);
-        }
+	std::string& buffer = _users[ev.data.fd]->recvBuffer();
+	size_t pos;
+	while ((pos = buffer.find("\r\n")) != std::string::npos)
+	{
+		std::string line = buffer.substr(0, pos);
+		buffer.erase(0, pos + 2);
+		// traitez 'line' comme une commande IRC complète
+		_users[ev.data.fd]->handleLine(fd, line);
+	}
     }
     if (ev.events & (EPOLLHUP|EPOLLERR))
 	{
         close(fd);
-        clientBuffers[fd].erase();
+        _users[ev.data.fd]->recvBuffer().erase();
     }
 }
-
-	// if(msg == "KICK")
-	// 	return ; //KICK func
-	// if(msg == "INVITE")
-	// 	return ; //INVITE func
-	// if(msg == "TOPIC")
-	// 	return ; //TOPIC func
-	// else
-	// 	return ; //send msg
-// }
 
 extern volatile bool g_running;
 
@@ -251,9 +288,10 @@ void	Server::up()
 			ERR_SYS("epoll_wait");
 			break ;
 		}
-			int event_index = 0;
+		int event_index = 0;
 		while (event_index < events_count)
 		{
+			// std::cerr << "bablbablabl\n\n" << std::endl;
 			std::cout << "New event: " << B << "fd=" << events[event_index].data.fd << R << ", " << B << "type=" << events[event_index].events << R << std::endl;
 			if (events[event_index].data.fd == _socket_fd) //requete sk server = nouvelle demande connexon (sinon client a deja sa propre socket et dans ce cas hanleClient)
 				addUsers();

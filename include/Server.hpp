@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/16 10:39:06 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/16 15:06:47 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 
 
 
-#define ERR_SYS(msg) std::cerr << RED << B << "error " << msg << ": " << R << std::strerror(errno) << std::endl
 
 class Server
 {
@@ -48,6 +47,10 @@ class Server
         void setmdp(const std::string& password);
         std::string getmdp() const;
         unsigned int getport() const;
+		const std::map<int, User*>&  getUsers() const;
+	    User*   getUser(int fd) const;
+		void handleClient(const epoll_event& ev);
+
 
 	
 		bool	init(void);

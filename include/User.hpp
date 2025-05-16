@@ -23,11 +23,13 @@ class User
         int             _port;
         int         _socket_fd;
         char        _buffer[MAX_MSG_SIZE + 1];
+        std::string clientBuffers;
         std::string _Nickname;
         std::string _Username;
         std::string _Host;
 
     public:
+        User();
         User(int socket_fd);
         User(int socket_fd, const std::string& nick);
         ~User();
@@ -36,6 +38,10 @@ class User
         std::string     getNick() const;
         void            setId(unsigned int id);
         unsigned int    getId() const;
+        std::string&  recvBuffer();
+        const std::string& recvBuffer() const;
+        void handleLine(int fd, std::string msg);
+
 };
 
 #endif
