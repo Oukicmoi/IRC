@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:57:35 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/16 22:07:12 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/16 22:19:46 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,8 @@ void	show_limits(void)
 	std::cout << std::endl;
 }
 
-int main(int ac, char **av)
+void	setup_signals(void)
 {
-    if (ac != 3)
-    {
-        std::cerr << "Usage: " << av[0] << " <port> <password>\n";
-        return 1;
-    }
-
 	struct sigaction sa;
     sa.sa_handler = signal_handler;
     sigemptyset(&sa.sa_mask);
@@ -54,13 +48,22 @@ int main(int ac, char **av)
     sigaction(SIGINT, &sa, NULL);
     sigaction(SIGTERM, &sa, NULL);
     sigaction(SIGTSTP, &sa, NULL);
+}
+
+int main(int ac, char **av)
+{
+	if (ac != 3)
+    {
+		std::cerr << "Usage: " << av[0] << " <port> <password>\n";
+        return (1);
+    }
+	
+	setup_signals();
+	show_limits();
     try
     {
         char **end = NULL;
-        Server server(std::strtod(av[1],end), av[2]);
-
-		show_limits();
-
+        Server server(std::strtod(av[1], end), av[2]);
 		server.run();
     }
     catch(const std::exception& e)
