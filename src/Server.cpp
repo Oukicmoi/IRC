@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:12:54 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/16 00:09:37 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/16 12:47:32 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,15 +150,16 @@ void	Server::addUsers(void)
 {
 	socklen_t	addrlen = sizeof(_server_addr);
 	bool	acceptBool = true;
+	int	client_fd = 0; //temporary? idk
 	while (acceptBool)
 	{
-		std::cout << "\tnew " << B << "connection " << GREEN << "accepted" << R << " on " << B << "fd " << client_fd << R << std::endl;
 		client_fd = accept(_socket_fd, (struct sockaddr *)&_server_addr, &addrlen);
+		std::cout << "\tnew " << B << "connection " << GREEN << "accepted" << R << " on " << B << "fd " << client_fd << R << std::endl;
 		if (client_fd >= 0)
 		{
-			User	*user = new User(client_fd)
+			User	*user = new User(client_fd);
 			_users[client_fd] = user;
-			sr
+			// sr
 		}
 		else
 		{
@@ -172,10 +173,70 @@ void	Server::addUsers(void)
 	}
 }
 
-void	handleClient()
+
+void handleClient(const epoll_event& ev)
 {
-	
+    int fd = ev.data.fd;
+	std::string clientBuffers[4096];
+    if (ev.events & EPOLLIN)
+    {
+        char buf[4096];
+        while (true)
+        {
+            int n = recv(fd, buf, sizeof(buf), 0);
+            if (n > 0)
+			{
+                // On stocke dans un buffer associé à ce client
+                clientBuffers[fd].append(buf, n);
+            }
+            else if (n == 0)
+			{
+                // le client a fermé la connexion
+                close(fd);
+                clientBuffers[fd].erase();
+                return;
+            }
+            else
+			{
+                if (errno == EAGAIN || errno == EWOULDBLOCK)
+                    break;
+				else
+				{
+                    // vraie erreur
+                    ERR_SYS("recv");
+                    close(fd);
+                    clientBuffers[fd].erase();
+                    return;
+                }
+            }
+        }
+
+        std::string& buffer = clientBuffers[fd];
+        size_t pos;
+        while ((pos = buffer.find("\r\n")) != std::string::npos)
+		{
+            std::string line = buffer.substr(0, pos);
+            buffer.erase(0, pos + 2);
+            // traitez 'line' comme une commande IRC complète
+            // handleLine(fd, line);
+        }
+    }
+    if (ev.events & (EPOLLHUP|EPOLLERR))
+	{
+        close(fd);
+        clientBuffers[fd].erase();
+    }
 }
+
+	// if(msg == "KICK")
+	// 	return ; //KICK func
+	// if(msg == "INVITE")
+	// 	return ; //INVITE func
+	// if(msg == "TOPIC")
+	// 	return ; //TOPIC func
+	// else
+	// 	return ; //send msg
+// }
 
 extern volatile bool g_running;
 
@@ -190,14 +251,14 @@ void	Server::up()
 			ERR_SYS("epoll_wait");
 			break ;
 		}
-		int event_index = 0;
+			int event_index = 0;
 		while (event_index < events_count)
 		{
 			std::cout << "New event: " << B << "fd=" << events[event_index].data.fd << R << ", " << B << "type=" << events[event_index].events << R << std::endl;
-			if (events[event_index].fd == _socket_fd) //requete sk server = nouvelle demande connexon (sinon client a deja sa propre socket et dans ce cas hanleClient)
+			if (events[event_index].data.fd == _socket_fd) //requete sk server = nouvelle demande connexon (sinon client a deja sa propre socket et dans ce cas hanleClient)
 				addUsers();
 			else
-				handleClient();
+				handleClient(events[event_index]);
 			event_index ++;
 		}
 		if (events_count)

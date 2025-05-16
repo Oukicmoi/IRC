@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:22:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/14 20:43:18 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/16 10:39:15 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,19 @@
 #include <signal.h>     // signal, sigaction
 #include <sys/stat.h>   // fstat (si utilisé)
 
+# define B "\x1B[1m"
+# define U "\x1B[4m"
+# define R "\033[0m"
+
+# define RED "\033[0;31m"
+# define GREEN "\033[1;32m"
+# define YELLOW "\033[1;33m"
+# define CYAN "\033[0;36m"
+# define MAGENTA "\033[0;35m"
+
+# define ALLOW_NOT_RECOMMENDED_PORT true
+# define DEFAULT_PORT 6667
+# define MAX_WAITING_ROOM SOMAXCONN
+# define MAX_MSG_SIZE 512
 
 #endif

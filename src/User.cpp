@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:55:10 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/15 22:31:40 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/16 12:46:59 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ User::User(int socket_fd) : _socket_fd(socket_fd), _Nickname(""), _id(_nextId++)
     memset(_buffer, 0, sizeof(char) * (MAX_MSG_SIZE + 1));
 }
 
-User::User(int socket_fd, const std::string& nick) : socket_fd(socket_fd), __Nickname(nick), _id(_nextId++) {}
+User::User(int socket_fd, const std::string& nick) : _socket_fd(socket_fd), _Nickname(nick), _id(_nextId++) {}
 
 User::~User()
 {
