@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:57:35 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/14 21:20:40 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/16 22:07:12 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,8 @@ int main(int ac, char **av)
         Server server(std::strtod(av[1],end), av[2]);
 
 		show_limits();
-	
-		if (!server.init())
-			return (1);
-		server.up();
+
+		server.run();
     }
     catch(const std::exception& e)
     {

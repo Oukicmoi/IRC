@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/16 15:06:47 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/16 22:09:27 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@
 # include <sys/resource.h>
 
 
-
-
 class Server
 {
     private:
@@ -32,29 +30,31 @@ class Server
 		int								_epoll_fd;
 		std::map<int, User *>			_users;
 
+		void	init(void);
+		void	shutdown(void);
 		void	init_socket_address(void);
 		bool	set_non_blocking_socket(int socket_fd);
 		bool	init_socket(void);
 		bool	add_to_epoll(int socket_fd, uint32_t event_type);
 		bool	init_epoll(void);
 		void	addUsers(void);
+		void	handleClient(const epoll_event& ev);
+		bool	up(void);
 
     public:
-        Server();
+        Server(void);
+		Server(unsigned int port);
+		Server(const std::string& password);
 		Server(unsigned int port, const std::string& password);
-        ~Server();
+        ~Server(void);
 
         void setmdp(const std::string& password);
         std::string getmdp() const;
         unsigned int getport() const;
 		const std::map<int, User*>&  getUsers() const;
 	    User*   getUser(int fd) const;
-		void handleClient(const epoll_event& ev);
-
-
 	
-		bool	init(void);
-		void	up(void);
+		void	run(void);
 };
 
 
