@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:12:54 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/16 22:03:27 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/16 22:27:40 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,10 @@ void Server::handleClient(const epoll_event& ev)
         while (true)
         {
             int n = recv(fd, buf, 4096, 0);
-            if (n > 0)
-                // On stocke dans un buffer associé à ce client
-                _users[ev.data.fd]->recvBuffer().append(buf, n);
+            if (n > 0 && n < 513)
+                _users[ev.data.fd]->recvBuffer().append(buf, n);    // On stocke dans un buffer associé à ce client
+            else if (n > 512)
+                std::cout << "Hola ! Message trop long la team" << std::endl;
             else if (n == 0)
 			{
                 // le client a fermé la connexion
