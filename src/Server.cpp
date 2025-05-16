@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:12:54 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/16 16:15:46 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:45:36 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,15 +258,15 @@ void Server::handleClient(const epoll_event& ev)
                 }
             }
         }
-	std::string& buffer = _users[ev.data.fd]->recvBuffer();
-	size_t pos;
-	while ((pos = buffer.find("\r\n")) != std::string::npos)
-	{
-		std::string line = buffer.substr(0, pos);
-		buffer.erase(0, pos + 2);
-		// traitez 'line' comme une commande IRC complète
-		_users[ev.data.fd]->handleLine(fd, line);
-	}
+		std::string& buffer = _users[ev.data.fd]->recvBuffer();
+		size_t pos;
+		while ((pos = buffer.find("\n")) != std::string::npos)
+		{
+			std::string line = buffer.substr(0, pos);
+			buffer.erase(0, pos + 2);
+			// traitez 'line' comme une commande IRC complète
+			_users[ev.data.fd]->handleLine(fd, line);
+		}
     }
     if (ev.events & (EPOLLHUP|EPOLLERR))
 	{
