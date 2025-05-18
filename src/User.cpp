@@ -6,11 +6,11 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:55:10 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/16 16:45:54 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/18 23:50:17 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "User.hpp"
+#include "all.hpp"
 
 unsigned int User::_nextId = 1;
 
@@ -38,6 +38,11 @@ std::string User::getNick() const
     return _Nickname;
 }
 
+std::string User::getUsername() const
+{
+    return _Username;
+}
+
 void User::setId(unsigned int id)
 {
     _id = id;
@@ -46,6 +51,11 @@ void User::setId(unsigned int id)
 unsigned int User::getId() const
 {
     return _id;
+}
+
+int User::getSocketFd() const 
+{
+    return _socket_fd;
 }
 
 std::string&  User::recvBuffer()
@@ -57,15 +67,81 @@ const std::string& User::recvBuffer() const
     return clientBuffers;
 }
 
-void User::handleLine(int fd, std::string msg)
+
+
+// Découpe la chaîne `s` selon le séparateur `delim`
+std::vector<std::string> split(const std::string& s, char delim)
 {
-    (void)fd;
-	if(msg == "KICK")
-		return ; //KICK func
-	if(msg == "INVITE")
-		return ; //INVITE func
-	if(msg == "TOPIC")
-		return ; //TOPIC func
-	else
-		std::cerr << msg << std::endl;
+    std::vector<std::string> elems;
+    std::string item;
+    std::istringstream iss(s);
+    while (std::getline(iss, item, delim))
+    {
+        elems.push_back(item);
+    }
+    return elems;
+}
+
+// Concatène tous les éléments de `v` à partir de l’indice `start`,
+// en les séparant par un espace.
+std::string join_rest(const std::vector<std::string>& v, size_t start)
+{
+    if (start >= v.size())
+        return std::string();
+
+    std::string result = v[start];
+    for (size_t i = start + 1; i < v.size(); ++i)
+    {
+        result += " ";
+        result += v[i];
+    }
+    return result;
+}
+
+
+void Server::handleLine(int fd, const std::string& line)
+{
+    // On récupère l'utilisateur
+    User* u = getUser(fd);
+    if (!u)
+        return; // pas trouvé, on ignore
+
+    // On découpe la ligne en tokens
+    std::vector<std::string> tokens = split(line, ' ');
+    if (tokens.empty())
+        return;
+
+    // Le verbe IRC est le premier token
+    std::string cmd = tokens[0];
+
+    // JOIN et PART prennent tous leurs paramètres après le verbe
+    if (cmd == "JOIN")
+    {
+        std::vector<std::string> params(tokens.begin() + 1, tokens.end());
+        cmd_JOIN(u, params);
+    }
+    else if (cmd == "PART")
+    {
+        std::vector<std::string> params(tokens.begin() + 1, tokens.end());
+        cmd_PART(u, params);
+    }
+    // PRIVMSG prend 2 paramètres explicitement : cible et message
+    else if (cmd == "PRIVMSG")
+    {
+        // On vérifie qu'on a au moins "PRIVMSG cible texte..."
+        if (tokens.size() >= 3)
+        {
+            std::string target  = tokens[1];
+            std::string message = join_rest(tokens, 2);
+            std::vector<std::string> params;
+            params.push_back(target);
+            params.push_back(message);
+            cmd_PRIVMSG(u, params);
+        }
+    }
+    else if (cmd == "TOPIC")
+    {
+        std::vector<std::string> params(tokens.begin() + 1, tokens.end());
+        cmd_TOPIC(u, params);
+    }
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/16 22:09:27 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/18 23:47:59 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,8 @@
 
 # include "lib.hpp"
 # include "User.hpp"
-# include <sys/epoll.h>
-#include <tr1/unordered_map>
-# include <sys/resource.h>
+# include "Channel.hpp"
+
 
 
 class Server
@@ -29,6 +28,7 @@ class Server
 		int								_socket_fd;
 		int								_epoll_fd;
 		std::map<int, User *>			_users;
+		std::map<std::string,Channel*> _channels;
 
 		void	init(void);
 		void	shutdown(void);
@@ -53,8 +53,16 @@ class Server
         unsigned int getport() const;
 		const std::map<int, User*>&  getUsers() const;
 	    User*   getUser(int fd) const;
-	
+		
 		void	run(void);
+
+		void handleLine(int fd, const std::string& line);
+		
+		Channel* getOrCreateChannel(const std::string& name, User& u);
+		void     cmd_JOIN(User* u, const std::vector<std::string>& params);
+		void     cmd_PART(User* u, const std::vector<std::string>& params);
+		void     cmd_PRIVMSG(User* u, const std::vector<std::string>& params);
+		void     cmd_TOPIC(User* u, const std::vector<std::string>& params);
 };
 
 

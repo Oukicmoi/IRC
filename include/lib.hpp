@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:22:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/16 13:53:28 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/18 23:43:17 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,10 @@
 #include <poll.h>       // poll
 #include <signal.h>     // signal, sigaction
 #include <sys/stat.h>   // fstat (si utilisé)
+
+#include <sys/epoll.h>
+#include <tr1/unordered_map>
+#include <sys/resource.h>
 
 # define B "\x1B[1m"
 # define U "\x1B[4m"

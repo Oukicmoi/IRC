@@ -36,11 +36,12 @@ class User
 
         void            setNick(const std::string& nick);
         std::string     getNick() const;
+        std::string     getUsername() const;
         void            setId(unsigned int id);
         unsigned int    getId() const;
+        int getSocketFd() const;
         std::string&  recvBuffer();
         const std::string& recvBuffer() const;
-        void handleLine(int fd, std::string msg);
 
 };
 
