@@ -6,15 +6,14 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:26:03 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/18 23:23:55 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/19 15:56:11 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # ifndef CHANNEL_HPP
 #define CHANNEL_HPP
 
-#include <string>
-#include <set>
+
 #include "User.hpp"
 
 class Channel

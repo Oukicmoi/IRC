@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 23:33:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/18 23:43:44 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/19 20:16:05 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void Server::cmd_JOIN(User* u, const std::vector<std::string>& params)
 {
     // params[0] == "#channel"
     std::string chname = params[0];
+    std::cout << "hereeee" << std::endl;
     Channel*    ch = getOrCreateChannel(chname, *u);
 
     // si déjà membre
@@ -46,10 +47,9 @@ void Server::cmd_JOIN(User* u, const std::vector<std::string>& params)
         // ERR_ALREADYJOINED
         return;
     }
-
     // on notifie tout le canal
-    // std::string joinMsg = RPL_JOIN(user_id(u->getNick(), u->getUsername()), chname);
-    // ch->broadcast(joinMsg);
+    std::string joinMsg = RPL_JOIN(user_id(u->getNick(), u->getUsername()), chname);
+    ch->broadcast(joinMsg);
 }
 
 void Server::cmd_PART(User* u, const std::vector<std::string>& params)
@@ -65,8 +65,8 @@ void Server::cmd_PART(User* u, const std::vector<std::string>& params)
 
     Channel* ch = it->second;
     // on envoie le PART avant de retirer
-    // std::string partMsg = RPL_PART(user_id(u->getNick(), u->getUsername()),chname,"");
-    // ch->broadcast(partMsg);
+    std::string partMsg = RPL_PART(user_id(u->getNick(), u->getUsername()),chname,"");
+    ch->broadcast(partMsg);
 
     ch->removeMember(u);
 

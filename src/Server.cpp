@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:12:54 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/18 23:49:11 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/19 20:18:14 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void Server::handleClient(const epoll_event& ev)
             if (n > 0 && n < 513)
                 _users[ev.data.fd]->recvBuffer().append(buf, n);    // On stocke dans un buffer associé à ce client
             else if (n > 512)
-                std::cout << "Hola ! Message trop long la team" << std::endl;
+                write(fd,"Hola ! Message trop long la team",33);
             else if (n == 0)
 			{
                 // le client a fermé la connexion

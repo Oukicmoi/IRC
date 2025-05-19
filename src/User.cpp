@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:55:10 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/18 23:50:17 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/19 18:33:36 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,14 +115,15 @@ void Server::handleLine(int fd, const std::string& line)
     std::string cmd = tokens[0];
 
     // JOIN et PART prennent tous leurs paramètres après le verbe
+    std::vector<std::string> params(tokens.begin() + 1, tokens.end());
     if (cmd == "JOIN")
     {
-        std::vector<std::string> params(tokens.begin() + 1, tokens.end());
+        if(params.empty())
+            return(write(fd,"You need a name for your channel",32), (void)cmd);
         cmd_JOIN(u, params);
     }
     else if (cmd == "PART")
     {
-        std::vector<std::string> params(tokens.begin() + 1, tokens.end());
         cmd_PART(u, params);
     }
     // PRIVMSG prend 2 paramètres explicitement : cible et message
@@ -141,6 +142,8 @@ void Server::handleLine(int fd, const std::string& line)
     }
     else if (cmd == "TOPIC")
     {
+        if(params.empty())
+            return(write(fd,"You need a name for your topic",30), (void)cmd);
         std::vector<std::string> params(tokens.begin() + 1, tokens.end());
         cmd_TOPIC(u, params);
     }

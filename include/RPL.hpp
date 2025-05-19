@@ -6,12 +6,12 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:51:32 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/13 16:51:33 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/19 15:57:01 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-#include <iostream>
+# include <iostream>
 
 void	sendServerRpl(int const client_fd, std::string client_buffer);
 
