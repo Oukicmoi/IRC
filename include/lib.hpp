@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:22:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/19 15:56:16 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:23:32 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,6 @@
 #include <tr1/unordered_map>
 #include <sys/resource.h>
 
-
-
 # define B "\x1B[1m"
 # define U "\x1B[4m"
 # define R "\033[0m"
@@ -56,12 +54,8 @@
 # define CYAN "\033[0;36m"
 # define MAGENTA "\033[0;35m"
 
-# define ALLOW_NOT_RECOMMENDED_PORT true
-# define DEFAULT_PORT 6667
-# define MAX_WAITING_ROOM SOMAXCONN
-# define MAX_MSG_SIZE 512
-
 #define ERR_SYS(msg) std::cerr << RED << B << "error " << msg << ": " << R << std::strerror(errno) << std::endl
 
+# include "config.hpp"
 
 #endif
