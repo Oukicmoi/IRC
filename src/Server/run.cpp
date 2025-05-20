@@ -29,6 +29,23 @@ void	Server::addUsers(void)
 	}
 }
 
+std::string	string_epoll_event(const epoll_event& ev)
+{
+	if (ev.events & EPOLLIN)
+		return ("EPOLLIN");
+	if (ev.events & EPOLLOUT)
+		return ("EPOLLOUT");
+	if (ev.events & EPOLLERR)
+		return ("EPOLLERR ");
+	if (ev.events & EPOLLHUP)
+		return ("EPOLLHUP ");
+	if (ev.events & EPOLLET)
+		return ("EPOLLET");
+	if (ev.events & EPOLLONESHOT)
+		return ("EPOLLONESHOT");
+	return ("unknown");
+}
+
 void	Server::run()
 {
 	if (!up())
@@ -47,7 +64,7 @@ void	Server::run()
 		while (event_index < events_count)
 		{
 			// std::cerr << "bablbablabl\n\n" << std::endl;
-			std::cout << "New event: " << B << "fd=" << events[event_index].data.fd << R << ", " << B << "type=" << events[event_index].events << R << std::endl;
+			std::cout << "New event: " << B << "fd=" << events[event_index].data.fd << R << ", " << B << "type=" << string_epoll_event(events[event_index]) << R << std::endl;
 			if (events[event_index].data.fd == _socket_fd) //requete sk server = nouvelle demande connexon (sinon client a deja sa propre socket et dans ce cas hanleClient)
 				addUsers();
 			else
