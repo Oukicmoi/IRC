@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/18 23:33:31 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:08:31 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,5 +65,44 @@ void Channel::setTopic(const std::string& t)
     _topic = t;
 }
 
+typedef std::map<std::string,Channel*> ChannelMap;
+
+Channel* Server::getOrCreateChannel(const std::string& name, User& u)
+{
+    // itérateur explicite
+    ChannelMap::iterator it = _channels.find(name);
+    if (it != _channels.end())
+        return it->second;
+
+    // pas trouvé, on crée
+    Channel* ch = new Channel(name);
+    ch->addOperator(&u);
+    _channels[name] = ch;
+    return ch;
+}
 
 
+void	sendServerRpl(int const client_fd, std::string client_buffer)
+{
+	std::istringstream	buf(client_buffer);
+	std::string			reply;
+	
+	send(client_fd, client_buffer.c_str(), client_buffer.size(), 0);
+	while (getline(buf, reply))
+	{
+		std::cout << "[Server] Message sent to client " \
+				  << client_fd << "       >> " << CYAN << reply << R << std::endl;
+	}
+}
+
+void Channel::broadcast(const std::string& message, User* except) const
+{
+    for (std::set<User*>::const_iterator it = _members.begin(); it != _members.end(); ++it)
+    {
+        User* u = *it;
+        if (u == except)
+            continue;
+        // envoie le message à chaque membre (sauf « except »)
+        sendServerRpl(u->getSocketFd(), message);
+    }
+}
