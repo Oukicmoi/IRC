@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/20 16:38:30 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:27:24 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "Channel.hpp"
 # include "IRCMessage.hpp"
 
+class IRCMessage;
 
 class Server
 {
@@ -29,7 +30,8 @@ class Server
 		std::string						_server_name;
 		std::string						_mdp;
 		std::map<int, User *>			_users;
-		std::map<std::string,Channel*> _channels;
+		std::map<std::string, Channel *> _channels;
+		std::map<std::string, void (Server::*)(User *, const IRCMessage &)>	_cmds;
 
 		void	init(void);
 		void	shutdown(void);
@@ -42,11 +44,13 @@ class Server
 	
 		void	handleNewClients(void);
 		void	handleClient(const epoll_event& ev);
-	
+		void	handleMsg(int fd, const std::string& line);
+		
+		void	loadCmds(void);
 		bool	up(void);
-
+		
 		void	welcome(User *user);
-		void	cmd_CAP(User *user);
+		void	cmd_CAP(User *user, const IRCMessage &msg);
 
     public:
 		Server(void);
@@ -63,14 +67,14 @@ class Server
 		
 		void	run(void);
 
-		void handleLine(int fd, const std::string& line);
+		// void handleLine(int fd, const std::string& line);
 		
 		Channel* getOrCreateChannel(const std::string& name, User& u);
-		void	cmd_JOIN(User* u, const std::vector<std::string>& params);
-		void	cmd_PART(User* u, const std::vector<std::string>& params);
-		void	cmd_PRIVMSG(User* u, const std::vector<std::string>& params);
-		void	cmd_TOPIC(User* u, const std::vector<std::string>& params);
-		void	cmd_MSG(User* u, const std::vector<std::string>& params);
+		void	cmd_JOIN(User* user, const IRCMessage &msg);
+		void	cmd_PART(User* user, const IRCMessage &msg);
+		void	cmd_PRIVMSG(User* user, const IRCMessage &msg);
+		void	cmd_TOPIC(User* user, const IRCMessage &msg);
+		void	cmd_MSG(User* user, const IRCMessage &msg);
 };
 
 
