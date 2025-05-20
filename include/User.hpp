@@ -39,9 +39,11 @@ class User
         std::string     getUsername() const;
         void            setId(unsigned int id);
         unsigned int    getId() const;
-        int getSocketFd() const;
+        int 			getSocketFd() const;
         std::string&  recvBuffer();
         const std::string& recvBuffer() const;
+
+		// ssize_t	send(const std::string& msg, int flags = 0);
 
 };
 

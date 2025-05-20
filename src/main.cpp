@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:57:35 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/16 22:19:46 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/17 12:04:45 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	show_limits(void)
 {
 	std::cout << "Socket Maximum Connections: " << B << MAX_WAITING_ROOM << R << "/" << SOMAXCONN << std::endl;
 	struct rlimit rlim;
-	// Récupère la limite de descripteurs de fichiers (RLIMIT_NOFILE)
+	// Récupère la limite de descripteurs de fichiers
 	std::cout << "Opened Fd limits" << std::endl;
 	if (getrlimit(RLIMIT_NOFILE, &rlim) == 0)
 	{

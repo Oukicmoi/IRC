@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:55:10 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/19 21:50:32 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:43:08 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,3 +157,11 @@ void Server::handleLine(int fd, const std::string& line)
     }
 
 }
+
+// ssize_t User::send(const std::string& msg, int flags)
+// {
+// 	ssize_t ret = send(_socket_fd, msg.c_str(), msg.size(), flags);
+// 	if (ret == -1)
+// 		ERR_SYS("send");
+// 	return ret;
+// }

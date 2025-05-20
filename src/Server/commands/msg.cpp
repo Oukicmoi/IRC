@@ -6,11 +6,13 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:50:15 by octoross          #+#    #+#             */
-/*   Updated: 2025/05/20 15:50:30 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:39:25 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+
+typedef std::map<std::string,Channel*> ChannelMap;
 
 void Server::cmd_MSG(User* u, const std::vector<std::string>& params)
 {

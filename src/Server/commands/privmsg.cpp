@@ -1,16 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PRIVMSG.cpp                                        :+:      :+:    :+:   */
+/*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:48:09 by octoross          #+#    #+#             */
-/*   Updated: 2025/05/20 15:48:42 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:39:37 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+
+typedef std::map<std::string,Channel*> ChannelMap;
 
 void Server::cmd_PRIVMSG(User* u, const std::vector<std::string>& params)
 {

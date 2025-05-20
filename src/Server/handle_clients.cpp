@@ -6,11 +6,16 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/05/20 15:06:46 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:36:03 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+
+// void	Server::welcome(User *user)
+// {
+// 	send(user->getFd(), , MSG_DONTWAIT | MSG_NOSIGNAL);
+// }
 
 void	Server::handleNewClients(void)
 {

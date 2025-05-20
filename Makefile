@@ -6,10 +6,9 @@
 #    By: octoross <octoross@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/13 16:58:31 by gtraiman          #+#    #+#              #
-#    Updated: 2025/05/16 22:05:20 by octoross         ###   ########.fr        #
+#    Updated: 2025/05/20 16:43:38 by octoross         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-
 
 NAME        = ircserv
 
@@ -18,10 +17,16 @@ CXXFLAGS    = -std=c++98 -Wall -Wextra -Werror -g3
 INCLUDE = include
 
 SRCS        = src/main.cpp \
-              src/Server.cpp \
 			  src/Server/core.cpp \
 			  src/Server/run.cpp \
 			  src/Server/up.cpp \
+			  src/Server/handle_clients.cpp \
+			  src/Server/commands/cap.cpp \
+			  src/Server/commands/join.cpp \
+			  src/Server/commands/msg.cpp \
+			  src/Server/commands/part.cpp \
+			  src/Server/commands/privmsg.cpp \
+			  src/Server/commands/topic.cpp \
               src/Channel.cpp \
               src/IRCMessage.cpp \
               src/User.cpp \

@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/20 15:28:04 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:38:30 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "lib.hpp"
 # include "User.hpp"
 # include "Channel.hpp"
-
+# include "IRCMessage.hpp"
 
 
 class Server
@@ -46,6 +46,7 @@ class Server
 		bool	up(void);
 
 		void	welcome(User *user);
+		void	cmd_CAP(User *user);
 
     public:
 		Server(void);

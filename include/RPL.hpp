@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPL.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:51:32 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/19 15:57:01 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:32:10 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	sendServerRpl(int const client_fd, std::string client_buffer);
 # define ERR_INVITEYOURSELF(client) (":localhost 502 " + client + " :Cannot invite yourself\r\n")
 # define ERR_USERONCHANNEL(client, nick, channel) (":localhost 443 " + client + " " + nick + " " + channel + " :Is already on channel\r\n")
 # define RPL_INVITE(user_id, invited, channel) (user_id + " INVITE " + invited + " " + channel + "\r\n")
-# define RPL_INVITING(client, target, channel) ("localhost 341 " + client + " inviting " + target + " " + channel + "\r\n")
+# define RPL_INVITING(client, target, channel) (":localhost 341 " + client + " inviting " + target + " " + channel + "\r\n")
 
 
 // JOIN
@@ -71,7 +71,7 @@ void	sendServerRpl(int const client_fd, std::string client_buffer);
 #define RPL_CHANNELMODEIS(client, channel, mode) (":localhost 324 " + client + " " + channel + " " + mode + "\r\n")
 #define RPL_CHANNELMODEISWITHKEY(client, channel, mode, password) (":localhost 324 " + client + " " + channel + " " + mode + " " + password + "\r\n")
 #define ERR_CANNOTSENDTOCHAN(client, channel) ("localhost 404 " + client + " " + channel + " :Cannot send to channel\r\n")
-#define ERR_CHANNELISFULL(client, channel) ("localhost 471 " + client + " " + channel + " :Cannot join channel (+l)\r\n")
+#define ERR_CHANNELISFULL(client, channel) (":localhost 471 " + client + " " + channel + " :Cannot join channel (+l)\r\n")
 #define ERR_CHANOPRIVSNEEDED(client, channel) (":localhost 482 " + client + " " + channel + " :You're not channel operator\r\n")
 #define ERR_INVALIDMODEPARAM(client, channel, mode, password) (":localhost 696 " + client + " " + channel + " " + mode + " " + password + " : password must only contained alphabetic character\r\n")
 // RPL_ERR a broadcoast quand user pas +v ou operator veut parler

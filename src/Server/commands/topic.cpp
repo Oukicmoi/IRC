@@ -1,16 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   TOPIC.cpp                                          :+:      :+:    :+:   */
+/*   topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:49:00 by octoross          #+#    #+#             */
-/*   Updated: 2025/05/20 15:49:02 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:39:40 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+
+typedef std::map<std::string,Channel*> ChannelMap;
 
 void Server::cmd_TOPIC(User* u, const std::vector<std::string>& params)
 {
