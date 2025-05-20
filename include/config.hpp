@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:22:52 by octoross          #+#    #+#             */
-/*   Updated: 2025/05/20 15:23:14 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:27:11 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,7 @@
 # define DEFAULT_PORT 6667
 # define MAX_WAITING_ROOM SOMAXCONN
 # define MAX_MSG_SIZE 512
+
+# define SERVER_NAME "jeffrey"
 
 #endif
