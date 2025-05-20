@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:12:54 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/19 20:18:14 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/19 20:28:27 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void Server::handleClient(const epoll_event& ev)
 		{
 			std::string line = buffer.substr(0, pos);
 			buffer.erase(0, pos + 2);
+            std::cout << "hereeeeeee" << std::endl;
 			// traitez 'line' comme une commande IRC complète
 			handleLine(fd, line);
 		}

@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/18 23:47:59 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/19 21:41:45 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,27 +42,29 @@ class Server
 		bool	up(void);
 
     public:
-        Server(void);
+	Server(void);
 		Server(unsigned int port);
 		Server(const std::string& password);
 		Server(unsigned int port, const std::string& password);
-        ~Server(void);
+	~Server(void);
 
-        void setmdp(const std::string& password);
-        std::string getmdp() const;
-        unsigned int getport() const;
+		void setmdp(const std::string& password);
+		std::string getmdp() const;
+		unsigned int getport() const;
 		const std::map<int, User*>&  getUsers() const;
-	    User*   getUser(int fd) const;
+		User*   getUser(int fd) const;
 		
 		void	run(void);
 
 		void handleLine(int fd, const std::string& line);
 		
 		Channel* getOrCreateChannel(const std::string& name, User& u);
-		void     cmd_JOIN(User* u, const std::vector<std::string>& params);
-		void     cmd_PART(User* u, const std::vector<std::string>& params);
-		void     cmd_PRIVMSG(User* u, const std::vector<std::string>& params);
-		void     cmd_TOPIC(User* u, const std::vector<std::string>& params);
+		void	cmd_JOIN(User* u, const std::vector<std::string>& params);
+		void	cmd_PART(User* u, const std::vector<std::string>& params);
+		void	cmd_PRIVMSG(User* u, const std::vector<std::string>& params);
+		void	cmd_TOPIC(User* u, const std::vector<std::string>& params);
+		void	cmd_MSG(User* u, const std::vector<std::string>& params);
+
 };
 
 

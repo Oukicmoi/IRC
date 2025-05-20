@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:55:10 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/19 18:33:36 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/19 21:50:32 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,4 +147,13 @@ void Server::handleLine(int fd, const std::string& line)
         std::vector<std::string> params(tokens.begin() + 1, tokens.end());
         cmd_TOPIC(u, params);
     }
+    else
+    {
+        // On reconstruit correctement params pour cmd_MSG
+        std::vector<std::string> fixedParams;
+        fixedParams.push_back(cmd); // l'ancien "cmd" est ici en réalité le nom du canal
+        fixedParams.insert(fixedParams.end(), params.begin(), params.end());
+        cmd_MSG(u, fixedParams);
+    }
+
 }
