@@ -12,10 +12,10 @@ void	Server::init(void)
 		throw std::invalid_argument("Port integer should be inferior to 65535");
 }
 
-Server::Server(void) : _mdp("admin"), _port(DEFAULT_PORT) { init(); }
-Server::Server(unsigned int port) : _mdp("admin"), _port(port) { init(); }
-Server::Server(const std::string &password) : _mdp(password), _port(DEFAULT_PORT) { init(); }
-Server::Server(unsigned int port, const std::string& password) : _mdp(password), _port(port) { init(); }
+Server::Server(void) : _port(DEFAULT_PORT), _server_name(SERVER_NAME), _mdp("admin") { init(); }
+Server::Server(unsigned int port) : _port(port), _server_name(SERVER_NAME), _mdp("admin") { init(); }
+Server::Server(const std::string &password) : _port(DEFAULT_PORT), _server_name(SERVER_NAME), _mdp(password) { init(); }
+Server::Server(unsigned int port, const std::string& password) : _port(port), _server_name(SERVER_NAME), _mdp(password) { init(); }
 
 void	Server::shutdown(void)
 {
