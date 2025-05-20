@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/19 21:41:45 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:05:59 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ class Server
 		bool	init_socket(void);
 		bool	add_to_epoll(int socket_fd, uint32_t event_type);
 		bool	init_epoll(void);
-		void	addUsers(void);
+		void	handleNewClients(void);
 		void	handleClient(const epoll_event& ev);
 		bool	up(void);
 

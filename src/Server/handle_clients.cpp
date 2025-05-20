@@ -1,16 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.cpp                                         :+:      :+:    :+:   */
+/*   handle_clients.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/13 16:12:54 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/20 14:56:37 by octoross         ###   ########.fr       */
+/*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
+/*   Updated: 2025/05/20 15:06:46 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "all.hpp"
+#include "Server.hpp"
+
+void	Server::handleNewClients(void)
+{
+	socklen_t	addrlen = sizeof(_server_addr);
+	bool	acceptBool = true;
+	while (acceptBool)
+	{
+		int	client_fd = accept(_socket_fd, (struct sockaddr *)&_server_addr, &addrlen);
+		if (client_fd >= 0)
+		{
+			if (!set_non_blocking_socket(client_fd))
+				continue;
+			if (!add_to_epoll(client_fd, EPOLLIN | EPOLLET | EPOLLOUT))
+				continue;
+			User* user = new User(client_fd);
+			_users[client_fd] = user;
+			std::cout << "\tnew " << B << "connection " << GREEN << "accepted" << R << " on " << B << "fd " << client_fd << R << std::endl;
+		}
+		else
+			acceptBool = false;
+	}
+	if ((errno != EAGAIN) && (errno != EWOULDBLOCK))
+	{
+		std::cout << "\t";
+		ERR_SYS("accept");
+	}
+}
 
 void Server::handleClient(const epoll_event& ev)
 {
