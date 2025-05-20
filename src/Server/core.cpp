@@ -1,5 +1,15 @@
 #include "Server.hpp"
 
+void	Server::loadCmds(void)
+{
+	_cmds["CAP"] = &Server::cmd_CAP;
+	_cmds["JOIN"] = &Server::cmd_JOIN;
+	_cmds["PART"] = &Server::cmd_PART;
+	_cmds["PRIVMSG"] = &Server::cmd_PRIVMSG;
+	_cmds["TOPIC"] = &Server::cmd_TOPIC;
+	_cmds["MSG"] = &Server::cmd_MSG;
+}
+
 void	Server::init(void)
 {
 	_socket_fd = -1;
@@ -10,6 +20,7 @@ void	Server::init(void)
 		throw std::invalid_argument("Port integer is recommended to be between 1024 and 65535");
 	if ((_port > 65535))
 		throw std::invalid_argument("Port integer should be inferior to 65535");
+	loadCmds();
 }
 
 Server::Server(void) : _port(DEFAULT_PORT), _server_name(SERVER_NAME), _mdp("admin") { init(); }

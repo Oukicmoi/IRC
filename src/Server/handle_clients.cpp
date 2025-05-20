@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/05/20 15:36:03 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:48:16 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,26 @@ void	Server::handleNewClients(void)
 		std::cout << "\t";
 		ERR_SYS("accept");
 	}
+}
+
+void	Server::handleMsg(int fd, const std::string& line)
+{
+	User* user = getUser(fd);
+    if (!user)
+	{
+		return;
+	}
+
+	IRCMessage msg(line);
+	std::map<std::string, void (Server::*)(User *, const IRCMessage &)>::iterator it = _cmds.find(msg.getCmd());
+	if (it != _cmds.end())
+	{
+		void (Server::*cmd)(User*, const IRCMessage&) = it->second;
+		(this->*cmd)(user, msg);
+	}
+	else
+		std::cout << B << "Unknown command: " << R << line << std::endl;
+	
 }
 
 void Server::handleClient(const epoll_event& ev)
@@ -83,11 +103,11 @@ void Server::handleClient(const epoll_event& ev)
 		while ((pos = buffer.find("\r\n")) != std::string::npos)
 		{
 			std::string line = buffer.substr(0, pos);
-			std::cout << B << "line: " << line << R << std::endl;
+			std::cout << "\tRecv: " << B << YELLOW << line << R << std::endl;
 			buffer.erase(0, pos + 2);
-            std::cout << "hereeeeeee" << std::endl;
 			// traitez 'line' comme une commande IRC complète
-			handleLine(fd, line);
+			// handleLine(fd, line);
+			handleMsg(fd, line);
 		}
     }
     if (ev.events & (EPOLLHUP|EPOLLERR))
