@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/05/20 17:48:16 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/20 18:08:18 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	Server::handleMsg(int fd, const std::string& line)
 		(this->*cmd)(user, msg);
 	}
 	else
-		std::cout << B << "Unknown command: " << R << line << std::endl;
+		std::cout << "\t ⤷ Unknown command" << std::endl;
 	
 }
 
@@ -100,7 +100,7 @@ void Server::handleClient(const epoll_event& ev)
         }
 		std::string& buffer = _users[ev.data.fd]->recvBuffer();
 		size_t pos;
-		while ((pos = buffer.find("\r\n")) != std::string::npos)
+		while ((pos = buffer.find("\n")) != std::string::npos)
 		{
 			std::string line = buffer.substr(0, pos);
 			std::cout << "\tRecv: " << B << YELLOW << line << R << std::endl;
