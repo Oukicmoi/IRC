@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:55:10 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/20 17:27:18 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/24 00:13:43 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ const std::string& User::recvBuffer() const
 
 
 
-// Découpe la chaîne `s` selon le séparateur `delim`
 std::vector<std::string> split(const std::string& s, char delim)
 {
     std::vector<std::string> elems;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRCMessage.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 23:33:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/20 17:49:51 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/24 00:08:20 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,3 +90,5 @@ IRCMessage::IRCMessage(const std::string &rawMsg): _prefix(""), _cmd("")
 IRCMessage::~IRCMessage(void) {}
 
 std::string IRCMessage::getCmd(void) const { return (_cmd); }
+
+const std::vector<std::string>&  IRCMessage::getParams() const { return _params; }

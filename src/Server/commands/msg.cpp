@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   msg.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:50:15 by octoross          #+#    #+#             */
-/*   Updated: 2025/05/20 17:25:43 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/24 00:08:43 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#include "all.hpp"
 
 typedef std::map<std::string,Channel*> ChannelMap;
 

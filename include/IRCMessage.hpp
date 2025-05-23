@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IRCMessage.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:26:09 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/20 16:38:46 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/24 00:07:53 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class IRCMessage
 	public:
 		IRCMessage(const std::string &rawMsg);
 		~IRCMessage(void);
-
+		const std::vector<std::string>&  getParams() const;
 		std::string getCmd() const;
 };
 
