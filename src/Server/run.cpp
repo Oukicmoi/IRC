@@ -23,7 +23,6 @@ void	Server::run()
 {
 	if (!up())
 		return ;
-
 	struct epoll_event events[MAX_WAITING_ROOM];
 	while (g_running)
 	{

@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:55:10 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/24 00:13:43 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/05/31 19:42:49 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,60 @@ const std::string& User::recvBuffer() const
 }
 
 
+void User::setPort(int port)
+{
+    _port = port;
+}
+
+int User::getPort() const
+{
+    return _port;
+}
+
+void User::setUsername(const std::string& username)
+{
+    _Username = username;
+}
+
+void User::setHost(const std::string& host)
+{
+    _Host = host;
+}
+
+std::string User::getHost() const
+{
+    return _Host;
+}
+
+std::string& User::getClientBuffers()
+{
+    return clientBuffers;
+}
+
+const std::string& User::getClientBuffers() const
+{
+    return clientBuffers;
+}
+
+void User::setClientBuffers(const std::string& buf)
+{
+    clientBuffers = buf;
+}
+
+char* User::getBuffer()
+{
+    return _buffer;
+}
+
+const char* User::getBuffer() const
+{
+    return _buffer;
+}
+
+unsigned int User::getNextId()
+{
+    return _nextId;
+}
 
 std::vector<std::string> split(const std::string& s, char delim)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/20 16:08:31 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/20 19:49:47 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void Channel::setTopic(const std::string& t)
 typedef std::map<std::string,Channel*> ChannelMap;
 
 Channel* Server::getOrCreateChannel(const std::string& name, User& u)
-{
+{  
     // itérateur explicite
     ChannelMap::iterator it = _channels.find(name);
     if (it != _channels.end())

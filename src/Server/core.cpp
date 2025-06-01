@@ -8,6 +8,10 @@ void	Server::loadCmds(void)
 	_cmds["PRIVMSG"] = &Server::cmd_PRIVMSG;
 	_cmds["TOPIC"] = &Server::cmd_TOPIC;
 	_cmds["MSG"] = &Server::cmd_MSG;
+	_cmds["PASS"] = &Server::cmd_PASS;
+	_cmds["NICK"] = &Server::cmd_NICK;
+	_cmds["USER"] = &Server::cmd_USER;
+
 }
 
 void	Server::init(void)

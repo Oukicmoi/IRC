@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/05/20 18:31:15 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/01 21:58:07 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	Server::handleMsg(int fd, const std::string& line)
 	}
 
 	IRCMessage msg(line);
+	std::cout << "LINE HERE" << line << std::endl;
 	std::map<std::string, void (Server::*)(User *, const IRCMessage &)>::iterator it = _cmds.find(msg.getCmd());
 	if (it != _cmds.end())
 	{
@@ -60,8 +61,7 @@ void	Server::handleMsg(int fd, const std::string& line)
 		(this->*cmd)(user, msg);
 	}
 	else
-		std::cout << "\t ⤷ Unknown command" << std::endl;
-	
+        sendServerRpl(fd, ERR_UNKNOWNCOMMAND(user->getNick(), msg.getCmd()));	
 }
 
 void Server::handleClient(const epoll_event& ev)
