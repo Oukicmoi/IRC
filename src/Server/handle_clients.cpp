@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/05/20 18:16:28 by octoross         ###   ########.fr       */
+/*   Updated: 2025/05/20 18:31:15 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void Server::handleClient(const epoll_event& ev)
 				else
 				{
                     // vraie erreur
+					std::cerr << "\t";
                     ERR_SYS("recv");
                     close(fd);
                     _users[ev.data.fd]->recvBuffer().erase();
