@@ -32,12 +32,16 @@ void Server::cmd_PASS(User* user, const IRCMessage& msg)
 
     // 3. Validation du mot de passe
     const std::string& givenPass = params[0];
+    std::cout << "params : " << msg.getParams()[0] << std::endl;
+    std::cout << "mdp : " << this->_mdp <<  std::endl;
     if (givenPass != this->_mdp)
     {
         sendServerRpl(user->getSocketFd(), ERR_PASSWDMISMATCH(user->getNick()));
         // Optionnel : close(user->getSocketFd());
         return;
     }
+        std::cout << "here" << std::endl;
+
 
     // 4. Authentification réussie
     user->setPasswordValidated(true);

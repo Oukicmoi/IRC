@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 23:33:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/24 00:08:20 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/01 21:52:19 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,25 +44,34 @@ size_t IRCMessage::parseCmd(const std::string &rawMsg)
 
 void IRCMessage::parseParams(const std::string &rawMsg)
 {
-	if (rawMsg.empty())
-		return;
 	size_t i = 0;
-	while (rawMsg[i] == ' ')
-		i ++;
-	if (rawMsg[0] == ':')
-		_params.push_back(rawMsg.substr(1));
-	else
+	while (i < rawMsg.length() && rawMsg[i] == ' ')
+		i++;
+
+	while (i < rawMsg.length())
 	{
-		size_t pos = rawMsg.find(' ');
-		if (pos == std::string::npos)
+		if (rawMsg[i] == ':') // paramètre final
+		{
+			_params.push_back(rawMsg.substr(i + 1));
+			break;
+		}
+
+		size_t nextSpace = rawMsg.find(' ', i);
+		if (nextSpace == std::string::npos)
+		{
 			_params.push_back(rawMsg.substr(i));
+			break;
+		}
 		else
 		{
-			_params.push_back(rawMsg.substr(i, pos));
-			parseParams(rawMsg.substr(pos + 1));
+			_params.push_back(rawMsg.substr(i, nextSpace - i));
+			i = nextSpace + 1;
+			while (i < rawMsg.length() && rawMsg[i] == ' ') // skip espaces multiples
+				i++;
 		}
 	}
 }
+
 
 IRCMessage::IRCMessage(const std::string &rawMsg): _prefix(""), _cmd("")
 {
@@ -75,16 +84,6 @@ IRCMessage::IRCMessage(const std::string &rawMsg): _prefix(""), _cmd("")
 	if (start == std::string::npos)
 		return ;
 	parseParams(rawMsg.substr(start));
-
-	// std::cout << std::endl;
-	// std::cout << "Treating msg " << rawMsg << "..." << std::endl;
-	// std::cout << "Prefix: " << _prefix << std::endl;
-	// std::cout << "Command: " << _cmd << std::endl;
-	// std::cout << "Params: ";
-	// size_t i = 0;
-	// while (i < _params.size())
-	// 	std::cout << _params[i ++] << " ";
-	// std::cout << std::endl << std::endl;
 }
 
 IRCMessage::~IRCMessage(void) {}
