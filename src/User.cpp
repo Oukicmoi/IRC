@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:55:10 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/31 19:42:49 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/01 22:33:40 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,12 @@
 
 unsigned int User::_nextId = 1;
 
-User::User(int socket_fd) : _id(_nextId++), _socket_fd(socket_fd), _Nickname("")
+User::User(int socket_fd) : _id(_nextId++), _socket_fd(socket_fd), _Nickname(""), _Username(""), _Host(""), _password(""), _registered(false), _passValid(false)
 {
     memset(_buffer, 0, sizeof(char) * (MAX_MSG_SIZE + 1));
 }
-User::User() {}
 
-User::User(int socket_fd, const std::string& nick) :  _id(_nextId++), _socket_fd(socket_fd), _Nickname(nick) {}
+// User::User(int socket_fd, const std::string& nick) :  _id(_nextId++), _socket_fd(socket_fd), _Nickname(nick) {}
 
 User::~User()
 {

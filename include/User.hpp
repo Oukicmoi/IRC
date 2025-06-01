@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:21:41 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/31 19:42:19 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/01 22:34:07 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ class User
 	public:
 		User();
 		User(int socket_fd);
-		User(int socket_fd, const std::string& nick);
+		// User(int socket_fd, const std::string& nick);
 		~User();
 
 		void			setNick(const std::string& nick);
