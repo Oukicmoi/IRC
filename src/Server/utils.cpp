@@ -58,7 +58,7 @@ void Server::sendWelcomeMessages(User* user)
 	// sendServerRpl(user->getSocketFd(), RPL_CREATED(nick, datetime));
 	// 004: Capacités serveur
 	sendServerRpl(user->getSocketFd(), RPL_MYINFO(nick, SERVER_NAME, SERVER_VERSION, "iwso", "mtklbv", "lv"));	// Channel modes avec paramètres
-
+	sendServerRpl(user->getSocketFd(), RPL_ISUPPORT(nick, "NICKLEN=9 CHANTYPES=# PREFIX=(ov)@+ :are supported by this server"));
 	// Erreur MOTD manquant (à remplacer par l'implémentation complète si besoin)
 	sendServerRpl(user->getSocketFd(), ERR_NOMOTD(nick));
 }

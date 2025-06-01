@@ -1,4 +1,16 @@
-#include "Server.hpp"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   core.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
+/*   Updated: 2025/06/01 23:36:52 by gtraiman         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "all.hpp"
 
 void	Server::loadCmds(void)
 {
@@ -11,6 +23,7 @@ void	Server::loadCmds(void)
 	_cmds["PASS"] = &Server::cmd_PASS;
 	_cmds["NICK"] = &Server::cmd_NICK;
 	_cmds["USER"] = &Server::cmd_USER;
+	_cmds["PING"] = &Server::cmd_PING;
 
 }
 

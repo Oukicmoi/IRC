@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:51:32 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/01 20:38:49 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/01 23:41:38 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void	sendServerRpl(int const client_fd, std::string client_buffer);
 # define ERR_PASSWDMISMATCH(client) (":localhost 464 " + client + " :Password incorrect.\r\n")
 
 // PING
-# define RPL_PONG(user_id, token) (user_id + " PONG " + token + "\r\n")
+#define RPL_PONG(servername, token) (std::string(":") + servername + " PONG " + token + "\r\n")
 
 // QUIT
 /* # define RPL_QUIT(user_id, reason) (user_id + " QUIT :Quit: " + reason + "\r\n")

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_clients.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/01 21:58:07 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/01 23:36:02 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void	Server::handleMsg(int fd, const std::string& line)
 	}
 
 	IRCMessage msg(line);
-	std::cout << "LINE HERE" << line << std::endl;
 	std::map<std::string, void (Server::*)(User *, const IRCMessage &)>::iterator it = _cmds.find(msg.getCmd());
 	if (it != _cmds.end())
 	{
