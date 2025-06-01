@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/20 17:27:24 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/01 20:53:38 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,15 @@ class Server
 		
 		void	run(void);
 
+		bool	isValidNickname(const std::string& nick) const;
+		bool	isNicknameInUse(const std::string& nick) const;
+		void	broadcastToAllChannels(User* user, const std::string& message);
+		void	sendWelcomeMessages(User* user);
+
+		std::string	parseRealName(const std::vector<std::string>& params, size_t index);
+		void	processUsername(std::string& username, const std::string& fallbackNick);
+		void	EndRegister(User* user);
+
 		// void handleLine(int fd, const std::string& line);
 		
 		Channel* getOrCreateChannel(const std::string& name, User& u);
@@ -75,6 +84,10 @@ class Server
 		void	cmd_PRIVMSG(User* user, const IRCMessage &msg);
 		void	cmd_TOPIC(User* user, const IRCMessage &msg);
 		void	cmd_MSG(User* user, const IRCMessage &msg);
+		void	cmd_PASS(User* user, const IRCMessage &msg);
+		void	cmd_NICK(User* user, const IRCMessage &msg);
+		void	cmd_USER(User* user, const IRCMessage &msg);
+
 };
 
 

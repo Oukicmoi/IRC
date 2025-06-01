@@ -1,0 +1,46 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pass.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/31 18:02:13 by gtraiman          #+#    #+#             */
+/*   Updated: 2025/05/31 18:02:13 by gtraiman         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "all.hpp"
+
+void Server::cmd_PASS(User* user, const IRCMessage& msg)
+{
+    const std::vector<std::string>& params = msg.getParams();
+
+    // 1. Vérification des paramètres
+    if (params.empty())
+    {
+        sendServerRpl(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "PASS"));
+        return;
+    }
+
+    // 2. Vérification état utilisateur
+    if (user->isRegistered())
+    {
+        sendServerRpl(user->getSocketFd(), ERR_ALREADYREGISTERED(user->getNick()));
+        return;
+    }
+
+    // 3. Validation du mot de passe
+    const std::string& givenPass = params[0];
+    if (givenPass != this->_mdp)
+    {
+        sendServerRpl(user->getSocketFd(), ERR_PASSWDMISMATCH(user->getNick()));
+        // Optionnel : close(user->getSocketFd());
+        return;
+    }
+
+    // 4. Authentification réussie
+    user->setPasswordValidated(true);
+    std::cout << "[Auth] Client " << user->getSocketFd() << " (" << user->getNick() << ") authenticated\n";
+}
+
