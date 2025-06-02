@@ -29,6 +29,7 @@ bool Server::isNicknameInUse(const std::string& nick) const
 {
 	for (std::map<int, User*>::const_iterator it = _users.begin(); it != _users.end(); ++it)
 	{
+		std::cout << "OKAYYY TEST 12 12" << it->second->getNick() << std::endl;
 		if (it->second->getNick() == nick)
 			return true;
 	}

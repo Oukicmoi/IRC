@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/01 23:36:52 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/02 17:47:53 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	Server::loadCmds(void)
 	_cmds["NICK"] = &Server::cmd_NICK;
 	_cmds["USER"] = &Server::cmd_USER;
 	_cmds["PING"] = &Server::cmd_PING;
+	_cmds["QUIT"] = &Server::cmd_QUIT;
 
 }
 

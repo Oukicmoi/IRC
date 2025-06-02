@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/01 23:37:56 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/01 23:58:36 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ class Server
 		void	cmd_NICK(User* user, const IRCMessage &msg);
 		void	cmd_USER(User* user, const IRCMessage &msg);
 		void	cmd_PING(User* user, const IRCMessage &msg);
-
+		void	cmd_QUIT(User* user, const IRCMessage& msg);
 
 };
 
