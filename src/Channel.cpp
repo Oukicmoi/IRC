@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/03 19:10:52 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/03 22:29:04 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,6 @@ Channel::Channel(const std::string& name): _name(name),  _topic(""),  _inviteOnl
 const std::string& Channel::getName()  const
 {
     return _name;
-}
-const std::string& Channel::getTopic() const
-{
-    return _topic;
 }
 
 const std::set<User*>& Channel::getMembers() const
@@ -61,10 +57,6 @@ bool Channel::isOperator(User* u) const
     return _operators.count(u) != 0;
 }
 
-void Channel::setTopic(const std::string& t)
-{
-    _topic = t;
-}
 
 typedef std::map<std::string,Channel*> ChannelMap;
 
@@ -120,4 +112,17 @@ void Channel::broadcast(const std::string& message, User* except) const
         // envoie le message à chaque membre (sauf « except »)
         sendServerRpl(u->getSocketFd(), message);
     }
-}
+} 
+
+
+// TOPIC
+void Channel::setTopic(const std::string& topic) { _topic = topic; }
+std::string Channel::getTopic() const { return _topic; }
+
+void Channel::setTopicSetter(const std::string& setter) { _topicSetter = setter; }
+std::string Channel::getTopicSetter() const { return _topicSetter; }
+
+void Channel::setTopicSetTime(std::time_t t) { _topicSetTime = t; }
+std::time_t Channel::getTopicSetTime() const { return _topicSetTime; }
+
+bool Channel::isTopicProtected() const { return _topicRestricted; } // +t

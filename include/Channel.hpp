@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:26:03 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/02 23:30:12 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/03 22:28:06 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ class Channel
         std::string      _topic;
         std::set<User*>  _members;
         std::set<User*>  _operators;
+        std::string _topicSetter;
+        std::time_t _topicSetTime;
+
         bool        _inviteOnly;      // +i
         bool        _topicRestricted; // +t
         std::string _key;             // +k
@@ -35,7 +38,6 @@ class Channel
 
         // Accesseurs
         const std::string& getName()  const;
-        const std::string& getTopic() const;
 
         const std::set<User*>& getMembers() const;
         // Membres
@@ -48,8 +50,7 @@ class Channel
         void   removeOperator(User* u);
         bool   isOperator(User* u) const;
 
-        // Topic
-        void   setTopic(const std::string& t);
+
 
         // Broadcast
         void   broadcast(const std::string& message, User* except = NULL) const;
@@ -68,6 +69,21 @@ class Channel
         void removeKey() { _key = ""; }
         void setUserLimit(int n) { _userLimit = n; }
         void removeUserLimit() { _userLimit = -1; }
+
+
+        //// TOPIC
+
+        void setTopic(const std::string& topic);
+        std::string getTopic() const;
+
+        void setTopicSetter(const std::string& setter);
+        std::string getTopicSetter() const;
+
+        void setTopicSetTime(std::time_t t);
+        std::time_t getTopicSetTime() const;
+
+        bool isTopicProtected() const; // true si +t
+
 };
 
 #endif
