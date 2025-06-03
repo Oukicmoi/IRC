@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:22:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/01 20:46:20 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/03 15:13:04 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 #include <cerrno>       // errno
 #include <csignal>      // signal, sigaction
 #include <cstdlib>      // std::exit, std::atoi
+#include <ctime>
+
 
 // POSIX / Sockets / I/O non-bloquante
 #include <unistd.h>     // close, read, write, lseek

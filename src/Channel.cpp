@@ -6,13 +6,14 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/20 19:49:47 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:10:52 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.hpp"
 
-Channel::Channel(const std::string& name) : _name(name) {}                                                             
+Channel::Channel(const std::string& name): _name(name),  _topic(""),  _inviteOnly(false),  _topicRestricted(false),  _key(""),  _userLimit(-1),  _creationTime(std::time(NULL)) {}
+                                                          
 
 const std::string& Channel::getName()  const
 {
@@ -81,6 +82,20 @@ Channel* Server::getOrCreateChannel(const std::string& name, User& u)
     return ch;
 }
 
+const std::map<std::string, Channel *>& Server::getChannels() const
+{
+	return _channels;
+}
+
+std::map<std::string, Channel *>& Server::getChannels()
+{
+	return _channels;
+}
+
+void Server::setChannels(const std::map<std::string, Channel *>& channels)
+{
+	_channels = channels;
+}
 
 void	sendServerRpl(int const client_fd, std::string client_buffer)
 {

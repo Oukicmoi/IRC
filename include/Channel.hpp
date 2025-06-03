@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:26:03 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/19 15:56:11 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/02 23:30:12 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,11 @@ class Channel
         std::string      _topic;
         std::set<User*>  _members;
         std::set<User*>  _operators;
-        // + clés, limites, modes…
+        bool        _inviteOnly;      // +i
+        bool        _topicRestricted; // +t
+        std::string _key;             // +k
+        int         _userLimit;       // +l, -1 si pas de limite
+        time_t      _creationTime;    // Pour 329 RPL_CREATIONTIME
         
     public:
         Channel(const std::string& name);
@@ -49,6 +53,21 @@ class Channel
 
         // Broadcast
         void   broadcast(const std::string& message, User* except = NULL) const;
+
+        // GETTERS
+        bool        isInviteOnly() const { return _inviteOnly; }
+        bool        isTopicRestricted() const { return _topicRestricted; }
+        std::string getKey() const { return _key; }
+        int         getUserLimit() const { return _userLimit; }
+        time_t      getCreationTime() const { return _creationTime; }
+
+        //SETTERS
+        void setInviteOnly(bool b) { _inviteOnly = b; }
+        void setTopicRestricted(bool b) { _topicRestricted = b; }
+        void setKey(const std::string& k) { _key = k; }
+        void removeKey() { _key = ""; }
+        void setUserLimit(int n) { _userLimit = n; }
+        void removeUserLimit() { _userLimit = -1; }
 };
 
 #endif

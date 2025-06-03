@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/01 23:58:36 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:30:36 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ class Server
 		void	loadCmds(void);
 		bool	up(void);
 		
-		void	welcome(User *user);
 		void	cmd_CAP(User *user, const IRCMessage &msg);
 
     public:
@@ -76,6 +75,16 @@ class Server
 		void	processUsername(std::string& username, const std::string& fallbackNick);
 		void	EndRegister(User* user);
 
+
+		const std::map<std::string, Channel *>& getChannels() const;
+
+		std::map<std::string, Channel *>& getChannels();
+
+		void	setChannels(const std::map<std::string, Channel *>& channels);
+		void	sendChannelModes(User* user, Channel* c, const std::vector<std::string>& p);
+		void	applyChannelModes(User* user, Channel* c, const std::vector<std::string>& p);
+		bool	handleModeChar(User* u, Channel* c, const std::vector<std::string>& p, size_t& i, char m, bool add);
+
 		// void handleLine(int fd, const std::string& line);
 		
 		Channel* getOrCreateChannel(const std::string& name, User& u);
@@ -89,6 +98,8 @@ class Server
 		void	cmd_USER(User* user, const IRCMessage &msg);
 		void	cmd_PING(User* user, const IRCMessage &msg);
 		void	cmd_QUIT(User* user, const IRCMessage& msg);
+		void	cmd_MODE(User* user, const IRCMessage& msg);
+
 
 };
 

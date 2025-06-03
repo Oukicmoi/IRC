@@ -150,6 +150,10 @@ std::string join_rest(const std::vector<std::string>& v, size_t start)
     return result;
 }
 
+std::string User::getPrefix() const
+{
+	return _Nickname + "!" + _Username + "@" + _Host;
+}
 
 // void Server::handleLine(int fd, const std::string& line)
 // {

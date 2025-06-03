@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:21:41 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/02 00:00:36 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/03 22:12:15 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ class User
 		std::string&    getClientBuffers();
 		const std::string& getClientBuffers() const;
 		void            setClientBuffers(const std::string& buf);
+		std::string getPrefix() const;
 
 		char*           getBuffer();
 		const char*     getBuffer() const;
