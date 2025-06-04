@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 23:33:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/01 21:52:19 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/04 16:50:35 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,3 +91,11 @@ IRCMessage::~IRCMessage(void) {}
 std::string IRCMessage::getCmd(void) const { return (_cmd); }
 
 const std::vector<std::string>&  IRCMessage::getParams() const { return _params; }
+
+
+
+void IRCMessage::printParams() const
+{
+	for (size_t i = 0; i < _params.size(); ++i)
+		std::cout << "Param[" << i << "]: \"" << _params[i] << "\"" << std::endl;
+}

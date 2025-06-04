@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:49:00 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/03 22:36:04 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/04 17:19:24 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,17 @@ void Server::cmd_TOPIC(User* user, const IRCMessage& msg)
 	}
 
 	// View topic
+        msg.printParams();
 	if (p.size() == 1)
 	{
 		if (channel->getTopic().empty())
 		{
+            std::cout << "no topic" << std::endl;
 			sendServerRpl(user->getSocketFd(), RPL_NOTOPIC(user->getNick(), channelName));
 		}
 		else
 		{
+            std::cout << "a topic" << std::endl;
 			sendServerRpl(user->getSocketFd(), RPL_TOPIC(user->getNick(), channelName, channel->getTopic()));
 		}
 		return;
@@ -62,8 +65,5 @@ void Server::cmd_TOPIC(User* user, const IRCMessage& msg)
 	channel->setTopic(newTopic);
 	channel->setTopicSetter(user->getNick());
 	channel->setTopicSetTime(std::time(NULL));
-
-	channel->broadcast(":" + user->getPrefix() + " TOPIC " + channelName + " :" + newTopic);
+	channel->broadcast(":" + user->getPrefix() + " TOPIC " + channelName + " :" + newTopic + "\r\n");
 }
-
-
