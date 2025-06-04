@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:48:09 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/02 22:36:15 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/04 17:49:52 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void Server::cmd_PRIVMSG(User* user, const IRCMessage& msg)
 {
 	const std::vector<std::string>& params = msg.getParams();
 
+    msg.printParams();
 	// Vérifie qu'il y a au moins 2 paramètres (cible + message)
 	if (params.size() < 1)
 	{

@@ -6,36 +6,12 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:51:18 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/02 19:09:41 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/04 17:27:25 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.hpp"
 
-// void Server::cmd_JOIN(User* user, const IRCMessage &msg)
-// {
-//     // params[0] == "#channel"
-// 	(void)user;
-// 	(void)msg;
-    // std::string chname = params[0];
-    // std::cout << "hereeee" << std::endl;
-    // Channel*    ch = getOrCreateChannel(chname, *u);
-
-    // // si déjà membre
-    // if (! ch->addMember(u))
-    // {
-    //     // ERR_ALREADYJOINED
-    //     return;
-    // }
-    // // on notifie tout le canal
-    // std::string joinMsg = RPL_JOIN(user_id(u->getNick(), u->getUsername()), chname);
-    // ch->broadcast(joinMsg);
-// }
-
-
-// dans Server.cpp
-
-// découpe une string selon un délimiteur (vous l'avez déjà quelque part)
 extern std::vector<std::string> split(const std::string& s, char delim);
 
 void Server::cmd_JOIN(User* user, const IRCMessage& msg)

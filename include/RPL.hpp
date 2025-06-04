@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:51:32 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/01 23:41:38 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/04 19:49:22 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	sendServerRpl(int const client_fd, std::string client_buffer);
 // KICK
 # define ERR_USERNOTINCHANNEL(client, nickname, channel) ("441 " + client + " " + nickname + " " + channel + " :They aren't on that channel\r\n")
 // # define ERR_CHANOPRIVSNEEDED(client, channel) ("482 " + client + " #" +  channel + " :You're not channel operator\r\n")
-# define RPL_KICK(channel, kicked, reason) (":localhost KICK " + channel + " " + kicked + " " + reason + "\r\n\n")
+# define RPL_KICK(channel, kicked, reason) (":localhost KICK " + channel + " " + kicked + " " + reason + "\r\n")
 # define ERR_CANNOTKICKSELF(client) ("502 " + client + " :Cannot kick yourself\r\n")
 
 

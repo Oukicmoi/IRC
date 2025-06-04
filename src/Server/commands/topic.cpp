@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:49:00 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/04 17:19:24 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/04 17:27:07 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ void Server::cmd_TOPIC(User* user, const IRCMessage& msg)
 		return;
 	}
 
-	// View topic
-        msg.printParams();
 	if (p.size() == 1)
 	{
 		if (channel->getTopic().empty())
