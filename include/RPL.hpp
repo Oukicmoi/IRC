@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:51:32 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/04 19:49:22 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/05 19:51:32 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 void	sendServerRpl(int const client_fd, std::string client_buffer);
 
-# define user_id(nickname, username) (":" + nickname + "!" + username + "@localhost")
+# define user_id(nickname, username) (nickname + "!" + username + "@localhost")
 
 # define RPL_WELCOME(user_id, nickname) (":localhost 001 " + nickname + " :Welcome to the Internet Relay Network " + user_id + "\r\n")
 # define RPL_YOURHOST(client, servername, version) (":localhost 002 " + client + " :Your host is " + servername + " (localhost), running version " + version + "\r\n")

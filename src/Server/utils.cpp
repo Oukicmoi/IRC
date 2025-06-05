@@ -102,7 +102,7 @@ void Server::processUsername(std::string& username, const std::string& fallbackN
 
 void Server::EndRegister(User* user)
 {
-	if (user->isPasswordValidated() && !user->getNick().empty() && user->getUsername().empty())
+	if (user->isPasswordValidated() && !user->getNick().empty() && !user->getUsername().empty())
 	{
 		user->setRegistered(true);
 		sendWelcomeMessages(user);

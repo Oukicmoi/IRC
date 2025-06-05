@@ -27,14 +27,14 @@ void Server::cmd_USER(User* user, const IRCMessage& msg)
     }
     // Process user parameters
     std::string username = params[0];
-    const std::string& realname = parseRealName(params, 3);
+    // const std::string& realname = parseRealName(params, 3);
     
     // Validate and normalize username
     processUsername(username, user->getNick());
 
     // Update user attributes
     user->setUsername(username);
-    user->setNick(realname);
+    // user->setNick(realname);
     
     // Complete registration if possible
     EndRegister(user);
