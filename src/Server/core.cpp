@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/04 18:45:13 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/06 22:06:35 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	Server::loadCmds(void)
 	_cmds["USER"] = &Server::cmd_USER;
 	_cmds["PING"] = &Server::cmd_PING;
 	_cmds["TOPIC"] = &Server::cmd_TOPIC;
+	_cmds["INVITE"] = &Server::cmd_INVITE;
 	_cmds["MODE"] = &Server::cmd_MODE;
 	_cmds["QUIT"] = &Server::cmd_QUIT;
 
