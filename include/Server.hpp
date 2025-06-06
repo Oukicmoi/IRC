@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/04 18:44:51 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/06 22:10:10 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,9 @@ class Server
 
 		void	kickOneUser(User* kicker, Channel* chan, const std::string& targetNick, const std::string& reason);
 
-		
+	    Channel* getChannelByName(const std::string& name);
+	    User* getUserByNick(const std::string& nick);
+
 		Channel* getOrCreateChannel(const std::string& name, User& u);
 		void	cmd_JOIN(User* user, const IRCMessage &msg);
 		void	cmd_PART(User* user, const IRCMessage &msg);
@@ -103,6 +105,8 @@ class Server
 		void	cmd_QUIT(User* user, const IRCMessage& msg);
 		void	cmd_MODE(User* user, const IRCMessage& msg);
 		void	cmd_KICK(User* user, const IRCMessage& msg);
+		void	cmd_INVITE(User* user, const IRCMessage& msg);
+
 
 
 };

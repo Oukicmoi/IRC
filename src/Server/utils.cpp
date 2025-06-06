@@ -108,3 +108,23 @@ void Server::EndRegister(User* user)
 		sendWelcomeMessages(user);
 	}
 }
+
+
+Channel* Server::getChannelByName(const std::string& name)
+{
+    std::map<std::string, Channel*>::iterator it = _channels.find(name);
+    if (it == _channels.end())
+        return NULL;
+    return it->second;
+}
+
+User* Server::getUserByNick(const std::string& nick)
+{
+    for (std::map<int, User*>::iterator it = _users.begin(); it != _users.end(); ++it)
+    {
+        User* u = it->second;
+        if (u->getNick() == nick)
+            return u;
+    }
+    return NULL;
+}
