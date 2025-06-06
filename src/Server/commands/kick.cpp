@@ -81,6 +81,7 @@ void Server::cmd_KICK(User* user, const IRCMessage& msg)
     }
     Channel* chan = itChan->second;
 
+
     // Vérifier que l'utilisateur courant est opérateur
     if (!chan->isOperator(user))
     {

@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/03 22:29:04 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/06 17:57:18 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ bool Channel::isMember(User* u) const
 
 bool Channel::addOperator(User* u)
 {
-    if (!isMember(u)) return false;
+    if (!isMember(u))
+        return false;
     _operators.insert(u);
     return true;
 }
@@ -69,6 +70,8 @@ Channel* Server::getOrCreateChannel(const std::string& name, User& u)
 
     // pas trouvé, on crée
     Channel* ch = new Channel(name);
+    if (!ch->addMember(&u))
+        return(sendServerRpl(u.getSocketFd(), ERR_ALREADYJOINED(u.getNick(), name)), ch);
     ch->addOperator(&u);
     _channels[name] = ch;
     return ch;
@@ -126,3 +129,13 @@ void Channel::setTopicSetTime(std::time_t t) { _topicSetTime = t; }
 std::time_t Channel::getTopicSetTime() const { return _topicSetTime; }
 
 bool Channel::isTopicProtected() const { return _topicRestricted; } // +t
+
+
+
+
+void Channel::printOpe() const
+{
+    std::cout << "Operators on channel " << _name << " (“ _members.size() = " << _operators.size() << "):\n";
+    for (std::set<User*>::const_iterator it = _operators.begin(); it != _operators.end(); ++it)
+        std::cout << "  – " << (*it)->getNick() << "\n";
+}
