@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:51:18 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/06 17:54:19 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/06 20:20:05 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void Server::cmd_JOIN(User* user, const IRCMessage& msg)
 		// 3) création/récupération du Channel
 		Channel* ch = getOrCreateChannel(name, *user);
 
-	
+		ch->printMembers();
 		ch->printOpe();
 		// 4) tentative d'ajout
 

@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/06 20:16:56 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/06 20:36:16 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,18 @@ typedef std::map<std::string,Channel*> ChannelMap;
 Channel* Server::getOrCreateChannel(const std::string& name, User& u)
 {  
     // itérateur explicite
+    Channel* ch;
     ChannelMap::iterator it = _channels.find(name);
     if (it != _channels.end())
-        return it->second;
+        ch =  it->second;
+    else        
+        ch = new Channel(name);
 
     // pas trouvé, on crée
-    Channel* ch = new Channel(name);
     if (!ch->addMember(&u))
         return(sendServerRpl(u.getSocketFd(), ERR_ALREADYJOINED(u.getNick(), name)), ch);
-    ch->addOperator(&u);
+    if (it == _channels.end())
+        ch->addOperator(&u);
     _channels[name] = ch;
     return ch;
 }
@@ -137,12 +140,12 @@ void Channel::printOpe() const
 {
     std::cout << "Operators on channel " << _name << " (“ operators.size() = " << _operators.size() << "):\n";
     for (std::set<User*>::const_iterator it = _operators.begin(); it != _operators.end(); ++it)
-        std::cout << "  – " << (*it)->getNick() << "\n";
+        std::cout << "  - " << (*it)->getNick() << "\n";
 }
 
 void Channel::printMembers() const
 {
     std::cout << "Members on channel " << _name << " (“ _members.size() = " << _members.size() << "):\n";
     for (std::set<User*>::const_iterator it = _members.begin(); it != _members.end(); ++it)
-        std::cout << "  – " << (*it)->getNick() << "\n";
+        std::cout << "  - " << (*it)->getNick() << "\n";
 }
