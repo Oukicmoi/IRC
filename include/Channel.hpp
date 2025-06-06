@@ -84,6 +84,7 @@ class Channel
 
 		bool	isTopicProtected() const; // true si +t
 		void	printOpe() const;
+		void	printMembers() const;
 
 };
 

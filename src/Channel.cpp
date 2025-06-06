@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/06 17:57:18 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/06 20:16:56 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,14 @@ bool Channel::isTopicProtected() const { return _topicRestricted; } // +t
 
 void Channel::printOpe() const
 {
-    std::cout << "Operators on channel " << _name << " (“ _members.size() = " << _operators.size() << "):\n";
+    std::cout << "Operators on channel " << _name << " (“ operators.size() = " << _operators.size() << "):\n";
     for (std::set<User*>::const_iterator it = _operators.begin(); it != _operators.end(); ++it)
+        std::cout << "  – " << (*it)->getNick() << "\n";
+}
+
+void Channel::printMembers() const
+{
+    std::cout << "Members on channel " << _name << " (“ _members.size() = " << _members.size() << "):\n";
+    for (std::set<User*>::const_iterator it = _members.begin(); it != _members.end(); ++it)
         std::cout << "  – " << (*it)->getNick() << "\n";
 }
