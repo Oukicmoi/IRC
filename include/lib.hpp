@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:22:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/03 15:13:04 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/06 22:19:36 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,20 @@
 # define R "\033[0m"
 
 # define RED "\033[0;31m"
-# define GREEN "\033[1;32m"
-# define YELLOW "\033[1;33m"
+# define BRED "\033[1;31m"
+# define GREEN "\033[0;32m"
+# define BGREEN "\033[1;32m"
+# define YELLOW "\033[0;33m"
+# define BYELLOW "\033[1;33m"
 # define CYAN "\033[0;36m"
+# define BCYAN "\033[1;36m"
 # define MAGENTA "\033[0;35m"
+# define BMAGENTA "\033[1;35m"
 
 # define NICKLEN 9
 # define USERLEN 9
 
-#define ERR_SYS(msg) std::cerr << RED << B << "error " << msg << ": " << R << std::strerror(errno) << std::endl
+#define ERR_SYS(msg) std::cerr << BRED << "error " << msg << ": " << R << std::strerror(errno) << std::endl
 
 # include "config.hpp"
 

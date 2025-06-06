@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   up.cpp                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:37:11 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/01 23:37:15 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/06 22:19:21 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ bool	Server::init_socket(void)
 		ERR_SYS("socket");
         return (false);
     }
-	std::cout << B << CYAN << "Server Socket" << R << " (TCP/IPv4) created on " << B << "fd " << _socket_fd << R << std::endl;
+	std::cout << BCYAN << "Server Socket" << R << " (TCP/IPv4) created on " << B << "fd " << _socket_fd << R << std::endl;
 	
 	// if (setsockopt(_server_socket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &optval, sizeof(optval)) < 0){
 	// 	std::cout << "Error:\tCreation socket failed." << std::endl;
@@ -47,7 +47,7 @@ bool	Server::init_socket(void)
 		ERR_SYS("bind");
 		return (false);
     }
-	std::cout << B << CYAN << "Server Socket" << R << " bind to " << B << "port " << _port << R << std::endl;
+	std::cout << BCYAN << "Server Socket" << R << " bind to " << B << "port " << _port << R << std::endl;
 
 	// 4. Mise en écoute de la socket
     if (listen(_socket_fd, MAX_WAITING_ROOM) < 0)
@@ -55,7 +55,7 @@ bool	Server::init_socket(void)
 		ERR_SYS("listen");
 		return 1;
     }
-    std::cout << std::endl << B << CYAN << "Server Socket" << R << B << " en écoute" << R << " sur le " << B << "port " << _port << R << "..." << std::endl << std::endl << std::endl;
+    std::cout << std::endl << BCYAN << "Server Socket" << R << B << " en écoute" << R << " sur le " << B << "port " << _port << R << "..." << std::endl << std::endl << std::endl;
     return (true);
 }
 

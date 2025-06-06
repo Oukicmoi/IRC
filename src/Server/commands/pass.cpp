@@ -45,6 +45,5 @@ void Server::cmd_PASS(User* user, const IRCMessage& msg)
 
     // 4. Authentification réussie
     user->setPasswordValidated(true);
-    std::cout << "[Auth] Client " << user->getSocketFd() << " (" << user->getNick() << ") authenticated\n";
+    std::cout << "║\t[Auth] Client " << user->getSocketFd() << " (" << user->getNick() << ") authenticated\n";
 }
-

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_clients.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/04 17:27:49 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/06 22:27:58 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	Server::handleNewClients(void)
 				continue;
 			User* user = new User(client_fd);
 			_users[client_fd] = user;
-			std::cout << "\tnew " << B << "connection " << GREEN << "accepted" << R << " on " << B << "fd " << client_fd << R << std::endl;
+			std::cout << "\tnew " << B << "connection " << BGREEN << "accepted" << R << " on " << B << "fd " << client_fd << R << std::endl;
 		}
 		else
 			acceptBool = false;
@@ -106,11 +106,12 @@ void Server::handleClient(const epoll_event& ev)
 		while ((pos = buffer.find(endline)) != std::string::npos)
 		{
 			std::string line = buffer.substr(0, pos);
-			std::cout << "\tRecv: " << B << YELLOW << line << R << std::endl;
+			std::cout << "╔════ Recv: " << BYELLOW << line << R << std::endl;
 			buffer.erase(0, pos + 2);
 			// traitez 'line' comme une commande IRC complète
 			// handleLine(fd, line);
 			handleMsg(fd, line);
+			std::cout << "╚══════════" << std::endl << std::endl;
 		}
     }
     if (ev.events & (EPOLLHUP|EPOLLERR))

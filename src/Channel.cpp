@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/06 20:16:56 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/06 22:27:03 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,8 @@ void	sendServerRpl(int const client_fd, std::string client_buffer)
 	send(client_fd, client_buffer.c_str(), client_buffer.size(), 0);
 	while (getline(buf, reply))
 	{
-		std::cout << "[Server] Message sent to client " \
-				  << client_fd << "       >> " << CYAN << reply << R << std::endl;
+		std::cout << "║\t[Server] Message sent to client " \
+				  << B << client_fd << R << "       >> " << BCYAN << reply << R << std::endl;
 	}
 }
 
