@@ -50,5 +50,5 @@ void Server::cmd_NICK(User* user, const IRCMessage& msg)
         broadcastToAllChannels(user, nickChangeMsg);
     }
 
-    EndRegister(user);
+    endRegistration(user);
 }

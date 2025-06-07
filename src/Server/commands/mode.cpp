@@ -26,7 +26,7 @@ void Server::cmd_MODE(User* user, const IRCMessage& msg)
         return sendServerRpl(user->getSocketFd(), ERR_NOSUCHCHANNEL(user->getNick(), p[0]));
 
     if (p.size() == 1)
-        return sendChannelModes(user, c , p);
+        return sendChannelModesToUser(user, c , p);
 
     if (!c->isOperator(user))
         return sendServerRpl(user->getSocketFd(), ERR_CHANOPRIVSNEEDED(user->getNick(), p[0]));
@@ -35,7 +35,7 @@ void Server::cmd_MODE(User* user, const IRCMessage& msg)
 }
 
 
-void	Server::sendChannelModes(User* user, Channel* c, const std::vector<std::string>& p)
+void	Server::sendChannelModesToUser(User* user, Channel* c, const std::vector<std::string>& p)
 {
 	std::string modes = "+";
 	std::string args = "";
@@ -77,7 +77,7 @@ void	Server::applyChannelModes(User* user, Channel* c, const std::vector<std::st
 		{
 			continue; // ou return; selon la logique que tu veux
 		}
-		if (!handleModeChar(user, c, p, i, m[j], add))
+		if (!handleMode(user, c, p, i, m[j], add))
 			continue;
 	}
 
@@ -87,7 +87,7 @@ void	Server::applyChannelModes(User* user, Channel* c, const std::vector<std::st
 	c->broadcast(":" + user->getPrefix() + " " + change);
 }
 
-bool	Server::handleModeChar(User* u, Channel* c, const std::vector<std::string>& p, size_t& i, char m, bool add)
+bool	Server::handleMode(User* u, Channel* c, const std::vector<std::string>& p, size_t& i, char m, bool add)
 {
     (void)u;
 	if (m == 'i')
