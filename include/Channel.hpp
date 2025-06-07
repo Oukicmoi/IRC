@@ -83,7 +83,7 @@ class Channel
 		std::time_t	getTopicSetTime() const;
 
 		bool	isTopicProtected() const; // true si +t
-		void	printOpe() const;
+		void	printOperatorse() const;
 		void	printMembers() const;
 
 };

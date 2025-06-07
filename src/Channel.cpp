@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/07 21:19:19 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:26:43 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,8 @@
 
 Channel::Channel(const std::string& name): _name(name),  _topic(""),  _inviteOnly(false),  _topicRestricted(false),  _key(""),  _userLimit(-1),  _creationTime(std::time(NULL)) {}
                                                           
-
-const std::string& Channel::getName()  const
-{
-    return _name;
-}
-
-const std::set<User*>& Channel::getMembers() const
-{
-    return(_members);
-}
+const std::string& Channel::getName()  const { return _name; }
+const std::set<User*>& Channel::getMembers() const { return(_members); }
 
 
 bool Channel::addMember(User* u)
@@ -37,10 +29,8 @@ void Channel::removeMember(User* u)
     _members.erase(u);
     _operators.erase(u);
 }
-bool Channel::isMember(User* u) const
-{
-    return (_members.find(u) != _members.end());
-}
+bool Channel::isMember(User* u) const { return (_members.find(u) != _members.end()); }
+
 
 bool Channel::addOperator(User* u)
 {
@@ -49,14 +39,8 @@ bool Channel::addOperator(User* u)
     _operators.insert(u);
     return (true);
 }
-void Channel::removeOperator(User* u)
-{
-    _operators.erase(u);
-}
-bool Channel::isOperator(User* u) const
-{
-    return (_operators.find(u) != _operators.end());
-}
+void Channel::removeOperator(User* u) { _operators.erase(u); }
+bool Channel::isOperator(User* u) const { return (_operators.find(u) != _operators.end()); }
 
 
 typedef std::map<std::string,Channel*> ChannelMap;
@@ -80,20 +64,6 @@ Channel* Server::getOrCreateChannel(const std::string& name, User& u)
     return ch;
 }
 
-const std::map<std::string, Channel *>& Server::getChannels() const
-{
-	return _channels;
-}
-
-std::map<std::string, Channel *>& Server::getChannels()
-{
-	return _channels;
-}
-
-// void Server::setChannels(const std::map<std::string, Channel *>& channels)
-// {
-// 	_channels = channels;
-// }
 
 void Channel::broadcast(const std::string& message, User* except) const
 {
@@ -121,9 +91,7 @@ std::time_t Channel::getTopicSetTime() const { return _topicSetTime; }
 bool Channel::isTopicProtected() const { return _topicRestricted; } // +t
 
 
-
-
-void Channel::printOpe() const
+void Channel::printOperatorse() const
 {
     std::cout << "Operators on channel " << _name << " (“ operators.size() = " << _operators.size() << "):\n";
     for (std::set<User*>::const_iterator it = _operators.begin(); it != _operators.end(); ++it)

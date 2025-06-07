@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   core.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/06 22:06:35 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:24:20 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ void Server::setmdp(const std::string& password) { _mdp = password; }
 std::string Server::getmdp() const { return (_mdp); }
 unsigned int Server::getport() const { return (_port); }
 const std::map<int, User*>& Server::getUsers() const { return (_users); }
+const std::map<std::string, Channel *>& Server::getChannels() const { return (_channels); }
+std::map<std::string, Channel *>& Server::getChannels() { return (_channels); }
 
 User* Server::getUser(int fd) const
 {
@@ -88,6 +90,7 @@ User* Server::getUser(int fd) const
         return (NULL);
     return it->second;
 }
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:51:18 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/07 21:17:58 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:26:43 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void Server::cmd_JOIN(User* user, const IRCMessage& msg)
 		Channel* ch = getOrCreateChannel(name, *user);
 
 		ch->printMembers();
-		ch->printOpe();
+		ch->printOperatorse();
 		// 4) tentative d'ajout
 
 
