@@ -12,29 +12,6 @@
 
 #include "all.hpp"
 
-void Server::cmd_MODE(User* user, const IRCMessage& msg)
-{
-    const std::vector<std::string>& p = msg.getParams();
-    if (p.size() < 1)
-        return sendToUser(user->getSocketFd(), ERR_UNKNOWNCOMMAND(user->getNick(), "MODE"));
-
-    if (p[0].empty() || p[0][0] != '#')
-        return sendToUser(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));
-
-    Channel* c = getChannels()[p[0]];
-    if (!c)
-        return sendToUser(user->getSocketFd(), ERR_NOSUCHCHANNEL(user->getNick(), p[0]));
-
-    if (p.size() == 1)
-        return sendChannelModesToUser(user, c , p);
-
-    if (!c->isOperator(user))
-        return sendToUser(user->getSocketFd(), ERR_CHANOPRIVSNEEDED(user->getNick(), p[0]));
-
-    applyChannelModes(user, c, p);
-}
-
-
 void	Server::sendChannelModesToUser(User* user, Channel* c, const std::vector<std::string>& p)
 {
 	std::string modes = "+";
@@ -60,32 +37,6 @@ void	Server::sendChannelModesToUser(User* user, Channel* c, const std::vector<st
     sendToUser(user->getSocketFd(), RPL_CHANNELMODEIS(user->getNick(), p[0], modes + args));
 }
 
-void	Server::applyChannelModes(User* user, Channel* c, const std::vector<std::string>& p)
-{
-	std::string m = p[1];
-	bool add = true;
-	size_t i = 2;
-	std::string change = "MODE " + c->getName() + " " + m;
-
-	for (size_t j = 0; j < m.size(); j++)
-	{
-		if (m[j] == '+')
-			add = true;
-		else if (m[j] == '-')
-			add = false;
-		else
-		{
-			continue; // ou return; selon la logique que tu veux
-		}
-		if (!handleMode(user, c, p, i, m[j], add))
-			continue;
-	}
-
-	for (size_t k = 2; k < i; k++)
-		change += " " + p[k];
-
-	c->broadcast(":" + user->getPrefix() + " " + change);
-}
 
 bool	Server::handleMode(User* u, Channel* c, const std::vector<std::string>& p, size_t& i, char m, bool add)
 {
@@ -115,4 +66,36 @@ bool	Server::handleMode(User* u, Channel* c, const std::vector<std::string>& p, 
 	else
         return false;
 	return true;
+}
+
+
+void	Server::applyChannelModes(User* user, Channel* c, const std::vector<std::string>& params)
+{
+	// std::string change = "MODE " + c->getName() + " " + m;
+
+	
+	
+	// c->broadcast(":" + user->getPrefix() + " " + change);
+}
+
+void Server::cmd_MODE(User* user, const IRCMessage& msg)
+{
+    const std::vector<std::string>& params = msg.getParams();
+    if (params.size() < 1)
+        return sendToUser(user->getSocketFd(), ERR_UNKNOWNCOMMAND(user->getNick(), "MODE"));
+
+    if (params[0].empty() || (params[0][0] != '#'))
+        return sendToUser(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));
+
+    Channel* channel = getChannels()[params[0]];
+    if (!channel)
+        return sendToUser(user->getSocketFd(), ERR_NOSUCHCHANNEL(user->getNick(), params[0]));
+
+    if (params.size() == 1)
+        return sendChannelModesToUser(user, channel , params);
+
+    if (!channel->isOperator(user))
+        return sendToUser(user->getSocketFd(), ERR_CHANOPRIVSNEEDED(user->getNick(), params[0]));
+
+    applyChannelModes(user, channel, params);
 }
