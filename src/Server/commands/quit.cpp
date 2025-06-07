@@ -52,6 +52,10 @@ void	Server::clientQuits(int client_fd, std::string reason)
     // Retirer l'utilisateur du map _users
     delete _users[client_fd];
     _users.erase(client_fd);
+    std::cout << "\t" << B << client_fd << R << " quit the server";
+    if (reason.size())
+        std::cout << ": " << B << reason << R;
+    std::cout << std::endl;
 }
 
 
