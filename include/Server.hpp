@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/07 20:27:19 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/07 20:36:51 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ class Server
 		void	sendWelcomeMessages(User* user);
 		void	endRegister(User* user);
 
-		void	clientQuits(int client_fd, std::string &reason);
+		void	clientQuits(int client_fd, std::string reason);
 
 		////////////////////////////////////////////////////////////////////////////////////////
 

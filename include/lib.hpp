@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:22:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/06 22:19:36 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/07 20:36:32 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <sstream>      // std::istringstream, std::ostringstream
 #include <algorithm>    // std::find, std::remove_if…
 #include <cstring>      // std::memcpy, std::strlen
+#include <string>
 #include <cerrno>       // errno
 #include <csignal>      // signal, sigaction
 #include <cstdlib>      // std::exit, std::atoi

@@ -14,7 +14,7 @@
 
 // src/Server/commands/quit.cpp
 
-void	Server::clientQuits(int client_fd, std::string &reason)
+void	Server::clientQuits(int client_fd, std::string reason)
 {
 	if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, client_fd, NULL) == -1)
 		ERR_SYS("epoll_ctl DEL");
