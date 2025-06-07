@@ -6,16 +6,11 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/06 22:27:58 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/07 20:51:15 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-
-// void	Server::welcome(User *user)
-// {
-// 	send(user->getFd(), , MSG_DONTWAIT | MSG_NOSIGNAL);
-// }
 
 void	Server::handleNewClients(void)
 {
@@ -28,7 +23,7 @@ void	Server::handleNewClients(void)
 		{
 			if (!set_non_blocking_socket(client_fd))
 				continue;
-			if (!add_to_epoll(client_fd, EPOLLIN | EPOLLET | EPOLLOUT))
+			if (!add_to_epoll(client_fd, EPOLLIN | EPOLLET | EPOLLOUT | EPOLLRDHUP))
 				continue;
 			User* user = new User(client_fd);
 			_users[client_fd] = user;
@@ -75,30 +70,24 @@ void Server::handleClient(const epoll_event& ev)
             if (n > 0 && n < 513)
                 _users[ev.data.fd]->recvBuffer().append(buf, n);    // On stocke dans un buffer associé à ce client
             else if (n > 512)
-                write(fd,"Hola ! Message trop long la team",33);
+                write(fd,"Hola ! Message trop long la team",33); // TODO change ca
             else if (n == 0)
-			{
-                // le client a fermé la connexion
-                close(fd);
-                _users[ev.data.fd]->recvBuffer().erase();
-                return;
-            }
+				clientQuits(fd, "connection lost");
             else
 			{
                 if (errno == EAGAIN || errno == EWOULDBLOCK)
                     break;
 				else
 				{
-                    // vraie erreur
-					std::cerr << "\t";
-                    ERR_SYS("recv");
-                    close(fd);
-                    _users[ev.data.fd]->recvBuffer().erase();
-                    return;
+					if (errno == EBADF)
+						return ; // TODO :pe creer une liste de fds actifs ?
+					clientQuits(fd, "connection error");
+					return ;
                 }
             }
         }
 		std::string& buffer = _users[ev.data.fd]->recvBuffer();
+		std::cout << "⤷ Recv: '" << BYELLOW << buffer << R << "'" << std::endl;
 		size_t pos;
 		std::string endline = "\r\n";
 		if (TEST_WITH_NC)
@@ -106,7 +95,7 @@ void Server::handleClient(const epoll_event& ev)
 		while ((pos = buffer.find(endline)) != std::string::npos)
 		{
 			std::string line = buffer.substr(0, pos);
-			std::cout << "╔════ Recv: " << BYELLOW << line << R << std::endl;
+			std::cout << "╔════ Msg: " << BYELLOW << line << R << std::endl;
 			buffer.erase(0, pos + 2);
 			// traitez 'line' comme une commande IRC complète
 			// handleLine(fd, line);
@@ -114,9 +103,8 @@ void Server::handleClient(const epoll_event& ev)
 			std::cout << "╚══════════" << std::endl << std::endl;
 		}
     }
-    if (ev.events & (EPOLLHUP|EPOLLERR))
-	{
-        close(fd);
-        _users[ev.data.fd]->recvBuffer().erase();
-    }
+    else if (ev.events & (EPOLLHUP|EPOLLRDHUP))
+		clientQuits(fd, "connection hang up");
+	else if (ev.events & EPOLLERR)
+		ERR_SYS("epoll event: EPOLLERR");
 }
