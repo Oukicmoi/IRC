@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/07 21:17:58 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/07 22:00:18 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ void Server::handleClient(const epoll_event& ev)
 			std::cout << "╔════ Msg: " << BYELLOW << line << R << std::endl;
 			buffer.erase(0, pos + 2);
 			// traitez 'line' comme une commande IRC complète
-			// handleLine(fd, line);
 			handleMsg(fd, line);
 			std::cout << "╚══════════" << std::endl << std::endl;
 		}

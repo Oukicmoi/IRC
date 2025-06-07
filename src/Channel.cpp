@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/07 21:29:38 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/07 22:03:30 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void Channel::broadcast(const std::string& message, User* except) const
         if (u == except)
             continue;
         // envoie le message à chaque membre (sauf « except »)
-        sendToUser(u->getSocketFd(), message);
+        Server::sendToUser(u->getSocketFd(), message);
     }
 } 
 
