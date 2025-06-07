@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/07 21:17:58 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:19:19 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,19 +94,6 @@ std::map<std::string, Channel *>& Server::getChannels()
 // {
 // 	_channels = channels;
 // }
-
-void	sendToUser(int const client_fd, std::string client_buffer)
-{
-	std::istringstream	buf(client_buffer);
-	std::string			reply;
-	
-	send(client_fd, client_buffer.c_str(), client_buffer.size(), 0);
-	while (getline(buf, reply))
-	{
-		std::cout << "║\t[Server] Message sent to client " \
-				  << B << client_fd << R << "       >> " << BCYAN << reply << R << std::endl;
-	}
-}
 
 void Channel::broadcast(const std::string& message, User* except) const
 {
