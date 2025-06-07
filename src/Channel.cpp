@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/06 22:56:49 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/07 18:21:57 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,15 @@ void Channel::removeMember(User* u)
 }
 bool Channel::isMember(User* u) const
 {
-    return _members.count(u) != 0;
+    return (_members.find(u) != _members.end());
 }
 
 bool Channel::addOperator(User* u)
 {
     if (!isMember(u))
-        return false;
+        return (false);
     _operators.insert(u);
-    return true;
+    return (true);
 }
 void Channel::removeOperator(User* u)
 {
@@ -55,7 +55,7 @@ void Channel::removeOperator(User* u)
 }
 bool Channel::isOperator(User* u) const
 {
-    return _operators.count(u) != 0;
+    return (_operators.find(u) != _operators.end());
 }
 
 
@@ -90,10 +90,10 @@ std::map<std::string, Channel *>& Server::getChannels()
 	return _channels;
 }
 
-void Server::setChannels(const std::map<std::string, Channel *>& channels)
-{
-	_channels = channels;
-}
+// void Server::setChannels(const std::map<std::string, Channel *>& channels)
+// {
+// 	_channels = channels;
+// }
 
 void	sendServerRpl(int const client_fd, std::string client_buffer)
 {
