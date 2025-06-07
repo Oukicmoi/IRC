@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/07 21:26:43 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:29:38 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,14 @@ Channel::Channel(const std::string& name): _name(name),  _topic(""),  _inviteOnl
                                                           
 const std::string& Channel::getName()  const { return _name; }
 const std::set<User*>& Channel::getMembers() const { return(_members); }
+
+Channel* Server::getChannelByName(const std::string& name)
+{
+    std::map<std::string, Channel*>::iterator it = _channels.find(name);
+    if (it == _channels.end())
+        return NULL;
+    return it->second;
+}
 
 
 bool Channel::addMember(User* u)
