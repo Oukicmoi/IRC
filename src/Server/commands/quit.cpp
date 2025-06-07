@@ -13,13 +13,13 @@
 #include "all.hpp"
 
 // src/Server/commands/quit.cpp
-void Server::cmd_QUIT(User* user, const IRCMessage& msg)
-{
-    std::string reason = "Quit: ";
-    if (!msg.getParams().empty())
-        reason += msg.getParams()[0];
 
-    std::string quitMsg = ":" + user_id(user->getNick(), user->getUsername()) + " QUIT :" + reason + "\r\n";
+void	Server::clientQuits(int client_fd, std::string &reason)
+{
+	if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, client_fd, NULL) == -1)
+		ERR_SYS("epoll_ctl DEL");
+
+	std::string quitMsg = ":" + user_id(_users[client_fd]->getNick(), _users[client_fd]->getUsername()) + " QUIT :" + reason + "\r\n";
 
     // Diffuser QUIT à tous les channels où est présent l'utilisateur
     for (std::map<std::string, Channel*>::iterator it = this->_channels.begin(); it != this->_channels.end(); )
@@ -27,29 +27,43 @@ void Server::cmd_QUIT(User* user, const IRCMessage& msg)
         Channel* chan = it->second;
 
         // S'il est dans ce channel
-        if (chan->getMembers().count(user))
+        if (chan->getMembers().find(_users[client_fd]) != chan->getMembers().end())
         {
-            chan->broadcast(quitMsg, user);  // envoyer aux autres
-            chan->removeMember(user);        // le retirer
+            chan->broadcast(quitMsg, _users[client_fd]);  // envoyer aux autres
+            chan->removeMember(_users[client_fd]);        // le retirer
 
             // S'il ne reste plus personne dans le channel, on peut le supprimer
             if (chan->getMembers().empty())
             {
                 delete chan;
-                this->_channels.erase(it++);
+                it = this->_channels.erase(it);
                 continue;
             }
+            else
+                it ++;
         }
-        ++it;
+        else
+            it ++;
     }
 
     // Optionnel : envoyer un message d'erreur localement (pas obligatoire)
-    send(user->getSocketFd(), ("ERROR :" + reason + "\r\n").c_str(), reason.length() + 9, 0);
+    send(_users[client_fd]->getSocketFd(), ("ERROR :" + reason + "\r\n").c_str(), reason.length() + 9, 0);
 
     // Fermer la socket immédiatement
-    close(user->getSocketFd());
+    close(_users[client_fd]->getSocketFd());
 
     // Retirer l'utilisateur du map _users
-    this->_users.erase(user->getSocketFd());
-    delete user;
+    delete _users[client_fd];
+    _users.erase(client_fd);
+}
+
+
+
+void Server::cmd_QUIT(User* user, const IRCMessage& msg)
+{
+    std::string reason = "Quit: ";
+    if (!msg.getParams().empty())
+        reason += msg.getParams()[0];
+
+   
 }
