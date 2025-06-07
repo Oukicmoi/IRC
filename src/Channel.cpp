@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/07 18:21:57 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:17:58 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ Channel* Server::getOrCreateChannel(const std::string& name, User& u)
 
     // pas trouvé, on crée
     if (!ch->addMember(&u))
-        return(sendServerRpl(u.getSocketFd(), ERR_ALREADYJOINED(u.getNick(), name)), ch);
+        return(sendToUser(u.getSocketFd(), ERR_ALREADYJOINED(u.getNick(), name)), ch);
     if (it == _channels.end())
         ch->addOperator(&u);
     _channels[name] = ch;
@@ -95,7 +95,7 @@ std::map<std::string, Channel *>& Server::getChannels()
 // 	_channels = channels;
 // }
 
-void	sendServerRpl(int const client_fd, std::string client_buffer)
+void	sendToUser(int const client_fd, std::string client_buffer)
 {
 	std::istringstream	buf(client_buffer);
 	std::string			reply;
@@ -116,7 +116,7 @@ void Channel::broadcast(const std::string& message, User* except) const
         if (u == except)
             continue;
         // envoie le message à chaque membre (sauf « except »)
-        sendServerRpl(u->getSocketFd(), message);
+        sendToUser(u->getSocketFd(), message);
     }
 } 
 

@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:22:52 by octoross          #+#    #+#             */
-/*   Updated: 2025/05/20 18:17:57 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/07 20:59:28 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,6 @@
 
 # define SERVER_VERSION "1.0"
 # define SERVER_NAME "jeffrey"
-# define TEST_WITH_NC false
+# define TEST_WITH_NC true
 
 #endif

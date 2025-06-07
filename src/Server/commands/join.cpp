@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:51:18 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/06 20:20:05 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:17:58 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void Server::cmd_JOIN(User* user, const IRCMessage& msg)
 	// 1) validation
 	if (params.empty())
 	{
-		sendServerRpl(user->getSocketFd(),
+		sendToUser(user->getSocketFd(),
 			ERR_NEEDMOREPARAMS(user->getNick(), "JOIN"));
 		return;
 	}
@@ -56,12 +56,12 @@ void Server::cmd_JOIN(User* user, const IRCMessage& msg)
 		// 6) envoi du topic ou pas de topic
 		if (ch->getTopic().empty())
 		{
-			sendServerRpl(user->getSocketFd(),
+			sendToUser(user->getSocketFd(),
 				RPL_NOTOPIC(user->getNick(), name));
 		}
 		else
 		{
-			sendServerRpl(user->getSocketFd(),
+			sendToUser(user->getSocketFd(),
 				RPL_TOPIC(user->getNick(), name, ch->getTopic()));
 		}
 
@@ -75,8 +75,8 @@ void Server::cmd_JOIN(User* user, const IRCMessage& msg)
 					list += " ";
 				list += (*it)->getNick();
 			}
-			sendServerRpl(user->getSocketFd(), RPL_NAMREPLY(user->getNick(), "=", name, list));
-			sendServerRpl(user->getSocketFd(), RPL_ENDOFNAMES(user->getNick(), name));
+			sendToUser(user->getSocketFd(), RPL_NAMREPLY(user->getNick(), "=", name, list));
+			sendToUser(user->getSocketFd(), RPL_ENDOFNAMES(user->getNick(), name));
 		}
 	}
 }

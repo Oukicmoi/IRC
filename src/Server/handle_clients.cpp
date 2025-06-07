@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/07 20:51:15 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:17:58 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	Server::handleMsg(int fd, const std::string& line)
 		(this->*cmd)(user, msg);
 	}
 	else
-        sendServerRpl(fd, ERR_UNKNOWNCOMMAND(user->getNick(), msg.getCmd()));	
+        sendToUser(fd, ERR_UNKNOWNCOMMAND(user->getNick(), msg.getCmd()));	
 }
 
 void Server::handleClient(const epoll_event& ev)

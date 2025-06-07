@@ -19,7 +19,7 @@ void Server::cmd_NICK(User* user, const IRCMessage& msg)
     // 1. Vérifier la présence du nickname
     if (params.empty())
     {
-        sendServerRpl(user->getSocketFd(), ERR_NONICKNAMEGIVEN(user->getNick()));
+        sendToUser(user->getSocketFd(), ERR_NONICKNAMEGIVEN(user->getNick()));
         return;
     }
 
@@ -28,14 +28,14 @@ void Server::cmd_NICK(User* user, const IRCMessage& msg)
     // 2. Valider le format du nickname
     if (!isValidNickname(newNick))
     {
-        sendServerRpl(user->getSocketFd(), ERR_ERRONEUSNICKNAME(user->getNick(), newNick));
+        sendToUser(user->getSocketFd(), ERR_ERRONEUSNICKNAME(user->getNick(), newNick));
         return;
     }
 
     // 3. Vérifier la disponibilité du nickname
     if (isNicknameInUse(newNick))
     {
-        sendServerRpl(user->getSocketFd(), ERR_NICKNAMEINUSE(user->getNick(), newNick));
+        sendToUser(user->getSocketFd(), ERR_NICKNAMEINUSE(user->getNick(), newNick));
         return;
     }
 

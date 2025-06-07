@@ -54,14 +54,14 @@ void Server::sendWelcomeMessages(User* user)
 	const std::string& nick = user->getNick();
 	//const std::string datetime = "May 2024"; // À remplacer par la date réelle de création
 	
-	sendServerRpl(user->getSocketFd(), RPL_WELCOME(user_id(user->getNick(), user->getUsername()), nick));
-	sendServerRpl(user->getSocketFd(), RPL_YOURHOST(nick, SERVER_NAME, SERVER_VERSION));
-	// sendServerRpl(user->getSocketFd(), RPL_CREATED(nick, datetime));
+	sendToUser(user->getSocketFd(), RPL_WELCOME(user_id(user->getNick(), user->getUsername()), nick));
+	sendToUser(user->getSocketFd(), RPL_YOURHOST(nick, SERVER_NAME, SERVER_VERSION));
+	// sendToUser(user->getSocketFd(), RPL_CREATED(nick, datetime));
 	// 004: Capacités serveur
-	sendServerRpl(user->getSocketFd(), RPL_MYINFO(nick, SERVER_NAME, SERVER_VERSION, "iwso", "mtklbv", "lv"));	// Channel modes avec paramètres
-	sendServerRpl(user->getSocketFd(), RPL_ISUPPORT(nick, "NICKLEN=9 CHANTYPES=# PREFIX=(ov)@+ :are supported by this server"));
+	sendToUser(user->getSocketFd(), RPL_MYINFO(nick, SERVER_NAME, SERVER_VERSION, "iwso", "mtklbv", "lv"));	// Channel modes avec paramètres
+	sendToUser(user->getSocketFd(), RPL_ISUPPORT(nick, "NICKLEN=9 CHANTYPES=# PREFIX=(ov)@+ :are supported by this server"));
 	// Erreur MOTD manquant (à remplacer par l'implémentation complète si besoin)
-	sendServerRpl(user->getSocketFd(), ERR_NOMOTD(nick));
+	sendToUser(user->getSocketFd(), ERR_NOMOTD(nick));
 }
 
 

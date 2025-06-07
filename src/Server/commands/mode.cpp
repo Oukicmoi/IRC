@@ -16,20 +16,20 @@ void Server::cmd_MODE(User* user, const IRCMessage& msg)
 {
     const std::vector<std::string>& p = msg.getParams();
     if (p.size() < 1)
-        return sendServerRpl(user->getSocketFd(), ERR_UNKNOWNCOMMAND(user->getNick(), "MODE"));
+        return sendToUser(user->getSocketFd(), ERR_UNKNOWNCOMMAND(user->getNick(), "MODE"));
 
     if (p[0].empty() || p[0][0] != '#')
-        return sendServerRpl(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));
+        return sendToUser(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));
 
     Channel* c = getChannels()[p[0]];
     if (!c)
-        return sendServerRpl(user->getSocketFd(), ERR_NOSUCHCHANNEL(user->getNick(), p[0]));
+        return sendToUser(user->getSocketFd(), ERR_NOSUCHCHANNEL(user->getNick(), p[0]));
 
     if (p.size() == 1)
         return sendChannelModesToUser(user, c , p);
 
     if (!c->isOperator(user))
-        return sendServerRpl(user->getSocketFd(), ERR_CHANOPRIVSNEEDED(user->getNick(), p[0]));
+        return sendToUser(user->getSocketFd(), ERR_CHANOPRIVSNEEDED(user->getNick(), p[0]));
 
     applyChannelModes(user, c, p);
 }
@@ -57,7 +57,7 @@ void	Server::sendChannelModesToUser(User* user, Channel* c, const std::vector<st
         args += " " + ss.str();
 
 	}
-    sendServerRpl(user->getSocketFd(), RPL_CHANNELMODEIS(user->getNick(), p[0], modes + args));
+    sendToUser(user->getSocketFd(), RPL_CHANNELMODEIS(user->getNick(), p[0], modes + args));
 }
 
 void	Server::applyChannelModes(User* user, Channel* c, const std::vector<std::string>& p)

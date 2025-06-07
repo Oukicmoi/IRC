@@ -18,10 +18,10 @@ void Server::cmd_PING(User* user, const IRCMessage& msg)
 
 	if (params.empty())
 	{
-		sendServerRpl(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "PING"));
+		sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "PING"));
 		return;
 	}
 
 	std::string token = params[0];
-	sendServerRpl(user->getSocketFd(), RPL_PONG("localhost", token));
+	sendToUser(user->getSocketFd(), RPL_PONG("localhost", token));
 }

@@ -19,14 +19,14 @@ void Server::cmd_PASS(User* user, const IRCMessage& msg)
     // 1. Vérification des paramètres
     if (params.empty())
     {
-        sendServerRpl(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "PASS"));
+        sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "PASS"));
         return;
     }
 
     // 2. Vérification état utilisateur
     if (user->isRegistered())
     {
-        sendServerRpl(user->getSocketFd(), ERR_ALREADYREGISTERED(user->getNick()));
+        sendToUser(user->getSocketFd(), ERR_ALREADYREGISTERED(user->getNick()));
         return;
     }
 
@@ -36,7 +36,7 @@ void Server::cmd_PASS(User* user, const IRCMessage& msg)
     std::cout << "mdp : " << this->_mdp <<  std::endl;
     if (givenPass != this->_mdp)
     {
-        sendServerRpl(user->getSocketFd(), ERR_PASSWDMISMATCH(user->getNick()));
+        sendToUser(user->getSocketFd(), ERR_PASSWDMISMATCH(user->getNick()));
         // Optionnel : close(user->getSocketFd());
         return;
     }

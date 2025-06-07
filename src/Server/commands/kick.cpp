@@ -40,7 +40,7 @@ void Server::kickOneUser(User* kicker, Channel* chan, const std::string& targetN
     }
     // ERR_USERNOTINCHANNEL si l'utilisateur n'existe pas ou n'est pas membre
     if (target == NULL || ! chan->isMember(target))
-                return(sendServerRpl(kicker->getSocketFd(), ERR_USERNOTINCHANNEL(kicker->getNick(), targetNick, chan->getName())),(void)target);
+                return(sendToUser(kicker->getSocketFd(), ERR_USERNOTINCHANNEL(kicker->getNick(), targetNick, chan->getName())),(void)target);
     
     if(reason.empty())
         chan->broadcast(RPL_KICK(chan->getName(), targetNick, ":No reason"), NULL);
@@ -53,7 +53,7 @@ void Server::cmd_KICK(User* user, const IRCMessage& msg)
 {
     const std::vector<std::string>& p = msg.getParams();
     if (p.size() < 2)
-        return(sendServerRpl(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "KICK")), (void)p);
+        return(sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "KICK")), (void)p);
 
     msg.printParams();
     const std::string& channelName = p[0];
@@ -65,13 +65,13 @@ void Server::cmd_KICK(User* user, const IRCMessage& msg)
     // Vérifier que le channel existe
     std::map<std::string, Channel*>::iterator itChan = _channels.find(channelName);
     if (itChan == _channels.end())
-        return(sendServerRpl(user->getSocketFd(), ERR_NOSUCHCHANNEL(user->getNick(), channelName)),(void)p);
+        return(sendToUser(user->getSocketFd(), ERR_NOSUCHCHANNEL(user->getNick(), channelName)),(void)p);
     Channel* chan = itChan->second;
 
     chan->printMembers();
     // Vérifier que l'utilisateur courant est opérateur
     if (!chan->isOperator(user))
-        return(sendServerRpl(user->getSocketFd(), ERR_CHANOPRIVSNEEDED(user->getNick(), channelName)), (void)p);
+        return(sendToUser(user->getSocketFd(), ERR_CHANOPRIVSNEEDED(user->getNick(), channelName)), (void)p);
     std::cout << "HEREEEEEEEE" << std::endl;
     // Découper la liste des cibles séparées par ','
     std::vector<std::string> targets = splitComma(userList);

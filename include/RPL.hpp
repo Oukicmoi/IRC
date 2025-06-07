@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   RPL.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:51:32 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/05 19:51:32 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:17:58 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 # include <iostream>
 
-void	sendServerRpl(int const client_fd, std::string client_buffer);
+void	sendToUser(int const client_fd, std::string client_buffer);
 
 # define user_id(nickname, username) (nickname + "!" + username + "@localhost")
 

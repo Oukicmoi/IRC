@@ -17,12 +17,12 @@ void Server::cmd_USER(User* user, const IRCMessage& msg)
     const std::vector<std::string>& params = msg.getParams();
     if (params.size() < 4)
     {
-        sendServerRpl(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "USER"));
+        sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "USER"));
         return;
     }
     if (user->isRegistered())
     {
-        sendServerRpl(user->getSocketFd(), ERR_ALREADYREGISTERED(user->getNick()));
+        sendToUser(user->getSocketFd(), ERR_ALREADYREGISTERED(user->getNick()));
         return;
     }
     // Process user parameters
