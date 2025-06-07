@@ -65,7 +65,7 @@ void Server::sendWelcomeMessages(User* user)
 }
 
 
-std::string Server::parseRealName(const std::vector<std::string>& params, size_t index)
+std::string Server::parseUserName(const std::vector<std::string>& params, size_t index)
 {
     if (index >= params.size())
     	return "";
@@ -100,7 +100,7 @@ void Server::processUsername(std::string& username, const std::string& fallbackN
 }
 
 
-void Server::EndRegister(User* user)
+void Server::endRegister(User* user)
 {
 	if (user->isPasswordValidated() && !user->getNick().empty() && !user->getUsername().empty())
 	{

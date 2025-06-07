@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/06 22:10:10 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/07 20:27:19 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,55 +49,72 @@ class Server
 		void	loadCmds(void);
 		bool	up(void);
 		
-		void	cmd_CAP(User *user, const IRCMessage &msg);
 
     public:
+		// SERVER CORE (construcors, destructors, overloads, setters, getters) ///////////////////
 		Server(void);
 		Server(unsigned int port);
 		Server(const std::string& password);
 		Server(unsigned int port, const std::string& password);
 		~Server(void);
 
+		
 		void setmdp(const std::string& password);
 		std::string getmdp() const;
 		unsigned int getport() const;
+
 		const std::map<int, User*>&  getUsers() const;
 		User*   getUser(int fd) const;
+	    User* getUserByNick(const std::string& nick);
 		
-		void	run(void);
+		const std::map<std::string, Channel *>& getChannels() const;
+		std::map<std::string, Channel *>& getChannels();
+	    Channel* getChannelByName(const std::string& name);
 
+		// void	setChannels(const std::map<std::string, Channel *>& channels);
+
+		//////////////////////////////////////////////////////////////////////////////////////////
+		
+		
+		// USER handling ////////////////////////////////////////////////////////////////////
 		bool	isValidNickname(const std::string& nick) const;
 		bool	isNicknameInUse(const std::string& nick) const;
-		void	broadcastToAllChannels(User* user, const std::string& message);
-		void	sendWelcomeMessages(User* user);
-
-		std::string	parseRealName(const std::vector<std::string>& params, size_t index);
+		
+		std::string	parseUserName(const std::vector<std::string>& params, size_t index);
 		void	processUsername(std::string& username, const std::string& fallbackNick);
-		void	EndRegister(User* user);
+		
+		void	sendWelcomeMessages(User* user);
+		void	endRegister(User* user);
+
+		void	clientQuits(int client_fd, std::string &reason);
+
+		////////////////////////////////////////////////////////////////////////////////////////
 
 
-		const std::map<std::string, Channel *>& getChannels() const;
+		
+		// CHANNEL HANDLING ///////////////////////////////////////////////////////////////////
 
-		std::map<std::string, Channel *>& getChannels();
+		void	broadcastToAllChannels(User* user, const std::string& message);
 
-		void	setChannels(const std::map<std::string, Channel *>& channels);
-		void	sendChannelModes(User* user, Channel* c, const std::vector<std::string>& p);
+		Channel* getOrCreateChannel(const std::string& name, User& u);
+
+		void	sendChannelModesToUser(User* user, Channel* c, const std::vector<std::string>& p);
 		void	applyChannelModes(User* user, Channel* c, const std::vector<std::string>& p);
-		bool	handleModeChar(User* u, Channel* c, const std::vector<std::string>& p, size_t& i, char m, bool add);
-
-		// void handleLine(int fd, const std::string& line);
+		bool	handleMode(User* u, Channel* c, const std::vector<std::string>& p, size_t& i, char m, bool add);
 
 		void	kickOneUser(User* kicker, Channel* chan, const std::string& targetNick, const std::string& reason);
 
-	    Channel* getChannelByName(const std::string& name);
-	    User* getUserByNick(const std::string& nick);
+		//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		Channel* getOrCreateChannel(const std::string& name, User& u);
+
+		
+		// COMMANDS //////////////////////////////////////////////////////////////////////////////////////////
+	
 		void	cmd_JOIN(User* user, const IRCMessage &msg);
 		void	cmd_PART(User* user, const IRCMessage &msg);
 		void	cmd_PRIVMSG(User* user, const IRCMessage &msg);
 		void	cmd_TOPIC(User* user, const IRCMessage &msg);
-		void	cmd_MSG(User* user, const IRCMessage &msg);
+		// void	cmd_MSG(User* user, const IRCMessage &msg);
 		void	cmd_PASS(User* user, const IRCMessage &msg);
 		void	cmd_NICK(User* user, const IRCMessage &msg);
 		void	cmd_USER(User* user, const IRCMessage &msg);
@@ -106,9 +123,11 @@ class Server
 		void	cmd_MODE(User* user, const IRCMessage& msg);
 		void	cmd_KICK(User* user, const IRCMessage& msg);
 		void	cmd_INVITE(User* user, const IRCMessage& msg);
+		// void	cmd_CAP(User *user, const IRCMessage &msg);
 
+		///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+		void	run(void);
 };
 
 
