@@ -36,14 +36,11 @@ void	Server::clientQuits(int client_fd, std::string &reason)
             if (chan->getMembers().empty())
             {
                 delete chan;
-                it = this->_channels.erase(it);
+                _channels.erase(it ++);
                 continue;
             }
-            else
-                it ++;
         }
-        else
-            it ++;
+        it ++;
     }
 
     // Optionnel : envoyer un message d'erreur localement (pas obligatoire)
@@ -65,5 +62,5 @@ void Server::cmd_QUIT(User* user, const IRCMessage& msg)
     if (!msg.getParams().empty())
         reason += msg.getParams()[0];
 
-   
+   clientQuits(user->getSocketFd(), reason);
 }
