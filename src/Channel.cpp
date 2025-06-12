@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/12 22:50:56 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/12 23:23:34 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,12 @@ void	Channel::mode_operators(bool sign, User *user, User *target)
 			if (sign)
 				_operators.insert(target);
 			else
-				_operators.erase(target);
+			{
+				if (_operators.size() == 1)
+					return Server::sendToUser(user->getSocketFd(), ERR_LASTCHANOP(user->getNick(), _name));
+				else
+					_operators.erase(target);
+			}
 			broadcast(":" + user->getPrefix() + " MODE #" + _name + " " + (sign ? "+" : "-") + "o" + + "\r\n");
 		}
 		

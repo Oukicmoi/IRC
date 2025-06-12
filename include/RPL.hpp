@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:51:32 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/12 20:13:49 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/12 23:22:56 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ void	sendToUser(int const client_fd, std::string client_buffer);
 #define ERR_CANNOTREMOVEOP(client, channel) (":localhost 461 " + client + " " + channel + " :Operator can't be removed\r\n")
 
 /* channel mode */
+// TODO 472 ERR_UNKNOWNMODE 
+# define ERR_LASTCHANOP(nickUser, channel) (":localhost 484 " + nickUser + channel + " :You are the last channel operator")
 #define MODE_CHANNELMSG(channel, mode) (":localhost MODE " + channel + " " + mode + "\r\n")
 #define MODE_CHANNELMSGWITHPARAM(channel, mode, param) (":localhost MODE " + channel + " " + mode + " " + param + "\r\n")
 #define RPL_CHANNELMODEIS(client, channel, mode) (":localhost 324 " + client + " " + channel + " " + mode + "\r\n")

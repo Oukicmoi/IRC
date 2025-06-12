@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/12 20:29:15 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/12 23:13:48 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void Server::handleClient(const epoll_event& ev)
 				else
 				{
 					if (errno == EBADF)
-						return ; // TODO :pe creer une liste de fds actifs ?
+						return ;
 					clientQuits(fd, "connection error");
 					return ;
                 }
