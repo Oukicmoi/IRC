@@ -84,12 +84,9 @@ void	Server::applyChannelMode(char mode, bool sign, User *user, Channel *channel
 
 void	Server::applyChannelModes(User* user, Channel* channel, std::vector<std::string> &params)
 {
-	// std::string change = "MODE " + c->ge
-	// 
-	// tName() + " " + m;
+	bool	oneValid = false;
 	while (!params.empty())
 	{
-		// bad parameter
 		std::string &param = params[0];
 		if (param.empty())
 			params.erase(params.begin());
@@ -100,13 +97,15 @@ void	Server::applyChannelModes(User* user, Channel* channel, std::vector<std::st
 			;
 		else
 		{
+			oneValid = true;
 			unsigned int i = 1;
 			while (i < param.size())
 				applyChannelMode(param[i ++], sign, user, channel, params);
 		}
 		params.erase(params.begin());
 	}
-	// c->broadcast(":" + user->getPrefix() + " " + change);
+	if (!oneValid)
+		sendToUser(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));
 }
 
 void	Server::sendChannelModesToUser(User* user, Channel* channel, const std::vector<std::string>& params)
