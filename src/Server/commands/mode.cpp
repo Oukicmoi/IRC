@@ -58,7 +58,11 @@ void	Server::applyChannelMode(char mode, bool sign, User *user, Channel *channel
 			sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(_server_name, channel->getName(), "l", "You must specify a parameter for the operator mode"));
 		else
 		{
-			channel->mode_operators(sign, user, *it);
+			User *target = getUserByNick(*it);
+			if (!target)
+				sendToUser(user->getSocketFd(), ERR_NOSUCHNICK(_server_name, *it));
+			else
+				channel->mode_operators(sign, user, target);
 			params.erase(it);
 		}
 	}
@@ -71,12 +75,12 @@ void	Server::applyChannelMode(char mode, bool sign, User *user, Channel *channel
 				sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(_server_name, channel->getName(), "l", "You must specify a parameter for the limit mode"));
 			else
 			{
-				channel->mode_userLimit(sign, userPrefix, &(*it));
+				channel->mode_userLimit(sign, user, &(*it));
 				params.erase(it);
 			}
 		}
 		else
-			channel->mode_userLimit(sign, userPrefix);
+			channel->mode_userLimit(sign, user);
 	}
 	else
 		sendToUser(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));

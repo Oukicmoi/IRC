@@ -13,8 +13,10 @@
 # ifndef CHANNEL_HPP
 #define CHANNEL_HPP
 
+class Server;
 
 #include "User.hpp"
+#include "Server.hpp"
 
 class Channel
 {
@@ -35,10 +37,11 @@ class Channel
 
 		std::set<User*>  _members;
 		std::set<User*>  _operators;
+		Server			&_server;
 
 		
 	public:
-		Channel(const std::string& name);
+		Channel(const std::string& name, Server &server);
 
 		// Accesseurs
 		const std::string&	getName()  const;
@@ -97,8 +100,8 @@ class Channel
 		void	mode_invite(bool sign, std::string &userPrefix);
 		void	mode_topicRestriction(bool sign, std::string &userPrefix);
 		void	mode_key(bool sign, std::string &userPrefix, std::string *password = NULL);
-		void	mode_operators(bool sign, User* user, std::string &userNick);
-		void	mode_userLimit(bool sign, std::string &userPrefix, std::string *limit = NULL);
+		void	mode_operators(bool sign, User* user, User *target);
+		void	mode_userLimit(bool sign, User *user, std::string *limit = NULL);
 
 };
 

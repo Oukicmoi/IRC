@@ -6,19 +6,20 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/12 21:15:45 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/12 22:46:32 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # ifndef SERVER_HPP
 #define SERVER_HPP
 
+class IRCMessage;
+class Channel;
+
 # include "lib.hpp"
 # include "User.hpp"
 # include "Channel.hpp"
 # include "IRCMessage.hpp"
-
-class IRCMessage;
 
 class Server
 {
@@ -59,6 +60,7 @@ class Server
 		~Server(void);
 
 		
+		const std::string &getServerName(void) const { return (_server_name); } 
 		void setmdp(const std::string& password);
 		std::string getmdp() const;
 		unsigned int getport() const;

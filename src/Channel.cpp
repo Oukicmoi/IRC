@@ -6,13 +6,13 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/12 21:35:37 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/12 22:50:56 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.hpp"
 
-Channel::Channel(const std::string& name):
+Channel::Channel(const std::string& name, Server &server):
 	_inviteOnly(false),
 	_topicRestricted(false),
 	_hasKey(false),
@@ -22,7 +22,8 @@ Channel::Channel(const std::string& name):
 	_name(name),
 	_key(""),
 	_topic(""),
-	_topicSetter("") {}
+	_topicSetter(""),
+	_server(server) {}
 	
                                                           
 const std::string& Channel::getName()  const { return _name; }
@@ -72,7 +73,7 @@ Channel* Server::getOrCreateChannel(const std::string& name, User& u)
     if (it != _channels.end())
         ch =  it->second;
     else        
-        ch = new Channel(name);
+        ch = new Channel(name, *this);
 
     // pas trouvé, on crée
     if (!ch->addMember(&u))
@@ -132,7 +133,7 @@ void	Channel::mode_invite(bool sign, std::string &userPrefix)
 {
 	_inviteOnly = sign;
 	std::cout << "MODE i: sign " << sign << std::endl;
-	broadcast(":" + userPrefix + " MODE #" + _name + " " + (sign? "+" : "-") + "i");
+	broadcast(":" + userPrefix + " MODE #" + _name + " " + (sign? "+" : "-") + "i\r\n");
 }
 
 //  Set/remove the restrictions of the TOPIC command to channel operators
@@ -140,29 +141,69 @@ void	Channel::mode_topicRestriction(bool sign, std::string &userPrefix)
 {
 	_topicRestricted = sign;
 	std::cout << "MODE t: sign " << sign << std::endl;
-	broadcast(":" + userPrefix + " MODE #" + _name + " " + (sign? "+" : "-") + "t");
+	broadcast(":" + userPrefix + " MODE #" + _name + " " + (sign? "+" : "-") + "t\r\n");
 }
 
 // Set/remove the channel key (password)
 void	Channel::mode_key(bool sign, std::string &userPrefix, std::string *password)
 {
-	(void)sign;
-	(void)password;
-	(void)userPrefix;
+	_hasKey = sign;
+	std::cout << "MODE k: sign " << sign << *password << std::endl;
+	if (_hasKey && password)
+	{
+		_key = *password;
+		broadcast(":" + userPrefix + " MODE #" + _name + " " + (sign? "+" : "-") + "k" + " " + _key + "\r\n");
+	}
+	else
+	{
+		_hasKey = false;
+		broadcast(":" + userPrefix + " MODE #" + _name + " " + "-k\r\n");
+	}
 }
 
 // Give/take channel operator privilege
-void	Channel::mode_operators(bool sign, User *user, std::string &userNick)
+void	Channel::mode_operators(bool sign, User *user, User *target)
 {
-	(void)user;
-	(void)sign;
-	(void)userNick;
+	if (_members.find(target) == _members.end())
+		Server::sendToUser(user->getSocketFd(), ERR_USERNOTINCHANNEL(user->getNick(), target->getNick(), _name));
+	else
+	{
+		bool is_operator = (_operators.find(target) != _operators.end());
+		if (sign && is_operator)
+			Server::sendToUser(user->getSocketFd(), ":" + _server.getServerName() + " 482 " + user->getNick() + " #" + _name + " :User is already an operator\r\n");
+		else if (!sign && !is_operator)
+			Server::sendToUser(user->getSocketFd(), ":" + _server.getServerName() + " 482 " + user->getNick() + " #" + _name + " :User is not an operator\r\n");
+		else
+		{
+			if (sign)
+				_operators.insert(target);
+			else
+				_operators.erase(target);
+			broadcast(":" + user->getPrefix() + " MODE #" + _name + " " + (sign ? "+" : "-") + "o" + + "\r\n");
+		}
+		
+	}
 }
 
 //  Set/remove the user limit to channel
-void	Channel::mode_userLimit(bool sign, std::string &userPrefix, std::string *limit)
+void	Channel::mode_userLimit(bool sign, User *user, std::string *limit)
 {
-	(void)sign;
-	(void)limit;
-	(void)userPrefix;
+	std::cout << "MODE l: sign " << sign << *limit << std::endl;
+	if (sign && limit)
+	{
+		try
+		{
+			_userLimit = (int)typeOfString<unsigned int>(*limit);
+			broadcast(":" + user->getPrefix() + " MODE #" + _name + " " + "+l" + " " + *limit + "\r\n");
+		}
+		catch (std::exception &e)
+		{
+			Server::sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(_server.getServerName(), _name, "l", "Invalid limit parameter (must be a positive number)"));
+		}
+	}
+	else
+	{
+		_userLimit = -1;
+		broadcast(":" + user->getPrefix() + " MODE #" + _name + " " + "-l\r\n");
+	}
 }
