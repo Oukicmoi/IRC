@@ -12,56 +12,127 @@
 
 #include "all.hpp"
 
-// Set/remove Invite-only channel
-void	Server::handleMode_i(User* user, Channel* channel, bool sign)
+
+std::vector<std::string>::iterator	Server::getFirstNonModeArg(std::vector <std::string> &params)
 {
-	channel->_inviteOnly = sign;
+	std::vector<std::string>::iterator it = params.begin();
+	it ++;
+	while (it != params.end())
+	{
+		if ((*it).empty())
+			return (it);
+		else if (((*it)[0] != '-') && ((*it)[0] != '+'))
+			return (it);
+		it ++;
+	}
+	return (it);
 }
 
-//  Set/remove the restrictions of the TOPIC command to channel operators
-void	Server::handleMode_t(User* user, Channel* channel, bool sign)
+void	Server::applyChannelMode(char mode, bool sign, User *user, Channel *channel, std::vector<std::string> &params)
 {
-	channel->_topicRestricted = sign;
+	if (mode == 'i')
+		channel->mode_invite(sign);
+	else if (mode == 't')
+		channel->mode_topicRestriction(sign);
+	else if (mode == 'k')
+	{
+		if (sign)
+		{
+			std::vector<std::string>::iterator it = getFirstNonModeArg(params);
+			if (it == params.end())
+				sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(_server_name, channel->getName(), "k", "You must specify a parameter for the key mode"));
+			else
+			{
+				channel->mode_key(sign, &(*it));
+				params.erase(it);
+			}
+		}
+		else
+			channel->mode_key(sign);
+	}
+	else if (mode == 'o')
+	{
+		std::vector<std::string>::iterator it = getFirstNonModeArg(params);
+		if (it == params.end())
+			sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(_server_name, channel->getName(), "l", "You must specify a parameter for the operator mode"));
+		else
+		{
+			channel->mode_operators(sign, user, *it);
+			params.erase(it);
+		}
+	}
+	else if (mode == 'l')
+	{
+		if (sign)
+		{
+			std::vector<std::string>::iterator it = getFirstNonModeArg(params);
+			if (it == params.end())
+				sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(_server_name, channel->getName(), "l", "You must specify a parameter for the limit mode"));
+			else
+			{
+				channel->mode_userLimit(sign, &(*it));
+				params.erase(it);
+			}
+		}
+		else
+			channel->mode_userLimit(sign);
+	}
+	else
+		sendToUser(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));
 }
 
-// Set/remove the channel key (password)
-void	Server::handleMode_k(User* user, Channel* channel, std::string password)
-{
 
-}
-
-// Give/take channel operator privilege
-void	Server::handleMode_o(User* user, Channel* channel)
-{
-
-}
-
-//  Set/remove the user limit to channel
-void	Server::handleMode_l(User* user, Channel* channel, std::string limit)
-{
-
-}
-
-void	Server::applyChannelModes(User* user, Channel* channel, std::vector<std::string> params)
+void	Server::applyChannelModes(User* user, Channel* channel, std::vector<std::string> &params)
 {
 	// std::string change = "MODE " + c->ge
 	// 
 	// tName() + " " + m;
-	std::vector<std::string>::iterator it = params.begin();
-	while (it != params.end())
+	while (!params.empty())
 	{
-		if (*it.empty())
-			it ++;
-		else if (((*it)[0] != '-') && ((*it)[0] != '+'))
-        	return sendToUser(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));
+		// bad parameter
+		std::string &param = params[0];
+		if (param.empty())
+			params.erase(params.begin());
+		bool	sign = true;
+		if (param[0] == '-')
+			sign = false;
+		if (sign && (param[0] != '+'))
+			;
 		else
 		{
-
+			unsigned int i = 1;
+			while (i < param.size())
+				applyChannelMode(param[i ++], sign, user, channel, params);
 		}
+		params.erase(params.begin());
 	}
-	
 	// c->broadcast(":" + user->getPrefix() + " " + change);
 }
+
+void	Server::sendChannelModesToUser(User* user, Channel* channel, const std::vector<std::string>& params)
+{
+	std::string modes = "+";
+	std::string args = "";
+    std::stringstream ss;
+
+	if (channel->isInviteOnly())
+        modes += "i";
+	if (channel->isTopicRestricted())
+        modes += "t";
+	if (!channel->hasKey())
+    {
+        modes += "k";
+        args += " " + channel->getKey();
+    }
+	if (channel->getUserLimit() != -1)
+    {
+		modes += "l";
+        ss << channel->getUserLimit();
+        args += " " + ss.str();
+	}
+    sendToUser(user->getSocketFd(), RPL_CHANNELMODEIS(user->getNick(), params[0], modes + args));
+}
+
 
 void Server::cmd_MODE(User* user, IRCMessage& msg)
 {
@@ -81,7 +152,7 @@ void Server::cmd_MODE(User* user, IRCMessage& msg)
 
     if (!channel->isOperator(user))
         return sendToUser(user->getSocketFd(), ERR_CHANOPRIVSNEEDED(user->getNick(), params[0]));
+	// TODO: laisser admin serveur changer 
 
-	
     applyChannelModes(user, channel, params);
 }
