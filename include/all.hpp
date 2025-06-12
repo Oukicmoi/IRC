@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   all.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:24:19 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/16 10:40:01 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/12 22:38:46 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,21 @@
 #include "IRCMessage.hpp"
 #include "RPL.hpp"
 #include "Server.hpp"
+
+template <typename T>
+T	typeOfString(const std::string &str)
+{
+	std::istringstream iss(str);
+    T	value;
+    
+    if (!(iss >> value))
+		throw std::runtime_error(str + " can't be converted to desired type");
+
+
+	char remaining;
+	if (iss.get(remaining))
+		throw std::runtime_error(str + " can't be converted to desired type");
+    return (value);
+}
 
 #endif
