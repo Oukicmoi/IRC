@@ -29,8 +29,8 @@ class Channel
 		time_t 		_topicSetTime;
 		
 		std::string	_name;
-		std::string	_topic;
 		std::string _key;			 // +k
+		std::string	_topic;
 		std::string _topicSetter;
 
 		std::set<User*>  _members;
