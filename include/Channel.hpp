@@ -20,18 +20,22 @@ class Channel
 {
 
 	private:
-		std::string	  _name;
-		std::string	  _topic;
-		std::set<User*>  _members;
-		std::set<User*>  _operators;
-		std::string _topicSetter;
-		std::time_t _topicSetTime;
-
 		bool		_inviteOnly;	  // +i
 		bool		_topicRestricted; // +t
+		bool		_hasKey;
+		int		 	_userLimit;	   // +l, -1 si pas de limite
+		
+		time_t	  	_creationTime;	// Pour 329 RPL_CREATIONTIME
+		time_t 		_topicSetTime;
+		
+		std::string	_name;
+		std::string	_topic;
 		std::string _key;			 // +k
-		int		 _userLimit;	   // +l, -1 si pas de limite
-		time_t	  _creationTime;	// Pour 329 RPL_CREATIONTIME
+		std::string _topicSetter;
+
+		std::set<User*>  _members;
+		std::set<User*>  _operators;
+
 		
 	public:
 		Channel(const std::string& name);

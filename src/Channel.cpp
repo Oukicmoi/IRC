@@ -6,13 +6,24 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/07 22:03:30 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/12 18:17:04 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.hpp"
 
-Channel::Channel(const std::string& name): _name(name),  _topic(""),  _inviteOnly(false),  _topicRestricted(false),  _key(""),  _userLimit(-1),  _creationTime(std::time(NULL)) {}
+Channel::Channel(const std::string& name):
+	_inviteOnly(false),
+	_topicRestricted(false),
+	_hasKey(false),
+	_userLimit(-1),
+	_creationTime(std::time(NULL)),
+	_topicSetTime(std::time(NULL)),
+	_name(name),
+	_key(""),
+	_topic(""),
+	_topicSetter("") {}
+	
                                                           
 const std::string& Channel::getName()  const { return _name; }
 const std::set<User*>& Channel::getMembers() const { return(_members); }
