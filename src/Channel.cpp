@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/12 21:11:33 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/12 21:35:37 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,22 +128,27 @@ void Channel::printMembers() const
 
 
 // Set/remove Invite-only channel -+i
-void	Channel::mode_invite(bool sign)
+void	Channel::mode_invite(bool sign, std::string &userPrefix)
 {
 	_inviteOnly = sign;
+	std::cout << "MODE i: sign " << sign << std::endl;
+	broadcast(":" + userPrefix + " MODE #" + _name + " " + (sign? "+" : "-") + "i");
 }
 
 //  Set/remove the restrictions of the TOPIC command to channel operators
-void	Channel::mode_topicRestriction(bool sign)
+void	Channel::mode_topicRestriction(bool sign, std::string &userPrefix)
 {
 	_topicRestricted = sign;
+	std::cout << "MODE t: sign " << sign << std::endl;
+	broadcast(":" + userPrefix + " MODE #" + _name + " " + (sign? "+" : "-") + "t");
 }
 
 // Set/remove the channel key (password)
-void	Channel::mode_key(bool sign, std::string *password)
+void	Channel::mode_key(bool sign, std::string &userPrefix, std::string *password)
 {
 	(void)sign;
 	(void)password;
+	(void)userPrefix;
 }
 
 // Give/take channel operator privilege
@@ -155,8 +160,9 @@ void	Channel::mode_operators(bool sign, User *user, std::string &userNick)
 }
 
 //  Set/remove the user limit to channel
-void	Channel::mode_userLimit(bool sign, std::string *limit)
+void	Channel::mode_userLimit(bool sign, std::string &userPrefix, std::string *limit)
 {
 	(void)sign;
 	(void)limit;
+	(void)userPrefix;
 }

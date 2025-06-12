@@ -30,10 +30,11 @@ std::vector<std::string>::iterator	Server::getFirstNonModeArg(std::vector <std::
 
 void	Server::applyChannelMode(char mode, bool sign, User *user, Channel *channel, std::vector<std::string> &params)
 {
+	std::string userPrefix = user->getPrefix();
 	if (mode == 'i')
-		channel->mode_invite(sign);
+		channel->mode_invite(sign, userPrefix);
 	else if (mode == 't')
-		channel->mode_topicRestriction(sign);
+		channel->mode_topicRestriction(sign, userPrefix);
 	else if (mode == 'k')
 	{
 		if (sign)
@@ -43,12 +44,12 @@ void	Server::applyChannelMode(char mode, bool sign, User *user, Channel *channel
 				sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(_server_name, channel->getName(), "k", "You must specify a parameter for the key mode"));
 			else
 			{
-				channel->mode_key(sign, &(*it));
+				channel->mode_key(sign, userPrefix, &(*it));
 				params.erase(it);
 			}
 		}
 		else
-			channel->mode_key(sign);
+			channel->mode_key(sign, userPrefix);
 	}
 	else if (mode == 'o')
 	{
@@ -70,12 +71,12 @@ void	Server::applyChannelMode(char mode, bool sign, User *user, Channel *channel
 				sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(_server_name, channel->getName(), "l", "You must specify a parameter for the limit mode"));
 			else
 			{
-				channel->mode_userLimit(sign, &(*it));
+				channel->mode_userLimit(sign, userPrefix, &(*it));
 				params.erase(it);
 			}
 		}
 		else
-			channel->mode_userLimit(sign);
+			channel->mode_userLimit(sign, userPrefix);
 	}
 	else
 		sendToUser(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));
