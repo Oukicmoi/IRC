@@ -63,6 +63,7 @@ class Channel
 		bool		isInviteOnly() const { return _inviteOnly; }
 		bool		isTopicRestricted() const { return _topicRestricted; }
 		std::string	getKey() const { return _key; }
+		bool		hasKey() const { return _hasKey; }
 		int			getUserLimit() const { return _userLimit; }
 		time_t	 	getCreationTime() const { return _creationTime; }
 
