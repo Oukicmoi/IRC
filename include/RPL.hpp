@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:51:32 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/07 21:17:58 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/12 20:13:49 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,10 @@ void	sendToUser(int const client_fd, std::string client_buffer);
 #define MODE_CHANNELMSGWITHPARAM(channel, mode, param) (":localhost MODE " + channel + " " + mode + " " + param + "\r\n")
 #define RPL_CHANNELMODEIS(client, channel, mode) (":localhost 324 " + client + " " + channel + " " + mode + "\r\n")
 #define RPL_CHANNELMODEISWITHKEY(client, channel, mode, password) (":localhost 324 " + client + " " + channel + " " + mode + " " + password + "\r\n")
-#define ERR_CANNOTSENDTOCHAN(client, channel) ("localhost 404 " + client + " " + channel + " :Cannot send to channel\r\n")
+#define ERR_CANNOTSENDTOCHAN(client, channel) (":localhost 404 " + client + " " + channel + " :Cannot send to channel\r\n")
 #define ERR_CHANNELISFULL(client, channel) (":localhost 471 " + client + " " + channel + " :Cannot join channel (+l)\r\n")
 #define ERR_CHANOPRIVSNEEDED(client, channel) (":localhost 482 " + client + " " + channel + " :You're not channel operator\r\n")
-#define ERR_INVALIDMODEPARAM(client, channel, mode, password) (":localhost 696 " + client + " " + channel + " " + mode + " " + password + " : password must only contained alphabetic character\r\n")
+#define ERR_INVALIDMODEPARAM(client, channel, mode, reason) (":localhost 696 " + client + " " + channel + " " + mode + " :" + reason + "\r\n")
 // RPL_ERR a broadcoast quand user pas +v ou operator veut parler
       // dans notre cas c'était tiff (client) qui voulait send a message
       // :lair.nl.eu.dal.net 404 tiff #pop :Cannot send to channel

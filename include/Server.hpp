@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/12 19:11:16 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/12 21:07:43 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,9 @@ class Server
 
 		Channel* getOrCreateChannel(const std::string& name, User& u);
 
+			
+		std::vector<std::string>::iterator	getFirstNonModeArg(std::vector <std::string> &params);
+		void	applyChannelMode(char mode, bool sign, User *user, Channel *channel, std::vector<std::string> &params);
 		void	sendChannelModesToUser(User* user, Channel* c, const std::vector<std::string>& p);
 		void	applyChannelModes(User* user, Channel* c, const std::vector<std::string>& p);
 		bool	handleMode(User* u, Channel* c, const std::vector<std::string>& p, size_t& i, char m, bool add);
