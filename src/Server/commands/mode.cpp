@@ -104,8 +104,17 @@ void	Server::applyChannelModes(User* user, Channel* channel, std::vector<std::st
 		{
 			oneValid = true;
 			unsigned int i = 1;
+			unsigned int last_op = 0;
 			while (i < param.size())
-				applyChannelMode(param[i ++], sign, user, channel, params);
+			{
+				if ((last_op != i - 1) && (param[i] == '+') || (param[i] == '-'))
+				{
+					last_op = i;
+					sign = (param[i ++] == '+');
+				}
+				else
+					applyChannelMode(param[i ++], sign, user, channel, params);
+			}
 		}
 		params.erase(params.begin());
 	}
