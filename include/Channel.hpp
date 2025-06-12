@@ -94,11 +94,11 @@ class Channel
 
 		// MODE
 		
-		void	channelMode_invite(bool sign);
-		void	channelMode_topicRestriction(bool sign);
-		void	channelMode_key(bool sign, std::string *password = NULL);
-		void	channelMode_operators(User* user, std::string &userNick);
-		void	channelMode_userLimit(std::string &limit);
+		void	mode_invite(bool sign);
+		void	mode_topicRestriction(bool sign);
+		void	mode_key(bool sign, std::string *password = NULL);
+		void	mode_operators(User* user, std::string &userNick);
+		void	mode_userLimit(std::string &limit);
 
 };
 

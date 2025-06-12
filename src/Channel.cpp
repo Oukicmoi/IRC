@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/12 18:17:04 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/12 19:58:45 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,4 +122,37 @@ void Channel::printMembers() const
     std::cout << "Members on channel " << _name << " (“ _members.size() = " << _members.size() << "):\n";
     for (std::set<User*>::const_iterator it = _members.begin(); it != _members.end(); ++it)
         std::cout << "  - " << (*it)->getNick() << "\n";
+}
+
+// MODE changes
+
+
+// Set/remove Invite-only channel -+i
+void	Channel::mode_invite(bool sign)
+{
+	channel->_inviteOnly = sign;
+}
+
+//  Set/remove the restrictions of the TOPIC command to channel operators
+void	Channel::mode_topicRestriction(bool sign)
+{
+	channel->_topicRestricted = sign;
+}
+
+// Set/remove the channel key (password)
+void	Channel::mode_key(bool sign, std::string *password = NULL)
+{
+
+}
+
+// Give/take channel operator privilege
+void	Channel::mode_operators(User *User, std::string &userNick)
+{
+
+}
+
+//  Set/remove the user limit to channel
+void	Channel::mode_userLimit(std::string &limit)
+{
+
 }
