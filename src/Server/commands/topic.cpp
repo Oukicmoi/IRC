@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:49:00 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/07 21:17:58 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/12 19:10:58 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 typedef std::map<std::string,Channel*> ChannelMap;
 
-void Server::cmd_TOPIC(User* user, const IRCMessage& msg)
+void Server::cmd_TOPIC(User* user, IRCMessage& msg)
 {
 	const std::vector<std::string>& p = msg.getParams();
 	if (p.size() < 1)

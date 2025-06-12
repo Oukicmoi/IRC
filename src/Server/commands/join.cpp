@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:51:18 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/07 21:26:43 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/12 19:10:24 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 extern std::vector<std::string> split(const std::string& s, char delim);
 
-void Server::cmd_JOIN(User* user, const IRCMessage& msg)
+void Server::cmd_JOIN(User* user, IRCMessage& msg)
 {
 	const std::vector<std::string>& params = msg.getParams();
 	// 1) validation

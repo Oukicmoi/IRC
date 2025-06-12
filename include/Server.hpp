@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/07 22:03:17 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/12 19:11:16 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ class Server
 		std::string						_mdp;
 		std::map<int, User *>			_users;
 		std::map<std::string, Channel *> _channels;
-		std::map<std::string, void (Server::*)(User *, const IRCMessage &)>	_cmds;
+		std::map<std::string, void (Server::*)(User *, IRCMessage &)>	_cmds;
 
 		void	init(void);
 		void	shutdown(void);
@@ -112,20 +112,20 @@ class Server
 		
 		// COMMANDS //////////////////////////////////////////////////////////////////////////////////////////
 	
-		void	cmd_JOIN(User* user, const IRCMessage &msg);
-		void	cmd_PART(User* user, const IRCMessage &msg);
-		void	cmd_PRIVMSG(User* user, const IRCMessage &msg);
-		void	cmd_TOPIC(User* user, const IRCMessage &msg);
-		// void	cmd_MSG(User* user, const IRCMessage &msg);
-		void	cmd_PASS(User* user, const IRCMessage &msg);
-		void	cmd_NICK(User* user, const IRCMessage &msg);
-		void	cmd_USER(User* user, const IRCMessage &msg);
-		void	cmd_PING(User* user, const IRCMessage &msg);
-		void	cmd_QUIT(User* user, const IRCMessage& msg);
-		void	cmd_MODE(User* user, const IRCMessage& msg);
-		void	cmd_KICK(User* user, const IRCMessage& msg);
-		void	cmd_INVITE(User* user, const IRCMessage& msg);
-		// void	cmd_CAP(User *user, const IRCMessage &msg);
+		void	cmd_JOIN(User* user, IRCMessage &msg);
+		void	cmd_PART(User* user, IRCMessage &msg);
+		void	cmd_PRIVMSG(User* user, IRCMessage &msg);
+		void	cmd_TOPIC(User* user, IRCMessage &msg);
+		// void	cmd_MSG(User* user, IRCMessage &msg);
+		void	cmd_PASS(User* user, IRCMessage &msg);
+		void	cmd_NICK(User* user, IRCMessage &msg);
+		void	cmd_USER(User* user, IRCMessage &msg);
+		void	cmd_PING(User* user, IRCMessage &msg);
+		void	cmd_QUIT(User* user, IRCMessage& msg);
+		void	cmd_MODE(User* user, IRCMessage& msg);
+		void	cmd_KICK(User* user, IRCMessage& msg);
+		void	cmd_INVITE(User* user, IRCMessage& msg);
+		// void	cmd_CAP(User *user, IRCMessage &msg);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 

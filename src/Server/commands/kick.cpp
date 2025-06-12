@@ -49,7 +49,7 @@ void Server::kickOneUser(User* kicker, Channel* chan, const std::string& targetN
     chan->removeMember(target);
 }
 
-void Server::cmd_KICK(User* user, const IRCMessage& msg)
+void Server::cmd_KICK(User* user, IRCMessage& msg)
 {
     const std::vector<std::string>& p = msg.getParams();
     if (p.size() < 2)

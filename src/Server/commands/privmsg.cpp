@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:48:09 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/04 17:49:52 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/12 19:10:48 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 typedef std::map<std::string,Channel*> ChannelMap;
 
-void Server::cmd_PRIVMSG(User* user, const IRCMessage& msg)
+void Server::cmd_PRIVMSG(User* user, IRCMessage& msg)
 {
 	const std::vector<std::string>& params = msg.getParams();
 

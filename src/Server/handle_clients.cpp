@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/07 22:00:18 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/12 19:11:44 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ void	Server::handleMsg(int fd, const std::string& line)
 	}
 
 	IRCMessage msg(line);
-	std::map<std::string, void (Server::*)(User *, const IRCMessage &)>::iterator it = _cmds.find(msg.getCmd());
+	std::map<std::string, void (Server::*)(User *, IRCMessage &)>::iterator it = _cmds.find(msg.getCmd());
 	if (it != _cmds.end())
 	{
-		void (Server::*cmd)(User*, const IRCMessage&) = it->second;
+		void (Server::*cmd)(User*, IRCMessage&) = it->second;
 		(this->*cmd)(user, msg);
 	}
 	else

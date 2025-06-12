@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:50:58 by octoross          #+#    #+#             */
-/*   Updated: 2025/05/24 00:08:49 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/12 19:10:39 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 typedef std::map<std::string,Channel*> ChannelMap;
 
-void Server::cmd_PART(User* user, const IRCMessage &msg)
+void Server::cmd_PART(User* user, IRCMessage &msg)
 {
 	
 	(void)user;

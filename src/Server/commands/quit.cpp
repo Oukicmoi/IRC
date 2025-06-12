@@ -60,7 +60,7 @@ void	Server::clientQuits(int client_fd, std::string reason)
 
 
 
-void Server::cmd_QUIT(User* user, const IRCMessage& msg)
+void Server::cmd_QUIT(User* user, IRCMessage& msg)
 {
     std::string reason = "Quit: ";
     if (!msg.getParams().empty())

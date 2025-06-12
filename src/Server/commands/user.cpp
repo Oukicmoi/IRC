@@ -12,7 +12,7 @@
 
 #include "all.hpp"
 
-void Server::cmd_USER(User* user, const IRCMessage& msg)
+void Server::cmd_USER(User* user, IRCMessage& msg)
 {
     const std::vector<std::string>& params = msg.getParams();
     if (params.size() < 4)

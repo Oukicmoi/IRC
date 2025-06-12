@@ -12,7 +12,7 @@
 
 #include "all.hpp"
 
-void Server::cmd_INVITE(User* user, const IRCMessage& msg)
+void Server::cmd_INVITE(User* user, IRCMessage& msg)
 {
     const std::vector<std::string>& p = msg.getParams();
     if (p.size() < 2)
