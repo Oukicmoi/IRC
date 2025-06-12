@@ -71,7 +71,7 @@ class Channel
 		bool		hasKey() const { return _hasKey; }
 		int			getUserLimit() const { return _userLimit; }
 		time_t	 	getCreationTime() const { return _creationTime; }
-		unsigned int	 	getSize() const { return _members.size(); }
+		int	 		getSize() const { return _members.size(); }
 
 		//SETTERS
 		void	setInviteOnly(bool b) { _inviteOnly = b; }
@@ -82,6 +82,8 @@ class Channel
 		void	removeUserLimit() { _userLimit = -1; }
 		
 		void	rmFromInviteList(User *user) { _inviteList.erase(user); }
+		bool	canUserJoin(User *user, const std::string *password);
+		bool 	userJoin(User *user, std::string *password = NULL);
 
 
 		//// TOPIC

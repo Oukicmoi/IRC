@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/13 00:42:10 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 01:27:46 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,40 +65,26 @@ bool Channel::isOperator(User* u) const { return (_operators.find(u) != _operato
 typedef std::map<std::string,Channel*> ChannelMap;
 
 
-Channel* Server::getOrCreateChannel(const std::string& name, User& user, std::string *password)
+bool Channel::userJoin(User *user, std::string *password)
 {  
-    Channel* channel;
-    ChannelMap::iterator it = _channels.find(name);
-    if (it != _channels.end())
-	{
-        channel = it->second;
-		if (!canUserJoinChannel(channel, user))
-			return (NULL);
+    if (!canUserJoin(user, password))
+			return (false);
 		
-		if (_inviteOnly)
-			rmFromInviteList(&user);
-		if (!channel.addMember(&user))
-			return (sendToUser(user->getSocketFd(), ERR_ALREADYJOINED(user->getNick(), channel->getName())), NULL);
-	}
-    else
-	{
-        channel = new Channel(name, *this);
-		channel->addOperator(&u);
-	}    
-
-
-    _channels[name] = channel;
-    return (channel);
+	if (_inviteOnly)
+		rmFromInviteList(user);
+	if (_members.find(user) != _members.end())
+		return (Server::sendToUser(user->getSocketFd(), ERR_ALREADYJOINED(user->getNick(), _name)), false);
+	return (true);
 }
 
-bool	Channel::canUserJoin(User &user)
+bool	Channel::canUserJoin(User *user, const std::string *password)
 {
-	if (_inviteOnly && !userOnInviteList(&user))
-		return (sendToUser(user.getSocketFd(), ERR_INVITEONLYCHAN(user.getNick(), _name)), false);
-	if ((_userLimit >= 0) && (_userLimit <= getSize())) // TODO checker la limite superieur aux nombres de gens deja inside
-		return (sendToUser(user.getSocketFd(), ERR_CHANNELISFULL(user.getNick(), _name)), false);
 	if (_hasKey && (!password || (_key != *password)))
-		return (sendToUser(user.getSocketFd(), ERR_BADCHANNELKEY(user.getNick(), _name)), false); // ERR_INVALIDKEY -> valid password check TODO
+		return (Server::sendToUser(user->getSocketFd(), ERR_BADCHANNELKEY(user->getNick(), _name)), false); // ERR_INVALIDKEY -> valid password check TODO
+	if (_inviteOnly && !userOnInviteList(user))
+		return (Server::sendToUser(user->getSocketFd(), ERR_INVITEONLYCHAN(user->getNick(), _name)), false);
+	if ((_userLimit >= 0) && (_userLimit <= getSize()))
+		return (Server::sendToUser(user->getSocketFd(), ERR_CHANNELISFULL(user->getNick(), _name)), false);
 	return (true);
 }
 

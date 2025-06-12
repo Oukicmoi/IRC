@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:51:18 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/13 00:04:27 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 01:27:32 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,26 @@ void Server::cmd_JOIN(User* user, IRCMessage& msg)
 	if (params.size() > 1)
 		keys = split(params[1], ',');
 
+	unsigned int key_index = 0;
 	for (size_t i = 0; i < chans.size(); ++i)
 	{
 		const std::string& name = chans[i];
-		const std::string  key  = (i < keys.size() ? keys[i] : "");
-
-		// <– ici, gérer éventuellement la clé 'key', l'invite-only, la limite…
 		
 		// 3) création/récupération du Channel
-		Channel* channel = getOrCreateChannel(name, *user);
+		Channel* channel = getChannelByName(name);
 		if (!channel)
-			return ;
-
+			createChannel(name, user);
+		else
+		{
+			if (channel->hasKey() && (key_index < keys.size()))
+			{
+				if (!channel->userJoin(user, &keys[key_index ++]))
+					return ;
+			}
+			else if (!channel->userJoin(user))
+				return ;
+		}
+		
 		channel->printMembers();
 		channel->printOperatorse();
 		// 4) tentative d'ajout

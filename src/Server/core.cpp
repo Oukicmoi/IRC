@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/07 21:53:38 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 01:23:03 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,12 @@ User* Server::getUserByNick(const std::string& nick)
     return NULL;
 }
 
+void	Server::createChannel(const std::string &name, User *user)
+{
+	Channel *channel = new Channel(name, *this);
+	channel->addOperator(user);
+	_channels[name] = channel;
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
