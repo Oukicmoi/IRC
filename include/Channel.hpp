@@ -37,6 +37,7 @@ class Channel
 
 		std::set<User*>  _members;
 		std::set<User*>  _operators;
+		std::set<User*>  _inviteList;
 		Server			&_server;
 
 		
@@ -63,12 +64,14 @@ class Channel
 		void  	broadcast(const std::string& message, User* except = NULL) const;
 
 		// GETTERS
+		bool		userOnInviteList(User *user) { return (_inviteList.find(user) != _inviteList.end()); }
 		bool		isInviteOnly() const { return _inviteOnly; }
 		bool		isTopicRestricted() const { return _topicRestricted; }
 		std::string	getKey() const { return _key; }
 		bool		hasKey() const { return _hasKey; }
 		int			getUserLimit() const { return _userLimit; }
 		time_t	 	getCreationTime() const { return _creationTime; }
+		unsigned int	 	getSize() const { return _members.size(); }
 
 		//SETTERS
 		void	setInviteOnly(bool b) { _inviteOnly = b; }
@@ -77,6 +80,8 @@ class Channel
 		void	removeKey() { _key = ""; }
 		void	setUserLimit(int n) { _userLimit = n; }
 		void	removeUserLimit() { _userLimit = -1; }
+		
+		void	rmFromInviteList(User *user) { _inviteList.erase(user); }
 
 
 		//// TOPIC

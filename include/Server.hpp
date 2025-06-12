@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/12 22:46:32 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 00:27:35 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ class Server
 
 		void	broadcastToAllChannels(User* user, const std::string& message);
 
-		Channel* getOrCreateChannel(const std::string& name, User& u);
+		Channel* getOrCreateChannel(const std::string& name, User& u, std::string *password = NULL);
 
 			
 		std::vector<std::string>::iterator	getFirstNonModeArg(std::vector <std::string> &params);

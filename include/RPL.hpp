@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:51:32 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/12 23:22:56 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 00:17:05 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	sendToUser(int const client_fd, std::string client_buffer);
 //# define ERR_BANNEDFROMCHAN(client, channel) ("474 " + client + " #" + channel + " :Cannot join channel (+b)\r\n")
 # define ERR_BADCHANNELKEY(client, channel) (":localhost 475 " + client + " " + channel + " :Cannot join channel (+k)\r\n")
 # define ERR_ALREADYJOINED(client, channel) (":localhost 443 " + client + " " + channel + " :Is already on channel\r\n")
-# define ERR_INVITEONLY(client, channel) (":localhost 473 " + client + " " + channel + " :Cannot join channel (+i)\r\n")
+# define ERR_INVITEONLYCHAN(nickUser, channel) (":localhost 473 " + nickUser + " " + channel + " :Cannot join channel (+i)\r\n")
 
 
 // KICK

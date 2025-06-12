@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:51:18 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/12 19:10:24 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 00:04:27 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,12 @@ void Server::cmd_JOIN(User* user, IRCMessage& msg)
 		// <– ici, gérer éventuellement la clé 'key', l'invite-only, la limite…
 		
 		// 3) création/récupération du Channel
-		Channel* ch = getOrCreateChannel(name, *user);
+		Channel* channel = getOrCreateChannel(name, *user);
+		if (!channel)
+			return ;
 
-		ch->printMembers();
-		ch->printOperatorse();
+		channel->printMembers();
+		channel->printOperatorse();
 		// 4) tentative d'ajout
 
 
@@ -50,11 +52,11 @@ void Server::cmd_JOIN(User* user, IRCMessage& msg)
 		{
 			std::string prefix = user_id(user->getNick(), user->getUsername());
 			std::string joinMsg = ":" + prefix + " JOIN :" + name + "\r\n";
-			ch->broadcast(joinMsg);
+			channel->broadcast(joinMsg);
 		}
 
 		// 6) envoi du topic ou pas de topic
-		if (ch->getTopic().empty())
+		if (channel->getTopic().empty())
 		{
 			sendToUser(user->getSocketFd(),
 				RPL_NOTOPIC(user->getNick(), name));
@@ -62,13 +64,13 @@ void Server::cmd_JOIN(User* user, IRCMessage& msg)
 		else
 		{
 			sendToUser(user->getSocketFd(),
-				RPL_TOPIC(user->getNick(), name, ch->getTopic()));
+				RPL_TOPIC(user->getNick(), name, channel->getTopic()));
 		}
 
 		// 7) envoi de la liste des noms (NAMES)
 		{
 			std::string list;
-			const std::set<User*>& members = ch->getMembers();
+			const std::set<User*>& members = channel->getMembers();
 			for (std::set<User*>::const_iterator it = members.begin(); it != members.end(); ++it)
 			{
 				if (!list.empty())

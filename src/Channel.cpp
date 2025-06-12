@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/12 23:23:34 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 00:42:10 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,27 +62,46 @@ bool Channel::addOperator(User* u)
 void Channel::removeOperator(User* u) { _operators.erase(u); }
 bool Channel::isOperator(User* u) const { return (_operators.find(u) != _operators.end()); }
 
-
 typedef std::map<std::string,Channel*> ChannelMap;
 
-Channel* Server::getOrCreateChannel(const std::string& name, User& u)
+
+Channel* Server::getOrCreateChannel(const std::string& name, User& user, std::string *password)
 {  
-    // itérateur explicite
-    Channel* ch;
+    Channel* channel;
     ChannelMap::iterator it = _channels.find(name);
     if (it != _channels.end())
-        ch =  it->second;
-    else        
-        ch = new Channel(name, *this);
+	{
+        channel = it->second;
+		if (!canUserJoinChannel(channel, user))
+			return (NULL);
+		
+		if (_inviteOnly)
+			rmFromInviteList(&user);
+		if (!channel.addMember(&user))
+			return (sendToUser(user->getSocketFd(), ERR_ALREADYJOINED(user->getNick(), channel->getName())), NULL);
+	}
+    else
+	{
+        channel = new Channel(name, *this);
+		channel->addOperator(&u);
+	}    
 
-    // pas trouvé, on crée
-    if (!ch->addMember(&u))
-        return(sendToUser(u.getSocketFd(), ERR_ALREADYJOINED(u.getNick(), name)), ch);
-    if (it == _channels.end())
-        ch->addOperator(&u);
-    _channels[name] = ch;
-    return ch;
+
+    _channels[name] = channel;
+    return (channel);
 }
+
+bool	Channel::canUserJoin(User &user)
+{
+	if (_inviteOnly && !userOnInviteList(&user))
+		return (sendToUser(user.getSocketFd(), ERR_INVITEONLYCHAN(user.getNick(), _name)), false);
+	if ((_userLimit >= 0) && (_userLimit <= getSize())) // TODO checker la limite superieur aux nombres de gens deja inside
+		return (sendToUser(user.getSocketFd(), ERR_CHANNELISFULL(user.getNick(), _name)), false);
+	if (_hasKey && (!password || (_key != *password)))
+		return (sendToUser(user.getSocketFd(), ERR_BADCHANNELKEY(user.getNick(), _name)), false); // ERR_INVALIDKEY -> valid password check TODO
+	return (true);
+}
+
 
 
 void Channel::broadcast(const std::string& message, User* except) const
