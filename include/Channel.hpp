@@ -90,6 +90,15 @@ class Channel
 		void	printOperatorse() const;
 		void	printMembers() const;
 
+
+		// MODE
+		
+		void	channelMode_invite(bool sign);
+		void	channelMode_topicRestriction(bool sign);
+		void	channelMode_key(bool sign, std::string *password = NULL);
+		void	channelMode_operators(User* user, std::string &userNick);
+		void	channelMode_userLimit(std::string &limit);
+
 };
 
 #endif
