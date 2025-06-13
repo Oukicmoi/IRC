@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:57:35 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/05/17 12:04:45 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 03:37:44 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,13 @@ void signal_handler(int signal)
 {
     if (signal == SIGINT || signal == SIGTERM || signal == SIGTSTP)
     {
-        std::cout << "\nSIGNAL D'ARRET DU SERVEUR RECU, GOODBYE\n";
+		if (signal == SIGINT)
+        	std::cout << BRED << "\nSIGINT";
+		else if (signal == SIGTERM)
+        	std::cout << BRED << "\nSIGTERM";
+		else if (signal == SIGTSTP)
+        	std::cout << BRED << "\nSIGTSTP";
+		std::cout << R << " catch" << std::endl;
         g_running = false;
     }
 }

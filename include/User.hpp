@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:21:41 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/07 18:05:22 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 03:04:37 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class User
 		std::string	_Username;
 		std::string	_Host;
 		std::string	_password;
-		bool		_registered;
+		bool		_authentified;
 		bool		_passValid;
 
 	public:
@@ -47,8 +47,8 @@ class User
 
 		void setPassword(const std::string& pass) { _password = pass; }
 		const std::string& getPassword() const { return _password; }
-		bool isRegistered() const { return _registered; }
-		void setRegistered(bool status) { _registered = status; }
+		bool isAuthentified() const { return _authentified; }
+		void setRegistered(bool status) { _authentified = status; }
 		void setPasswordValidated(bool status) { _passValid = status; }
 		bool isPasswordValidated() const { return _passValid; }
 		// ssize_t	send(const std::string& msg, int flags = 0);

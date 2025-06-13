@@ -20,7 +20,7 @@ void Server::cmd_USER(User* user, IRCMessage& msg)
         sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "USER"));
         return;
     }
-    if (user->isRegistered())
+    if (user->isAuthentified())
     {
         sendToUser(user->getSocketFd(), ERR_ALREADYREGISTERED(user->getNick()));
         return;

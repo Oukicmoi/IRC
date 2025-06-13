@@ -44,7 +44,7 @@ void Server::cmd_NICK(User* user, IRCMessage& msg)
     user->setNick(newNick);
 
     // 5. Notifier le changement si déjà enregistré
-    if (user->isRegistered())
+    if (user->isAuthentified())
     {
         std::string nickChangeMsg = ":" + oldNick + "!" + user->getUsername() + "@localhost NICK :" + newNick + "\r\n";
         broadcastToAllChannels(user, nickChangeMsg);

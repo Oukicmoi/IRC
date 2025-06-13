@@ -14,7 +14,7 @@
 
 unsigned int User::_nextId = 1;
 
-User::User(int socket_fd) : _id(_nextId++), _socket_fd(socket_fd), _Nickname(""), _Username(""), _Host(""), _password(""), _registered(false), _passValid(false)
+User::User(int socket_fd) : _id(_nextId++), _socket_fd(socket_fd), _Nickname(""), _Username(""), _Host(""), _password(""), _authentified(false), _passValid(false)
 {
     memset(_buffer, 0, sizeof(char) * (MAX_MSG_SIZE + 1));
 }

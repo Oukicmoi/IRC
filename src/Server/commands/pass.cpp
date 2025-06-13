@@ -24,7 +24,7 @@ void Server::cmd_PASS(User* user, IRCMessage& msg)
     }
 
     // 2. Vérification état utilisateur
-    if (user->isRegistered())
+    if (user->isAuthentified())
     {
         sendToUser(user->getSocketFd(), ERR_ALREADYREGISTERED(user->getNick()));
         return;
@@ -45,5 +45,4 @@ void Server::cmd_PASS(User* user, IRCMessage& msg)
 
     // 4. Authentification réussie
     user->setPasswordValidated(true);
-    std::cout << "║\t[Auth] Client " << user->getSocketFd() << " (" << user->getNick() << ") authenticated\n";
 }

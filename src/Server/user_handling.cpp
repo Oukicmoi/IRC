@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 21:27:51 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/07 21:54:16 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 03:29:18 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void Server::sendWelcomeMessages(User* user)
 	sendToUser(user->getSocketFd(), RPL_YOURHOST(nick, SERVER_NAME, SERVER_VERSION));
 	// sendToUser(user->getSocketFd(), RPL_CREATED(nick, datetime));
 	// 004: Capacités serveur
-	sendToUser(user->getSocketFd(), RPL_MYINFO(nick, SERVER_NAME, SERVER_VERSION, "iwso", "mtklbv", "lv"));	// Channel modes avec paramètres
+	sendToUser(user->getSocketFd(), RPL_MYINFO(nick, SERVER_NAME, SERVER_VERSION, "", "ti", "lok"));	// Channel modes avec paramètres
 	sendToUser(user->getSocketFd(), RPL_ISUPPORT(nick, "NICKLEN=9 CHANTYPES=# PREFIX=(ov)@+ :are supported by this server"));
 	// Erreur MOTD manquant (à remplacer par l'implémentation complète si besoin)
 	sendToUser(user->getSocketFd(), ERR_NOMOTD(nick));

@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/12 23:13:48 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 03:17:39 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,11 @@ void	Server::handleMsg(int fd, const std::string& line)
 	if (it != _cmds.end())
 	{
 		void (Server::*cmd)(User*, IRCMessage&) = it->second;
+		if ((cmd != &Server::cmd_PASS) && !user->isPasswordValidated())
+			return sendToUser(fd, ERR_NOTREGISTERED);
+		else if (!user->isAuthentified() && (cmd != &Server::cmd_PASS) && (cmd != &Server::cmd_NICK) && (cmd != &Server::cmd_USER))
+			return sendToUser(fd, ERR_NOTREGISTERED);
+			
 		(this->*cmd)(user, msg);
 	}
 	else
