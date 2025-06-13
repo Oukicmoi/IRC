@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:51:18 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/13 01:27:32 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 03:46:31 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void Server::cmd_JOIN(User* user, IRCMessage& msg)
 		// 3) création/récupération du Channel
 		Channel* channel = getChannelByName(name);
 		if (!channel)
-			createChannel(name, user);
+			channel = createChannel(name, user);
 		else
 		{
 			if (channel->hasKey() && (key_index < keys.size()))
@@ -55,6 +55,7 @@ void Server::cmd_JOIN(User* user, IRCMessage& msg)
 		channel->printOperatorse();
 		// 4) tentative d'ajout
 
+		// TODO : checker nom de channels avant creation, et mot de passes (jsp opur nick et user checker aussi)
 
 		// 5) diffusion du JOIN à tous
 		{

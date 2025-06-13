@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/13 01:22:25 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 03:53:00 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ class Server
 	
 		void	handleNewClients(void);
 		void	handleClient(const epoll_event& ev);
-		void	handleMsg(int fd, const std::string& line);
+		bool	handleMsg(int fd, const std::string& line);
 		
 		void	loadCmds(void);
 		bool	up(void);
@@ -75,7 +75,7 @@ class Server
 
 		// void	setChannels(const std::map<std::string, Channel *>& channels);
 
-		void	createChannel(const std::string &name, User *user);
+		Channel	*createChannel(const std::string &name, User *user);
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 		
