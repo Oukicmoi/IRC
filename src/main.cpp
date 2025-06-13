@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:57:35 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/13 03:37:44 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 01:31:08 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,14 @@
 
 volatile bool g_running = true;
 
-void signal_handler(int signal)
+std::vector<std::string> split(const std::string& s, char delim)
 {
-    if (signal == SIGINT || signal == SIGTERM || signal == SIGTSTP)
-    {
-		if (signal == SIGINT)
-        	std::cout << BRED << "\nSIGINT";
-		else if (signal == SIGTERM)
-        	std::cout << BRED << "\nSIGTERM";
-		else if (signal == SIGTSTP)
-        	std::cout << BRED << "\nSIGTSTP";
-		std::cout << R << " catch" << std::endl;
-        g_running = false;
-    }
+    std::vector<std::string> elems;
+    std::string item;
+    std::istringstream iss(s);
+    while (std::getline(iss, item, delim))
+        elems.push_back(item);
+    return (elems);
 }
 
 void	show_limits(void)
@@ -43,6 +38,21 @@ void	show_limits(void)
 	else
 		std::cout << "getrlimit failed: " << strerror(errno) << std::endl;
 	std::cout << std::endl;
+}
+
+void signal_handler(int signal)
+{
+    if (signal == SIGINT || signal == SIGTERM || signal == SIGTSTP)
+    {
+		if (signal == SIGINT)
+        	std::cout << BRED << "\nSIGINT";
+		else if (signal == SIGTERM)
+        	std::cout << BRED << "\nSIGTERM";
+		else if (signal == SIGTSTP)
+        	std::cout << BRED << "\nSIGTSTP";
+		std::cout << R << " catch" << std::endl;
+        g_running = false;
+    }
 }
 
 void	setup_signals(void)

@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:21:41 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/13 23:21:43 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 01:24:31 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,60 +22,36 @@ class User
 		bool		_passValid;
 		char		_buffer[MAX_MSG_SIZE + 1];
 		int			_socket_fd;
-		unsigned int	_id;
-		static unsigned int _nextId;
-		std::string	clientBuffers;
 		std::string	_Nickname;
 		std::string	_Username;
+		std::string	_password;
 		std::string	_Host;
 		std::string	_HostMask;
-		std::string	_password;
-
+		
 		std::string getIPFromSocket(int socket_fd);
-	
+		
 	public:
+		std::string	recvBuffer;
 		User(int socket_fd);
-		// User(int socket_fd, const std::string& nick);
 		~User();
 		
+		int					getSocketFd() const { return (_socket_fd); }
+		const std::string	&getNick() const { return (_Nickname); }
+		const std::string	&getUsername() const { return (_Username); }
+		const std::string	&getPassword() const { return (_password); }
+		bool				isAuthentified() const { return (_authentified); }
+		bool				isPasswordValid() const { return _passValid; }
+		bool				hasUsername() const { return (!_Username.empty()); }
+		const std::string	&getHost() const { return (_Host); };
+		std::string			getFullNameMask() const { return (_Nickname + "!~" + _Username + "@" + _HostMask); };
+		
+		void	setNick(const std::string& nick) { _Nickname = nick; };
+		void	setUsername(const std::string& username) {_Username = username; }
+		void	setPassword(const std::string& pass) { _password = pass; }
+		void	setAuthentified(bool status) { _authentified = status; }
+		void	setPasswordValid(bool status) { _passValid = status; }
+		
 
-		void			setNick(const std::string& nick);
-		std::string	 	getNick() const;
-		std::string		getUsername() const;
-		void			setId(unsigned int id);
-		unsigned int		getId() const;
-		int			getSocketFd() const;
-		std::string&		recvBuffer();
-		const std::string&	recvBuffer() const;
-
-		void setPassword(const std::string& pass) { _password = pass; }
-		const std::string& getPassword() const { return _password; }
-		bool isAuthentified() const { return _authentified; }
-		void setRegistered(bool status) { _authentified = status; }
-		void setPasswordValidated(bool status) { _passValid = status; }
-		bool isPasswordValidated() const { return _passValid; }
-		// ssize_t	send(const std::string& msg, int flags = 0);
-
-		bool hasUsername() const { return !_Username.empty(); }
-	
-
-		void            setUsername(const std::string& username);
-		// getUsername() existe déjà
-
-		void            setHost(const std::string& host);
-		std::string     getHost() const;
-
-		std::string&    getClientBuffers();
-		const std::string& getClientBuffers() const;
-		void            setClientBuffers(const std::string& buf);
-		std::string getPrefix() const;
-
-		char*           getBuffer();
-		const char*     getBuffer() const;
-
-		std::string		getFullNameMask() const { return (_Nickname + "!~" + _Username + "@" + _HostMask); };
-
-		static unsigned int getNextId();
 
 };
 
