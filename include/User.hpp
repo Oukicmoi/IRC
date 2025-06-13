@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:21:41 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/13 03:04:37 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 19:14:26 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,25 @@
 class User
 {
 	protected:
+		bool		_authentified;
+		bool		_passValid;
+		char		_buffer[MAX_MSG_SIZE + 1];
+		int			_socket_fd;
 		unsigned int	_id;
 		static unsigned int _nextId;
-		int		_port;
-		int		_socket_fd;
-		char		_buffer[MAX_MSG_SIZE + 1];
 		std::string	clientBuffers;
 		std::string	_Nickname;
 		std::string	_Username;
 		std::string	_Host;
 		std::string	_password;
-		bool		_authentified;
-		bool		_passValid;
 
+		std::string getIPFromSocket(int socket_fd);
+	
 	public:
 		User(int socket_fd);
 		// User(int socket_fd, const std::string& nick);
 		~User();
+		
 
 		void			setNick(const std::string& nick);
 		std::string	 	getNick() const;
@@ -54,9 +56,7 @@ class User
 		// ssize_t	send(const std::string& msg, int flags = 0);
 
 		bool hasUsername() const { return !_Username.empty(); }
-		
-		void            setPort(int port);
-		int             getPort() const;
+	
 
 		void            setUsername(const std::string& username);
 		// getUsername() existe déjà

@@ -14,8 +14,21 @@
 
 unsigned int User::_nextId = 1;
 
-User::User(int socket_fd) : _id(_nextId++), _socket_fd(socket_fd), _Nickname(""), _Username(""), _Host(""), _password(""), _authentified(false), _passValid(false)
+
+std::string User::getIPFromSocket(int socket_fd)
 {
+    struct sockaddr_in clientAddr;
+    socklen_t addrLen = sizeof(clientAddr);
+    memset(&clientAddr, 0, addrLen);
+
+    if (getsockname(socket_fd, (struct sockaddr*)&clientAddr, &addrLen) == -1)
+        return ("unknown");
+    return (std::string(inet_ntoa(clientAddr.sin_addr)));
+}
+
+User::User(int socket_fd) : _authentified(false), _passValid(false), _socket_fd(socket_fd), _id(_nextId++), _Nickname(""), _Username(""), _Host(getIPFromSocket(socket_fd)), _password("")
+{
+	std::cout << "client has ip address: " << _Host << std::endl;
     memset(_buffer, 0, sizeof(char) * (MAX_MSG_SIZE + 1));
 }
 
@@ -66,16 +79,6 @@ const std::string& User::recvBuffer() const
     return clientBuffers;
 }
 
-
-void User::setPort(int port)
-{
-    _port = port;
-}
-
-int User::getPort() const
-{
-    return _port;
-}
 
 void User::setUsername(const std::string& username)
 {
@@ -154,70 +157,3 @@ std::string User::getPrefix() const
 {
 	return _Nickname + "!" + _Username + "@" + _Host;
 }
-
-// void Server::handleLine(int fd, const std::string& line)
-// {
-//     // On récupère l'utilisateur
-//     User* u = getUser(fd);
-//     if (!u)
-//         return; // pas trouvé, on ignore
-
-//     // On découpe la ligne en tokens
-//     std::vector<std::string> tokens = split(line, ' ');
-//     if (tokens.empty())
-//         return;
-
-//     // Le verbe IRC est le premier token
-//     std::string cmd = tokens[0];
-
-//     // JOIN et PART prennent tous leurs paramètres après le verbe
-//     std::vector<std::string> params(tokens.begin() + 1, tokens.end());
-//     if (cmd == "JOIN")
-//     {
-//         if(params.empty())
-//             return(write(fd,"You need a name for your channel",32), (void)cmd);
-//         cmd_JOIN(u, params);
-//     }
-//     else if (cmd == "PART")
-//     {
-//         cmd_PART(u, params);
-//     }
-//     // PRIVMSG prend 2 paramètres explicitement : cible et message
-//     else if (cmd == "PRIVMSG")
-//     {
-//         // On vérifie qu'on a au moins "PRIVMSG cible texte..."
-//         if (tokens.size() >= 3)
-//         {
-//             std::string target  = tokens[1];
-//             std::string message = join_rest(tokens, 2);
-//             std::vector<std::string> params;
-//             params.push_back(target);
-//             params.push_back(message);
-//             cmd_PRIVMSG(u, params);
-//         }
-//     }
-//     else if (cmd == "TOPIC")
-//     {
-//         if(params.empty())
-//             return(write(fd,"You need a name for your topic",30), (void)cmd);
-//         std::vector<std::string> params(tokens.begin() + 1, tokens.end());
-//         cmd_TOPIC(u, params);
-//     }
-//     else
-//     {
-//         // On reconstruit correctement params pour cmd_MSG
-//         std::vector<std::string> fixedParams;
-//         fixedParams.push_back(cmd); // l'ancien "cmd" est ici en réalité le nom du canal
-//         fixedParams.insert(fixedParams.end(), params.begin(), params.end());
-//         cmd_MSG(u, fixedParams);
-//     }
-
-// }
-
-// ssize_t User::send(const std::string& msg, int flags)
-// {
-// 	ssize_t ret = send(_socket_fd, msg.c_str(), msg.size(), flags);
-// 	if (ret == -1)
-// 		ERR_SYS("send");
-// 	return ret;
-// }
