@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   core.cpp                                           :+:      :+:    :+:   */
+/*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/13 03:43:51 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 20:54:14 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ void	Server::init(void)
 	loadCmds();
 }
 
-Server::Server(void) : _port(DEFAULT_PORT), _server_name(SERVER_NAME), _mdp("admin") { init(); }
-Server::Server(unsigned int port) : _port(port), _server_name(SERVER_NAME), _mdp("admin") { init(); }
-Server::Server(const std::string &password) : _port(DEFAULT_PORT), _server_name(SERVER_NAME), _mdp(password) { init(); }
-Server::Server(unsigned int port, const std::string& password) : _port(port), _server_name(SERVER_NAME), _mdp(password) { init(); }
+Server::Server(void) : _port(DEFAULT_PORT), _server_name(NETWORK_NAME), _mdp("admin") { init(); }
+Server::Server(unsigned int port) : _port(port), _server_name(NETWORK_NAME), _mdp("admin") { init(); }
+Server::Server(const std::string &password) : _port(DEFAULT_PORT), _server_name(NETWORK_NAME), _mdp(password) { init(); }
+Server::Server(unsigned int port, const std::string& password) : _port(port), _server_name(NETWORK_NAME), _mdp(password) { init(); }
 
 void	Server::shutdown(void)
 {

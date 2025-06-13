@@ -23,5 +23,5 @@ void Server::cmd_PING(User* user, IRCMessage& msg)
 	}
 
 	std::string token = params[0];
-	sendToUser(user->getSocketFd(), RPL_PONG("localhost", token));
+	sendToUser(user->getSocketFd(), RPL_PONG(token));
 }

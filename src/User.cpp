@@ -26,9 +26,17 @@ std::string User::getIPFromSocket(int socket_fd)
     return (std::string(inet_ntoa(clientAddr.sin_addr)));
 }
 
-User::User(int socket_fd) : _authentified(false), _passValid(false), _socket_fd(socket_fd), _id(_nextId++), _Nickname(""), _Username(""), _Host(getIPFromSocket(socket_fd)), _password("")
+std::string maskIPOfIp(const std::string& ip)
 {
-	std::cout << "client has ip address: " << _Host << std::endl;
+    size_t lastDot = ip.find_last_of('.');
+    if (lastDot == std::string::npos) return ("hidden.xxx");
+    return ("hidden." + ip.substr(0, lastDot) + ".xxx");
+}
+
+
+User::User(int socket_fd) : _authentified(false), _passValid(false), _socket_fd(socket_fd), _id(_nextId++), _Nickname(""), _Username(""), _Host(getIPFromSocket(socket_fd)), _HostMask(maskIPOfIp(_Host)), _password("")
+{
+	std::cout << "client has ip address: " << _HostMask << std::endl;
     memset(_buffer, 0, sizeof(char) * (MAX_MSG_SIZE + 1));
 }
 
@@ -53,16 +61,6 @@ std::string User::getNick() const
 std::string User::getUsername() const
 {
     return _Username;
-}
-
-void User::setId(unsigned int id)
-{
-    _id = id;
-}
-
-unsigned int User::getId() const
-{
-    return _id;
 }
 
 int User::getSocketFd() const 

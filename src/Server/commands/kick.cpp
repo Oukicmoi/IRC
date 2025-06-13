@@ -43,9 +43,9 @@ void Server::kickOneUser(User* kicker, Channel* chan, const std::string& targetN
                 return(sendToUser(kicker->getSocketFd(), ERR_USERNOTINCHANNEL(kicker->getNick(), targetNick, chan->getName())),(void)target);
     
     if(reason.empty())
-        chan->broadcast(RPL_KICK(chan->getName(), targetNick, ":No reason"), NULL);
+        chan->broadcast(RPL_KICK(kicker->getFullNameMask(), chan->getName(), targetNick, "No reason"), NULL);
     else
-        chan->broadcast(RPL_KICK(chan->getName(), targetNick, (":" + reason)), NULL);
+        chan->broadcast(RPL_KICK(kicker->getFullNameMask(), chan->getName(), targetNick, reason), NULL);
     chan->removeMember(target);
 }
 

@@ -6,11 +6,13 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/13 03:55:33 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 23:19:07 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+
+
 
 void	Server::handleNewClients(void)
 {
@@ -51,9 +53,9 @@ bool	Server::handleMsg(int fd, const std::string& line)
 	{
 		void (Server::*cmd)(User*, IRCMessage&) = it->second;
 		if ((cmd != &Server::cmd_PASS) && !user->isPasswordValidated())
-			return (sendToUser(fd, ERR_NOTREGISTERED), false);
+			return (sendToUser(fd, ERR_NOTREGISTERED(msg.getCmd())), false);
 		else if (!user->isAuthentified() && (cmd != &Server::cmd_PASS) && (cmd != &Server::cmd_NICK) && (cmd != &Server::cmd_USER))
-			return (sendToUser(fd, ERR_NOTREGISTERED), false);
+			return (sendToUser(fd, ERR_NOTREGISTERED(msg.getCmd())), false);
 			
 		(this->*cmd)(user, msg);
 		return (cmd == &Server::cmd_QUIT);

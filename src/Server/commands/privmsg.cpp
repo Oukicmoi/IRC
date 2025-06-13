@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:48:09 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/12 19:10:48 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 23:16:36 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void Server::cmd_PRIVMSG(User* user, IRCMessage& msg)
 	// Vérifie qu'il y a au moins 2 paramètres (cible + message)
 	if (params.size() < 1)
 	{
-		send(user->getSocketFd(), ERR_NORECIPIENT(user->getNick()).c_str(), ERR_NORECIPIENT(user->getNick()).size(), 0);
+		send(user->getSocketFd(), ERR_NORECIPIENT(user->getNick(), "PRIVMSG").c_str(), ERR_NORECIPIENT(user->getNick(), "PRIVMSG").size(), 0); // TODO changer en sendToUser
 		return;
 	}
 	if (params.size() < 2 || params[1].empty())
@@ -33,7 +33,7 @@ void Server::cmd_PRIVMSG(User* user, IRCMessage& msg)
 
 	const std::string& target = params[0];
 	const std::string& message = params[1][0] == ':' ? params[1].substr(1) : params[1];
-	std::string fullMessage = RPL_PRIVMSG(user->getNick(), user->getUsername(), target, ":" + message);
+	std::string fullMessage = RPL_PRIVMSG(user->getFullNameMask(), target, message);
 
 	// Envoi vers un canal
 	if (!target.empty() && (target[0] == '#' || target[0] == '&'))

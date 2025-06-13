@@ -16,7 +16,7 @@ void Server::cmd_INVITE(User* user, IRCMessage& msg)
 {
     const std::vector<std::string>& p = msg.getParams();
     if (p.size() < 2)
-        return(sendToUser(user->getSocketFd(),ERR_NEEDMOREPARAMS(user->getNick(), "INVITE")), (void)p);
+        return(sendToUser(user->getSocketFd(),ERR_NEEDMOREPARAMS(user->getNick(), "INVITE")), (void)p); // TODO (void)p
 
     std::string targetNick  = p[0];
     std::string channelName = p[1];
@@ -39,12 +39,12 @@ void Server::cmd_INVITE(User* user, IRCMessage& msg)
 
     // If target is already on channel, error
     if (channel->isMember(target))
-        return(sendToUser(user->getSocketFd(),ERR_USERONCHANNEL(user->getNick(), targetNick, channelName)), (void)p);
+        return(sendToUser(user->getSocketFd(),
+		ERR_USERONCHANNEL(user->getNick(), targetNick, channelName)), (void)p);
 
     // Notify sender that invite succeeded
     sendToUser(user->getSocketFd(), RPL_INVITING(user->getNick(), targetNick, channelName));
 
     // Send INVITE to target
-    std::string prefix = user_id(user->getNick(), user->getUsername());
-    sendToUser(target->getSocketFd(), RPL_INVITE(prefix, targetNick, channelName));
+    sendToUser(target->getSocketFd(), RPL_INVITE(user->getFullNameMask(), targetNick, channelName));
 }

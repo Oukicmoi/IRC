@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:51:18 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/13 03:46:31 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 23:26:04 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,7 @@ void Server::cmd_JOIN(User* user, IRCMessage& msg)
 		// TODO : checker nom de channels avant creation, et mot de passes (jsp opur nick et user checker aussi)
 
 		// 5) diffusion du JOIN à tous
-		{
-			std::string prefix = user_id(user->getNick(), user->getUsername());
-			std::string joinMsg = ":" + prefix + " JOIN :" + name + "\r\n";
-			channel->broadcast(joinMsg);
-		}
+		channel->broadcast(RPL_JOIN(user->getFullNameMask(), name));
 
 		// 6) envoi du topic ou pas de topic
 		if (channel->getTopic().empty())

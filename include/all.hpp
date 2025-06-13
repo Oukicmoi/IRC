@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:24:19 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/12 22:38:46 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 23:22:19 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "Channel.hpp"
 #include "User.hpp"
 #include "IRCMessage.hpp"
-#include "RPL.hpp"
+#include "IRC_MSG.hpp"
 #include "Server.hpp"
 
 template <typename T>

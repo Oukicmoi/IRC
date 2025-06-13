@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:50:58 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/12 19:10:39 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 21:10:35 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,3 +42,5 @@ void Server::cmd_PART(User* user, IRCMessage &msg)
     //     _channels.erase(it);
     // }
 }
+
+// TODO

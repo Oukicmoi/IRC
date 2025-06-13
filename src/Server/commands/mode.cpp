@@ -122,7 +122,7 @@ void	Server::applyChannelModes(User* user, Channel* channel, std::vector<std::st
 		sendToUser(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));
 }
 
-void	Server::sendChannelModesToUser(User* user, Channel* channel, const std::vector<std::string>& params)
+void	Server::sendChannelModesToUser(User* user, Channel* channel, const std::vector<std::string>& params) // TODO mettre dans channel
 {
 	std::string modes = "+";
 	std::string args = "";
@@ -143,7 +143,7 @@ void	Server::sendChannelModesToUser(User* user, Channel* channel, const std::vec
         ss << channel->getUserLimit();
         args += " " + ss.str();
 	}
-    sendToUser(user->getSocketFd(), RPL_CHANNELMODEIS(user->getNick(), params[0], modes + args));
+    sendToUser(user->getSocketFd(), RPL_CHANNELMODEIS(user->getNick(), channel->getName(), params[0], modes + args));
 }
 
 
@@ -151,7 +151,7 @@ void Server::cmd_MODE(User* user, IRCMessage& msg)
 {
     std::vector<std::string>& params = msg.getParams();
     if (params.size() < 1)
-        return sendToUser(user->getSocketFd(), ERR_UNKNOWNCOMMAND(user->getNick(), "MODE"));
+        return sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "USER"));
 
     if (params[0].empty() || (params[0][0] != '#'))
         return sendToUser(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));

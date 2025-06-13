@@ -19,8 +19,6 @@ void	Server::clientQuits(int client_fd, std::string reason)
 	if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, client_fd, NULL) == -1)
 		ERR_SYS("epoll_ctl DEL");
 
-	std::string quitMsg = ":" + user_id(_users[client_fd]->getNick(), _users[client_fd]->getUsername()) + " QUIT :" + reason + "\r\n";
-
     // Diffuser QUIT à tous les channels où est présent l'utilisateur
     for (std::map<std::string, Channel*>::iterator it = this->_channels.begin(); it != this->_channels.end(); )
     {
@@ -29,7 +27,7 @@ void	Server::clientQuits(int client_fd, std::string reason)
         // S'il est dans ce channel
         if (chan->getMembers().find(_users[client_fd]) != chan->getMembers().end())
         {
-            chan->broadcast(quitMsg, _users[client_fd]);  // envoyer aux autres
+            chan->broadcast(RPL_QUIT((_users[client_fd])->getFullNameMask(), reason), _users[client_fd]);  // envoyer aux autres
             chan->removeMember(_users[client_fd]);        // le retirer
 
             // S'il ne reste plus personne dans le channel, on peut le supprimer

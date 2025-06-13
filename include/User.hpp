@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:21:41 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/13 19:14:26 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 23:21:43 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ class User
 		std::string	_Nickname;
 		std::string	_Username;
 		std::string	_Host;
+		std::string	_HostMask;
 		std::string	_password;
 
 		std::string getIPFromSocket(int socket_fd);
@@ -71,6 +72,8 @@ class User
 
 		char*           getBuffer();
 		const char*     getBuffer() const;
+
+		std::string		getFullNameMask() const { return (_Nickname + "!~" + _Username + "@" + _HostMask); };
 
 		static unsigned int getNextId();
 

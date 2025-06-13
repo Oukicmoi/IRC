@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 21:27:51 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/13 03:29:18 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/13 23:40:00 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,15 +84,15 @@ void Server::endRegister(User* user)
 // Envoi des messages de bienvenue
 void Server::sendWelcomeMessages(User* user)
 {
-	const std::string& nick = user->getNick();
 	//const std::string datetime = "May 2024"; // À remplacer par la date réelle de création
 	
-	sendToUser(user->getSocketFd(), RPL_WELCOME(user_id(user->getNick(), user->getUsername()), nick));
-	sendToUser(user->getSocketFd(), RPL_YOURHOST(nick, SERVER_NAME, SERVER_VERSION));
-	// sendToUser(user->getSocketFd(), RPL_CREATED(nick, datetime));
+	const std::string &nick = user->getNick();
+	sendToUser(user->getSocketFd(), RPL_WELCOME(nick, user->getFullNameMask()));
+	sendToUser(user->getSocketFd(), RPL_YOURHOST(nick));
+	// sendToUser(user->getSocketFd(), RPL_CREATED(nick, datetime)); // TODO
 	// 004: Capacités serveur
-	sendToUser(user->getSocketFd(), RPL_MYINFO(nick, SERVER_NAME, SERVER_VERSION, "", "ti", "lok"));	// Channel modes avec paramètres
-	sendToUser(user->getSocketFd(), RPL_ISUPPORT(nick, "NICKLEN=9 CHANTYPES=# PREFIX=(ov)@+ :are supported by this server"));
+	sendToUser(user->getSocketFd(), RPL_MYINFO(nick, "", "ti", "kol"));	// Channel modes avec paramètres
+	sendToUser(user->getSocketFd(), RPL_ISUPPORT(nick, "NICKLEN=9 CHANTYPES=# PREFIX=(ov)@+ :are supported by this server")); // TODO reregarder ce moreceau ce que ca fait
 	// Erreur MOTD manquant (à remplacer par l'implémentation complète si besoin)
 	sendToUser(user->getSocketFd(), ERR_NOMOTD(nick));
 }

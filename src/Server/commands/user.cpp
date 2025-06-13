@@ -27,7 +27,6 @@ void Server::cmd_USER(User* user, IRCMessage& msg)
     }
     // Process user parameters
     std::string username = params[0];
-    // const std::string& realname = parseUserName(params, 3);
     
     // Validate and normalize username
     processUsername(username, user->getNick());
