@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 20:14:38 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 20:16:30 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,14 +115,7 @@ Channel	*Server::createChannel(const std::string &channelName, User *user)
 
 bool	Server::set_non_blocking_socket(int socket_fd)
 {
-	int	flags = fcntl(socket_fd, F_GETFL, 0);  // Récupère les flags actuels
-	if (flags == -1)
-	{
-		close(socket_fd);
-		ERR_SYS("ftnl (get flags)");
-	    return (false);
-	}
-	if (fcntl(socket_fd, F_SETFL, flags | O_NONBLOCK) < 0)
+	if (fcntl(socket_fd, F_SETFL, O_NONBLOCK) < 0)
 	{
 		close(socket_fd);
 		ERR_SYS("ftnl (set flags)");
