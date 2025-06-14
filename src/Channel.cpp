@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 22:25:56 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 22:52:41 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ void Channel::broadcast(const std::string& message, User* except) const
 } 
 
 
-void Channel::printOperatorse() const
+void Channel::printOperators() const
 {
     std::cout << "Operators on channel " << _name << " (“ operators.size() = " << _operators.size() << "):\n";
     for (std::set<User*>::const_iterator it = _operators.begin(); it != _operators.end(); ++it)
@@ -152,7 +152,6 @@ void Channel::printInviteList() const
 void	Channel::mode_invite(bool sign, std::string &userPrefix)
 {
 	_inviteOnly = sign;
-	std::cout << "MODE i: sign " << sign << std::endl;
 	broadcast(RPL_MODE(userPrefix, _name, (sign? "+" : "-") + "i"));
 }
 
@@ -160,14 +159,12 @@ void	Channel::mode_invite(bool sign, std::string &userPrefix)
 void	Channel::mode_topicRestriction(bool sign, std::string &userPrefix)
 {
 	_topicRestricted = sign;
-	std::cout << "MODE t: sign " << sign << std::endl;
 	broadcast(RPL_MODE(userPrefix, _name, (sign? "+" : "-") + "t"));
 }
 
 // Set/remove the channel key (password)
 void	Channel::mode_key(bool sign, User *user, std::string *password)
 {
-	std::cout << "MODE k: sign " << sign << *password << std::endl;
 	if (sign && !password)
 		return Server::sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "MODE"));
 		
@@ -217,7 +214,6 @@ void	Channel::mode_operators(bool sign, User *user, User *target)
 //  Set/remove the user limit to channel
 void	Channel::mode_userLimit(bool sign, User *user, std::string *limit)
 {
-	std::cout << "MODE l: sign " << sign << *limit << std::endl;
 	if (sign && limit)
 	{
 		try

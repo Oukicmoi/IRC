@@ -98,7 +98,7 @@ class Channel
 		void	sendWelcomeInfo(User *user);
 		void  	broadcast(const std::string& message, User* except = NULL) const;
 		
-		void	printOperatorse() const;
+		void	printOperators() const;
 		void	printMembers() const;
 		void	printInviteList() const;
 };

@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:51:18 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 19:40:16 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 22:52:55 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	Server::userJoinChannel(User *user, const std::string &channelName, unsigne
 		else if (!channel->userJoin(user))
 			return ;
 	}
-
+	
 	// notif du JOIN a tous les membres du channel
 	channel->broadcast(RPL_JOIN(user->getFullNameMask(), channelName));
 	
