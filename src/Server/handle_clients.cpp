@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/13 23:19:07 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 01:16:33 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ bool	Server::handleMsg(int fd, const std::string& line)
 	if (it != _cmds.end())
 	{
 		void (Server::*cmd)(User*, IRCMessage&) = it->second;
-		if ((cmd != &Server::cmd_PASS) && !user->isPasswordValidated())
+		if ((cmd != &Server::cmd_PASS) && !user->isPasswordValid())
 			return (sendToUser(fd, ERR_NOTREGISTERED(msg.getCmd())), false);
 		else if (!user->isAuthentified() && (cmd != &Server::cmd_PASS) && (cmd != &Server::cmd_NICK) && (cmd != &Server::cmd_USER))
 			return (sendToUser(fd, ERR_NOTREGISTERED(msg.getCmd())), false);
@@ -75,7 +75,7 @@ void Server::handleClient(const epoll_event& ev)
         {
             int n = recv(fd, buf, 4096, 0);
             if (n > 0 && n < 513)
-                _users[ev.data.fd]->recvBuffer().append(buf, n);    // On stocke dans un buffer associé à ce client
+                _users[ev.data.fd]->_recvBuffer.append(buf, n);    // On stocke dans un buffer associé à ce client
             else if (n > 512)
                 write(fd,"Hola ! Message trop long la team",33); // TODO change ca
             else if (n == 0)
@@ -93,7 +93,7 @@ void Server::handleClient(const epoll_event& ev)
                 }
             }
         }
-		std::string& buffer = _users[ev.data.fd]->recvBuffer();
+		std::string& buffer = _users[ev.data.fd]->_recvBuffer;
 		std::cout << "⤷ Recv: '" << BYELLOW << buffer << R << "'" << std::endl;
 		size_t pos;
 		std::string endline = "\r\n";

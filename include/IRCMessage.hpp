@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:26:09 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/08 02:01:52 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 01:38:54 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,13 @@ class IRCMessage
 		void	parseParams(const std::string &rawMsg);
 		
 	public:
-		void printParams() const;
 		IRCMessage(const std::string &rawMsg);
-		~IRCMessage(void);
-		const std::vector<std::string>&  getParams() const;
-		std::vector<std::string>&  getParams();
-		std::string getCmd() const;
+		~IRCMessage(void) {};
+		const std::vector<std::string>&  getParams() const { return (_params); };
+		std::vector<std::string>&  getParams() { return (_params); };
+		std::string getCmd() const { return (_cmd); };
+		
+		void printParams() const;
 };
 
 #endif

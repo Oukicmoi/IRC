@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/13 20:54:14 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 04:10:45 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,29 +66,15 @@ void	Server::shutdown(void)
 	}
 }
 
-Server::~Server()
-{
-	shutdown();
-}
+Server::~Server() { shutdown(); }
 
-// SETTERS
-
-void Server::setmdp(const std::string& password) { _mdp = password; }
-
-// GETTERS
-
-std::string Server::getmdp() const { return (_mdp); }
-unsigned int Server::getport() const { return (_port); }
-const std::map<int, User*>& Server::getUsers() const { return (_users); }
-const std::map<std::string, Channel *>& Server::getChannels() const { return (_channels); }
-std::map<std::string, Channel *>& Server::getChannels() { return (_channels); }
 
 User* Server::getUser(int fd) const
 {
     std::map<int, User*>::const_iterator it = _users.find(fd);
     if (it == _users.end())
         return (NULL);
-    return it->second;
+    return (it->second);
 }
 
 User* Server::getUserByNick(const std::string& nick)
@@ -97,9 +83,17 @@ User* Server::getUserByNick(const std::string& nick)
     {
         User* u = it->second;
         if (u->getNick() == nick)
-            return u;
+            return (u);
     }
-    return NULL;
+    return (NULL);
+}
+
+Channel* Server::getChannelByName(const std::string& name)
+{
+    std::map<std::string, Channel*>::iterator it = _channels.find(name);
+    if (it == _channels.end())
+        return (NULL);
+    return (it->second);
 }
 
 Channel	*Server::createChannel(const std::string &name, User *user)

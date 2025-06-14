@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 21:27:51 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/13 23:40:00 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 02:37:57 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,31 +29,10 @@ bool Server::isNicknameInUse(const std::string& nick) const
 {
 	for (std::map<int, User*>::const_iterator it = _users.begin(); it != _users.end(); ++it)
 	{
-		std::cout << "OKAYYY TEST 12 12" << it->second->getNick() << std::endl;
 		if (it->second->getNick() == nick)
-			return true;
+			return (true);
 	}
-	return false;
-}
-
-
-std::string Server::parseUserName(const std::vector<std::string>& params, size_t index)
-{
-    if (index >= params.size())
-    	return "";
-    
-    std::string realname;
-    for (size_t i = index; i < params.size(); ++i)
-    {
-        if (i > index) realname += " ";
-        realname += params[i];
-    }
-    
-    // Remove leading colon if present
-    if (!realname.empty() && realname[0] == ':')
-        realname = realname.substr(1);
-    
-    return realname;
+	return (false);
 }
 
 void Server::processUsername(std::string& username, const std::string& fallbackNick)
@@ -72,11 +51,11 @@ void Server::processUsername(std::string& username, const std::string& fallbackN
 }
 
 
-void Server::endRegister(User* user)
+void Server::endAuthentification(User* user)
 {
-	if (user->isPasswordValidated() && !user->getNick().empty() && !user->getUsername().empty())
+	if (user->isPasswordValid() && !user->getNick().empty() && !user->getUsername().empty())
 	{
-		user->setRegistered(true);
+		user->setAuthentified(true);
 		sendWelcomeMessages(user);
 	}
 }
@@ -90,10 +69,9 @@ void Server::sendWelcomeMessages(User* user)
 	sendToUser(user->getSocketFd(), RPL_WELCOME(nick, user->getFullNameMask()));
 	sendToUser(user->getSocketFd(), RPL_YOURHOST(nick));
 	// sendToUser(user->getSocketFd(), RPL_CREATED(nick, datetime)); // TODO
-	// 004: Capacités serveur
 	sendToUser(user->getSocketFd(), RPL_MYINFO(nick, "", "ti", "kol"));	// Channel modes avec paramètres
 	sendToUser(user->getSocketFd(), RPL_ISUPPORT(nick, "NICKLEN=9 CHANTYPES=# PREFIX=(ov)@+ :are supported by this server")); // TODO reregarder ce moreceau ce que ca fait
-	// Erreur MOTD manquant (à remplacer par l'implémentation complète si besoin)
+	// Erreur MOTD manquant (à remplacer par l'implémentation complète si besoin) -> TODO
 	sendToUser(user->getSocketFd(), ERR_NOMOTD(nick));
 }
 

@@ -6,26 +6,42 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:51:18 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/13 23:26:04 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 04:09:56 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.hpp"
 
-extern std::vector<std::string> split(const std::string& s, char delim);
+void	Server::userJoinChannel(User *user, const std::string &channelName, unsigned int key_index, std::vector<std::string> &keys)
+{	
+	Channel* channel = getChannelByName(channelName);
+	if (!channel)
+		channel = createChannel(channelName, user);
+	else
+	{
+		if (channel->hasKey() && (key_index < keys.size()))
+		{
+			if (!channel->userJoin(user, &keys[key_index ++]))
+				return ;
+		}
+		else if (!channel->userJoin(user))
+			return ;
+	}
+
+	// TODO : checker nom de channels avant creation, et mot de passes (jsp opur nick et user checker aussi)
+
+	// notif du JOIN a tous les membres du channel
+	channel->broadcast(RPL_JOIN(user->getFullNameMask(), channelName));
+	
+	channel->sendWelcomeInfo(user);
+}
 
 void Server::cmd_JOIN(User* user, IRCMessage& msg)
 {
 	const std::vector<std::string>& params = msg.getParams();
-	// 1) validation
 	if (params.empty())
-	{
-		sendToUser(user->getSocketFd(),
-			ERR_NEEDMOREPARAMS(user->getNick(), "JOIN"));
-		return;
-	}
+		return sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "JOIN"));
 
-	// 2) liste de canaux et éventuellement de clés
 	std::vector<std::string> chans = split(params[0], ',');
 	std::vector<std::string> keys;
 	if (params.size() > 1)
@@ -33,57 +49,5 @@ void Server::cmd_JOIN(User* user, IRCMessage& msg)
 
 	unsigned int key_index = 0;
 	for (size_t i = 0; i < chans.size(); ++i)
-	{
-		const std::string& name = chans[i];
-		
-		// 3) création/récupération du Channel
-		Channel* channel = getChannelByName(name);
-		if (!channel)
-			channel = createChannel(name, user);
-		else
-		{
-			if (channel->hasKey() && (key_index < keys.size()))
-			{
-				if (!channel->userJoin(user, &keys[key_index ++]))
-					return ;
-			}
-			else if (!channel->userJoin(user))
-				return ;
-		}
-		
-		channel->printMembers();
-		channel->printOperatorse();
-		// 4) tentative d'ajout
-
-		// TODO : checker nom de channels avant creation, et mot de passes (jsp opur nick et user checker aussi)
-
-		// 5) diffusion du JOIN à tous
-		channel->broadcast(RPL_JOIN(user->getFullNameMask(), name));
-
-		// 6) envoi du topic ou pas de topic
-		if (channel->getTopic().empty())
-		{
-			sendToUser(user->getSocketFd(),
-				RPL_NOTOPIC(user->getNick(), name));
-		}
-		else
-		{
-			sendToUser(user->getSocketFd(),
-				RPL_TOPIC(user->getNick(), name, channel->getTopic()));
-		}
-
-		// 7) envoi de la liste des noms (NAMES)
-		{
-			std::string list;
-			const std::set<User*>& members = channel->getMembers();
-			for (std::set<User*>::const_iterator it = members.begin(); it != members.end(); ++it)
-			{
-				if (!list.empty())
-					list += " ";
-				list += (*it)->getNick();
-			}
-			sendToUser(user->getSocketFd(), RPL_NAMREPLY(user->getNick(), "=", name, list));
-			sendToUser(user->getSocketFd(), RPL_ENDOFNAMES(user->getNick(), name));
-		}
-	}
+		userJoinChannel(user, chans[i], key_index, keys);
 }

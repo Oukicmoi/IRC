@@ -22,16 +22,16 @@ class Channel
 {
 
 	private:
-		bool		_inviteOnly;	  // +i
-		bool		_topicRestricted; // +t
+		bool		_inviteOnly;
+		bool		_topicRestricted;
 		bool		_hasKey;
-		int		 	_userLimit;	   // +l, -1 si pas de limite
+		int		 	_userLimit;
 		
-		time_t	  	_creationTime;	// Pour 329 RPL_CREATIONTIME
+		time_t	  	_creationTime;
 		time_t 		_topicSetTime;
 		
 		std::string	_name;
-		std::string _key;			 // +k
+		std::string _key;
 		std::string	_topic;
 		std::string _topicSetter;
 
@@ -44,72 +44,56 @@ class Channel
 	public:
 		Channel(const std::string& name, Server &server);
 
-		// Accesseurs
-		const std::string&	getName()  const;
-
-		const std::set<User*>&	getMembers() const;
-		// Membres
-		bool  	addMember(User* u);
-		void  	removeMember(User* u);
-		bool  	isMember(User* u) const;
-
-		// Opérateurs
-		bool  	addOperator(User* u);
-		void  	removeOperator(User* u);
-		bool  	isOperator(User* u) const;
-
-
-
-		// Broadcast
-		void  	broadcast(const std::string& message, User* except = NULL) const;
-
-		// GETTERS
+		const std::string	&getName() const { return (_name); };
+		const std::string	&getTopic() const { return (_topic); };
+		const std::string	&getTopicSetter() const { return (_topicSetter); }
+		const time_t		&getTopicSetTime() const { return (_topicSetTime); }
+		const std::string	&getKey() const { return (_key); }
+		const time_t		&getCreationTime() const { return (_creationTime); }
+		bool		isTopicRestricted() const { return (_topicRestricted); }
+		bool		isEmpty() const { return (_members.empty()); }
+		int	 		getSize() const { return (_members.size()); }
+		bool  		isMember(User* user) const { return (_members.find(user) != _members.end()); }
+		bool  		isOperator(User* user) const { return (_operators.find(user) != _operators.end()); }
 		bool		userOnInviteList(User *user) { return (_inviteList.find(user) != _inviteList.end()); }
-		bool		isInviteOnly() const { return _inviteOnly; }
-		bool		isTopicRestricted() const { return _topicRestricted; }
-		std::string	getKey() const { return _key; }
-		bool		hasKey() const { return _hasKey; }
-		int			getUserLimit() const { return _userLimit; }
-		time_t	 	getCreationTime() const { return _creationTime; }
-		int	 		getSize() const { return _members.size(); }
-
-		//SETTERS
-		void	setInviteOnly(bool b) { _inviteOnly = b; }
-		void	setTopicRestricted(bool b) { _topicRestricted = b; }
-		void	setKey(const std::string& k) { _key = k; }
-		void	removeKey() { _key = ""; }
+		bool		isInviteOnly() const { return (_inviteOnly); }
+		bool		hasKey() const { return (_hasKey); }
+		int			getUserLimit() const { return (_userLimit); }
+		
+		
+		std::string	getNickList() const;
+		
+		void	setInviteOnly(bool invite) { _inviteOnly = invite; }
+		void	setTopicRestricted(bool topicRestricted) { _topicRestricted = topicRestricted; }
+		void	setTopic(const std::string& topic) { _topic = topic; }
+		void	setTopicSetter(const std::string& setter) { _topicSetter = setter; }
+		void	setTopicSetTime(std::time_t t) { _topicSetTime = t; }
+		void	setKey(const std::string& key) { _key = key; }
 		void	setUserLimit(int n) { _userLimit = n; }
-		void	removeUserLimit() { _userLimit = -1; }
+
+		bool  	addMember(User* user);
+		void  	removeMember(User* user);
+		bool  	addOperator(User* user);
+		void  	removeOperator(User* user);
+
 		
 		void	rmFromInviteList(User *user) { _inviteList.erase(user); }
 		bool	canUserJoin(User *user, const std::string *password);
 		bool 	userJoin(User *user, std::string *password = NULL);
-
-
-		//// TOPIC
-
-		void	setTopic(const std::string& topic);
-		std::string	getTopic() const;
-
-		void	setTopicSetter(const std::string& setter);
-		std::string	getTopicSetter() const;
-
-		void	setTopicSetTime(std::time_t t);
-		std::time_t	getTopicSetTime() const;
-
-		bool	isTopicProtected() const; // true si +t
-		void	printOperatorse() const;
-		void	printMembers() const;
-
-
-		// MODE
 		
+		
+		// MODES
 		void	mode_invite(bool sign, std::string &userPrefix);
 		void	mode_topicRestriction(bool sign, std::string &userPrefix);
 		void	mode_key(bool sign, std::string &userPrefix, std::string *password = NULL);
 		void	mode_operators(bool sign, User* user, User *target);
 		void	mode_userLimit(bool sign, User *user, std::string *limit = NULL);
-
+		
+		void	sendWelcomeInfo(User *user);
+		void  	broadcast(const std::string& message, User* except = NULL) const;
+		
+		void	printOperatorse() const;
+		void	printMembers() const;
 };
 
 #endif

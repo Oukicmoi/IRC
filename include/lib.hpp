@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:22:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/07 20:36:32 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 03:28:27 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,26 @@
 # define MAGENTA "\033[0;35m"
 # define BMAGENTA "\033[1;35m"
 
-# define NICKLEN 9
-# define USERLEN 9
 
-#define ERR_SYS(msg) std::cerr << BRED << "error " << msg << ": " << R << std::strerror(errno) << std::endl
+# define ERR_SYS(msg) std::cerr << BRED << "error " << msg << ": " << R << std::strerror(errno) << std::endl
+
+std::vector<std::string> split(const std::string& s, char delim);
+
+template <typename T>
+T	typeOfString(const std::string &str)
+{
+	std::istringstream iss(str);
+    T	value;
+    
+    if (!(iss >> value))
+		throw std::runtime_error(str + " can't be converted to desired type");
+
+
+	char remaining;
+	if (iss.get(remaining))
+		throw std::runtime_error(str + " can't be converted to desired type");
+    return (value);
+}
 
 # include "config.hpp"
 

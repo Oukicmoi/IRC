@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:21:41 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 01:24:31 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 03:17:54 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ class User
 		std::string getIPFromSocket(int socket_fd);
 		
 	public:
-		std::string	recvBuffer;
+		std::string	_recvBuffer;
 		User(int socket_fd);
 		~User();
 		
@@ -50,9 +50,6 @@ class User
 		void	setPassword(const std::string& pass) { _password = pass; }
 		void	setAuthentified(bool status) { _authentified = status; }
 		void	setPasswordValid(bool status) { _passValid = status; }
-		
-
-
 };
 
 #endif

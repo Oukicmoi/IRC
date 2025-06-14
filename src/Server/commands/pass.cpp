@@ -16,33 +16,16 @@ void Server::cmd_PASS(User* user, IRCMessage& msg)
 {
     const std::vector<std::string>& params = msg.getParams();
 
-    // 1. Vérification des paramètres
     if (params.empty())
-    {
-        sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "PASS"));
-        return;
-    }
+        return sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "PASS"));
 
-    // 2. Vérification état utilisateur
-    if (user->isAuthentified())
-    {
-        sendToUser(user->getSocketFd(), ERR_ALREADYREGISTERED(user->getNick()));
-        return;
-    }
-
-    // 3. Validation du mot de passe
-    const std::string& givenPass = params[0];
-    std::cout << "params : " << msg.getParams()[0] << std::endl;
-    std::cout << "mdp : " << this->_mdp <<  std::endl;
-    if (givenPass != this->_mdp)
-    {
-        sendToUser(user->getSocketFd(), ERR_PASSWDMISMATCH(user->getNick()));
-        // Optionnel : close(user->getSocketFd());
-        return;
-    }
-        std::cout << "here" << std::endl;
+    if (user->isAuthentified())    
+        return sendToUser(user->getSocketFd(), ERR_ALREADYREGISTERED(user->getNick()));
 
 
-    // 4. Authentification réussie
-    user->setPasswordValidated(true);
+    const std::string &givenPass = params[0];
+    if (givenPass != _mdp)
+        return sendToUser(user->getSocketFd(), ERR_PASSWDMISMATCH(user->getNick()));
+
+    user->setPasswordValid(true);
 }

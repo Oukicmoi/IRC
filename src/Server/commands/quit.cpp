@@ -25,13 +25,13 @@ void	Server::clientQuits(int client_fd, std::string reason)
         Channel* chan = it->second;
 
         // S'il est dans ce channel
-        if (chan->getMembers().find(_users[client_fd]) != chan->getMembers().end())
+        if (chan->isMember(_users[client_fd]))
         {
             chan->broadcast(RPL_QUIT((_users[client_fd])->getFullNameMask(), reason), _users[client_fd]);  // envoyer aux autres
             chan->removeMember(_users[client_fd]);        // le retirer
 
             // S'il ne reste plus personne dans le channel, on peut le supprimer
-            if (chan->getMembers().empty())
+            if (chan->isEmpty())
             {
                 delete chan;
                 _channels.erase(it ++);
@@ -42,25 +42,22 @@ void	Server::clientQuits(int client_fd, std::string reason)
     }
 
     // Optionnel : envoyer un message d'erreur localement (pas obligatoire)
-    send(_users[client_fd]->getSocketFd(), ("ERROR :" + reason + "\r\n").c_str(), reason.length() + 9, 0);
+    send(_users[client_fd]->getSocketFd(), ("ERROR :" + reason + "\r\n").c_str(), reason.length() + 9, 0); // TODO changer tous les send en sendToUser
 
-    // Fermer la socket immédiatement
-    close(_users[client_fd]->getSocketFd());
-
-    // Retirer l'utilisateur du map _users
     delete _users[client_fd];
     _users.erase(client_fd);
-    std::cout << "\t" << B << client_fd << R << " quit the server";
+
+	// print user quits
+    std::cout << "\t" << B << client_fd << R << " quit the network";
     if (reason.size())
         std::cout << ": " << B << reason << R;
     std::cout << std::endl;
 }
 
 
-
 void Server::cmd_QUIT(User* user, IRCMessage& msg)
 {
-    std::string reason = "Quit: ";
+    std::string reason = "QUIT: ";
     if (!msg.getParams().empty())
         reason += msg.getParams()[0];
 

@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/13 01:27:46 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 04:07:31 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,46 +24,57 @@ Channel::Channel(const std::string& name, Server &server):
 	_topic(""),
 	_topicSetter(""),
 	_server(server) {}
-	
-                                                          
-const std::string& Channel::getName()  const { return _name; }
-const std::set<User*>& Channel::getMembers() const { return(_members); }
-
-Channel* Server::getChannelByName(const std::string& name)
-{
-    std::map<std::string, Channel*>::iterator it = _channels.find(name);
-    if (it == _channels.end())
-        return NULL;
-    return it->second;
-}
-
 
 bool Channel::addMember(User* u)
 {
     std::pair<std::set<User*>::iterator,bool> result = _members.insert(u);
-    return result.second;
+    return (result.second);
 }
 
-void Channel::removeMember(User* u)
+void Channel::removeMember(User* user)
 {
-    _members.erase(u);
-    _operators.erase(u);
+    _members.erase(user);
+    _operators.erase(user);
 }
-bool Channel::isMember(User* u) const { return (_members.find(u) != _members.end()); }
 
 
 bool Channel::addOperator(User* u)
 {
     if (!isMember(u))
-        return (false);
-    _operators.insert(u);
-    return (true);
+		return (false);
+	_operators.insert(u);
+	return (true);
 }
-void Channel::removeOperator(User* u) { _operators.erase(u); }
-bool Channel::isOperator(User* u) const { return (_operators.find(u) != _operators.end()); }
+void Channel::removeOperator(User* user) { _operators.erase(user); }
 
-typedef std::map<std::string,Channel*> ChannelMap;
 
+std::string	Channel::getNickList() const
+{
+	std::string nickList;
+	for (std::set<User*>::const_iterator it = _members.begin(); it != _members.end(); ++it)
+	{
+		if (!nickList.empty())
+			nickList += " ";
+		if (isOperator(*it))
+			nickList += "@";
+		nickList += (*it)->getNick();
+	}
+	return (nickList);
+}
+
+
+void	Channel::sendWelcomeInfo(User *user)
+{
+	// envoi du topic du channel
+	if (_topic.empty())
+		Server::sendToUser(user->getSocketFd(), RPL_NOTOPIC(user->getNick(), _name));
+	else
+		Server::sendToUser(user->getSocketFd(), RPL_TOPIC(user->getNick(), _name, _topic));
+
+	// envoi de la liste des nick des users du channel (NAMES)
+	Server::sendToUser(user->getSocketFd(), RPL_NAMREPLY(user->getNick(), "=", _name, getNickList()));
+	Server::sendToUser(user->getSocketFd(), RPL_ENDOFNAMES(user->getNick(), _name));
+}
 
 bool Channel::userJoin(User *user, std::string *password)
 {  
@@ -103,19 +114,6 @@ void Channel::broadcast(const std::string& message, User* except) const
 } 
 
 
-// TOPIC
-void Channel::setTopic(const std::string& topic) { _topic = topic; }
-std::string Channel::getTopic() const { return _topic; }
-
-void Channel::setTopicSetter(const std::string& setter) { _topicSetter = setter; }
-std::string Channel::getTopicSetter() const { return _topicSetter; }
-
-void Channel::setTopicSetTime(std::time_t t) { _topicSetTime = t; }
-std::time_t Channel::getTopicSetTime() const { return _topicSetTime; }
-
-bool Channel::isTopicProtected() const { return _topicRestricted; } // +t
-
-
 void Channel::printOperatorse() const
 {
     std::cout << "Operators on channel " << _name << " (“ operators.size() = " << _operators.size() << "):\n";
@@ -138,7 +136,7 @@ void	Channel::mode_invite(bool sign, std::string &userPrefix)
 {
 	_inviteOnly = sign;
 	std::cout << "MODE i: sign " << sign << std::endl;
-	broadcast(":" + userPrefix + " MODE #" + _name + " " + (sign? "+" : "-") + "i\r\n");
+	broadcast(RPL_MODE(userPrefix, _name, (sign? "+" : "-") + "i"));
 }
 
 //  Set/remove the restrictions of the TOPIC command to channel operators
@@ -146,7 +144,7 @@ void	Channel::mode_topicRestriction(bool sign, std::string &userPrefix)
 {
 	_topicRestricted = sign;
 	std::cout << "MODE t: sign " << sign << std::endl;
-	broadcast(":" + userPrefix + " MODE #" + _name + " " + (sign? "+" : "-") + "t\r\n");
+	broadcast(RPL_MODE(userPrefix, _name, (sign? "+" : "-") + "t"));
 }
 
 // Set/remove the channel key (password)
@@ -157,12 +155,12 @@ void	Channel::mode_key(bool sign, std::string &userPrefix, std::string *password
 	if (_hasKey && password)
 	{
 		_key = *password;
-		broadcast(":" + userPrefix + " MODE #" + _name + " " + (sign? "+" : "-") + "k" + " " + _key + "\r\n");
+		broadcast(RPL_MODE_WITH_ARG(userPrefix, _name, (sign? "+" : "-") + "k", _key));
 	}
 	else
 	{
 		_hasKey = false;
-		broadcast(":" + userPrefix + " MODE #" + _name + " " + "-k\r\n");
+		broadcast(RPL_MODE(userPrefix, _name, "-k"));
 	}
 }
 
@@ -175,9 +173,9 @@ void	Channel::mode_operators(bool sign, User *user, User *target)
 	{
 		bool is_operator = (_operators.find(target) != _operators.end());
 		if (sign && is_operator)
-			Server::sendToUser(user->getSocketFd(), ":" + _server.getServerName() + " 482 " + user->getNick() + " #" + _name + " :User is already an operator\r\n");
+			Server::sendToUser(user->getSocketFd(), ERR_ALREADYCHANOPRIVS(user->getNick(), _name));
 		else if (!sign && !is_operator)
-			Server::sendToUser(user->getSocketFd(), ":" + _server.getServerName() + " 482 " + user->getNick() + " #" + _name + " :User is not an operator\r\n");
+			Server::sendToUser(user->getSocketFd(), ERR_CHANOPRIVSNEEDED(user->getNick(), _name));
 		else
 		{
 			if (sign)
@@ -189,7 +187,8 @@ void	Channel::mode_operators(bool sign, User *user, User *target)
 				else
 					_operators.erase(target);
 			}
-			broadcast(":" + user->getPrefix() + " MODE #" + _name + " " + (sign ? "+" : "-") + "o" + + "\r\n");
+			
+			broadcast(RPL_MODE_WITH_ARG(user->getFullNameMask(), _name, (sign? "+" : "-") + "o", target->getNick()));
 		}
 		
 	}
@@ -204,16 +203,16 @@ void	Channel::mode_userLimit(bool sign, User *user, std::string *limit)
 		try
 		{
 			_userLimit = (int)typeOfString<unsigned int>(*limit);
-			broadcast(":" + user->getPrefix() + " MODE #" + _name + " " + "+l" + " " + *limit + "\r\n");
+			broadcast(RPL_MODE_WITH_ARG(user->getFullNameMask(), _name, "+l", *limit));
 		}
 		catch (std::exception &e)
 		{
-			Server::sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(_server.getServerName(), _name, "l", "Invalid limit parameter (must be a positive number)"));
+			Server::sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(user->getNick(), _name, "l", "Invalid limit parameter (must be a positive number)"));
 		}
 	}
 	else
 	{
 		_userLimit = -1;
-		broadcast(":" + user->getPrefix() + " MODE #" + _name + " " + "-l\r\n");
+		broadcast(RPL_MODE(user->getFullNameMask(), _name, "-l"));
 	}
 }

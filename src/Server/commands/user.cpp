@@ -14,27 +14,23 @@
 
 void Server::cmd_USER(User* user, IRCMessage& msg)
 {
-    const std::vector<std::string>& params = msg.getParams();
+	// USER <username> <hostname> <servername> <realname>
+	std::vector<std::string> &params = msg.getParams();
     if (params.size() < 4)
-    {
-        sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "USER"));
-        return;
-    }
+        return sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "USER"));
+
     if (user->isAuthentified())
     {
         sendToUser(user->getSocketFd(), ERR_ALREADYREGISTERED(user->getNick()));
         return;
     }
-    // Process user parameters
-    std::string username = params[0];
+    std::string &username = params[0];
     
     // Validate and normalize username
     processUsername(username, user->getNick());
 
-    // Update user attributes
     user->setUsername(username);
-    // user->setNick(realname);
     
     // Complete registration if possible
-    endRegister(user);
+    endAuthentification(user);
 }

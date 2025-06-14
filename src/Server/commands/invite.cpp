@@ -14,33 +14,30 @@
 
 void Server::cmd_INVITE(User* user, IRCMessage& msg)
 {
-    const std::vector<std::string>& p = msg.getParams();
-    if (p.size() < 2)
-        return(sendToUser(user->getSocketFd(),ERR_NEEDMOREPARAMS(user->getNick(), "INVITE")), (void)p); // TODO (void)p
+    const std::vector<std::string>& params = msg.getParams();
+    if (params.size() < 2)
+        return sendToUser(user->getSocketFd(),ERR_NEEDMOREPARAMS(user->getNick(), "INVITE"));
 
-    std::string targetNick  = p[0];
-    std::string channelName = p[1];
+    std::string targetNick  = params[0];
+    std::string channelName = params[1];
 
     Channel* channel = getChannelByName(channelName);
     if (!channel)
-        return(sendToUser(user->getSocketFd(),ERR_NOSUCHCHANNEL(user->getNick(), channelName)), (void)p);
+        return sendToUser(user->getSocketFd(), ERR_NOSUCHCHANNEL(user->getNick(), channelName));
 
-    // Only members may invite
     if (!channel->isMember(user))
-        return(sendToUser(user->getSocketFd(),ERR_NOTONCHANNEL(user->getNick(), channelName)), (void)p);
+        return sendToUser(user->getSocketFd(), ERR_NOTONCHANNEL(user->getNick(), channelName));
 
     // If +i is set, only ops may invite
     if (channel->isInviteOnly() && !channel->isOperator(user))
-        return(sendToUser(user->getSocketFd(),ERR_CHANOPRIVSNEEDED(user->getNick(), channelName)), (void)p);
+        return sendToUser(user->getSocketFd(), ERR_CHANOPRIVSNEEDED(user->getNick(), channelName));
 
     User* target = getUserByNick(targetNick);
     if (!target)
-        return(sendToUser(user->getSocketFd(),ERR_NOSUCHNICK(user->getNick(), targetNick)), (void)p);
+        return sendToUser(user->getSocketFd(), ERR_NOSUCHNICK(user->getNick(), targetNick));
 
-    // If target is already on channel, error
     if (channel->isMember(target))
-        return(sendToUser(user->getSocketFd(),
-		ERR_USERONCHANNEL(user->getNick(), targetNick, channelName)), (void)p);
+        return sendToUser(user->getSocketFd(), ERR_USERONCHANNEL(user->getNick(), targetNick, channelName));
 
     // Notify sender that invite succeeded
     sendToUser(user->getSocketFd(), RPL_INVITING(user->getNick(), targetNick, channelName));

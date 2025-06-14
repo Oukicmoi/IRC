@@ -30,7 +30,7 @@ std::vector<std::string>::iterator	Server::getFirstNonModeArg(std::vector <std::
 
 void	Server::applyChannelMode(char mode, bool sign, User *user, Channel *channel, std::vector<std::string> &params)
 {
-	std::string userPrefix = user->getPrefix();
+	std::string userPrefix = user->getFullNameMask();
 	if (mode == 'i')
 		channel->mode_invite(sign, userPrefix);
 	else if (mode == 't')
@@ -39,13 +39,13 @@ void	Server::applyChannelMode(char mode, bool sign, User *user, Channel *channel
 	{
 		if (sign)
 		{
-			std::vector<std::string>::iterator it = getFirstNonModeArg(params);
-			if (it == params.end())
-				sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(_server_name, channel->getName(), "k", "You must specify a parameter for the key mode"));
+			std::vector<std::string>::iterator password = getFirstNonModeArg(params);
+			if (password == params.end())
+				sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(user->getNick(), channel->getName(), "k", "You must specify a parameter for the key mode"));
 			else
 			{
-				channel->mode_key(sign, userPrefix, &(*it));
-				params.erase(it);
+				channel->mode_key(sign, userPrefix, &(*password));
+				params.erase(password);
 			}
 		}
 		else
@@ -53,30 +53,30 @@ void	Server::applyChannelMode(char mode, bool sign, User *user, Channel *channel
 	}
 	else if (mode == 'o')
 	{
-		std::vector<std::string>::iterator it = getFirstNonModeArg(params);
-		if (it == params.end())
-			sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(_server_name, channel->getName(), "l", "You must specify a parameter for the operator mode"));
+		std::vector<std::string>::iterator targetNick = getFirstNonModeArg(params);
+		if (targetNick == params.end())
+			sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(user->getNick(), channel->getName(), "l", "You must specify a parameter for the operator mode"));
 		else
 		{
-			User *target = getUserByNick(*it);
+			User *target = getUserByNick(*targetNick);
 			if (!target)
-				sendToUser(user->getSocketFd(), ERR_NOSUCHNICK(_server_name, *it));
+				sendToUser(user->getSocketFd(), ERR_NOSUCHNICK(user->getNick(), *targetNick));
 			else
 				channel->mode_operators(sign, user, target);
-			params.erase(it);
+			params.erase(targetNick);
 		}
 	}
 	else if (mode == 'l')
 	{
 		if (sign)
 		{
-			std::vector<std::string>::iterator it = getFirstNonModeArg(params);
-			if (it == params.end())
-				sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(_server_name, channel->getName(), "l", "You must specify a parameter for the limit mode"));
+			std::vector<std::string>::iterator limit = getFirstNonModeArg(params);
+			if (limit == params.end())
+				sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(user->getNick(), channel->getName(), "l", "You must specify a parameter for the limit mode"));
 			else
 			{
-				channel->mode_userLimit(sign, user, &(*it));
-				params.erase(it);
+				channel->mode_userLimit(sign, user, &(*limit));
+				params.erase(limit);
 			}
 		}
 		else
@@ -87,6 +87,9 @@ void	Server::applyChannelMode(char mode, bool sign, User *user, Channel *channel
 }
 
 
+// waits for any arg that starts with + or - and check all char inside to see if they are a known mode : ktoli
+// 	-> if a mode is known, search for the first arg inside the params if needed (kol), and rm this arg from other modes args
+//		Example: +kil lala 15 -> k will search for first param lala for password, then l will have 15 as first param
 void	Server::applyChannelModes(User* user, Channel* channel, std::vector<std::string> &params)
 {
 	bool	oneValid = false;
@@ -94,24 +97,21 @@ void	Server::applyChannelModes(User* user, Channel* channel, std::vector<std::st
 	{
 		std::string &param = params[0];
 		if (param.empty())
+		{
 			params.erase(params.begin());
-		bool	sign = true;
-		if (param[0] == '-')
-			sign = false;
-		if (sign && (param[0] != '+'))
+			continue ;
+		}
+		bool	sign = (param[0] == '+');
+		if (!sign && (param[0] != '-'))
 			;
 		else
 		{
 			oneValid = true;
 			unsigned int i = 1;
-			unsigned int last_op = 0;
 			while (i < param.size())
 			{
-				if ((last_op != i - 1) && ((param[i] == '+') || (param[i] == '-')))
-				{
-					last_op = i;
+				if ((param[i] == '+') || (param[i] == '-'))
 					sign = (param[i ++] == '+');
-				}
 				else
 					applyChannelMode(param[i ++], sign, user, channel, params);
 			}
@@ -156,7 +156,7 @@ void Server::cmd_MODE(User* user, IRCMessage& msg)
     if (params[0].empty() || (params[0][0] != '#'))
         return sendToUser(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));
 
-    Channel* channel = getChannels()[params[0]];
+    Channel* channel = getChannelByName(params[0]);
     if (!channel)
         return sendToUser(user->getSocketFd(), ERR_NOSUCHCHANNEL(user->getNick(), params[0]));
 

@@ -7,22 +7,20 @@
 
 # define IRC_MSG(content) (std::string(":") + HOSTNAME + " " + content + "\r\n")
 
-
 // REPONSES COMMANDES STANDARTS /////////////////////////////////////////////////////////////
 
 # define RPL_PONG(msg)															(std::string("PONG ") + SERVER_NAME + " :" + msg + "\r\n")
 # define RPL_PRIVMSG(userFullName, target_nick, msg)							(":" + userFullName + " PRIVMSG " + target_nick + " :" + msg + "\r\n")
 # define RPL_INVITE(userFullName, invited_nick, channel)						(":" + userFullName + " INVITE " + invited_nick + " :" + channel + "\r\n")
-# define RPL_KICK(userFullName, channel, kicked_nick, reason)					(":" + userFullName + " KICK " + channel + " " + kicked_nick + " :" + reason)
+# define RPL_KICK(userFullName, channel, kicked_nick, reason)					(":" + userFullName + " KICK " + channel + " " + kicked_nick + " :" + reason + "\r\n")
 # define RPL_JOIN(userFullName, channel)										(":" + userFullName + " JOIN " + channel + "\r\n")
 # define RPL_QUIT(userFullName, reason)											(":" + userFullName + " QUIT :" + reason + "\r\n")
+# define RPL_MODE(userFullName, channel, change)								(":" + userFullName + " MODE " + channel + " " + change + "\r\n")
+# define RPL_MODE_WITH_ARG(userFullName, channel, change, change_args)			(":" + userFullName + " MODE " + channel + " " + change + " " + change_args + "\r\n")
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////:
 
 // RPL /////////////////////////////////////////////////////////////////////////////////////
-
-
-// REPONSES GENERALES (001-009)
 
 // WELCOME MSG: PASS + NICK + USER -> authentified=WELCOME
 # define RPL_WELCOME(nick, userFullName) 					 					(IRC_MSG("001 " + nick + " :Welcome to the " + NETWORK_NAME + " Network, " + userFullName))
@@ -61,7 +59,8 @@
 # define ERR_CHANNELISFULL(nick, channel)										(IRC_MSG("471 " + nick + " " + channel + " :Cannot join channel (+l)"))
 # define ERR_INVITEONLYCHAN(nick, channel)										(IRC_MSG("473 " + nick + " " + channel + " :Cannot join channel (+i)"))
 # define ERR_BADCHANNELKEY(nick, channel)										(IRC_MSG("475 " + nick + " " + channel + " :Cannot join channel (+k)"))
-# define ERR_CHANOPRIVSNEEDED(nick, channel)									(IRC_MSG("482 " + nick + " " + channel + " :You're not channel operator"))
+# define ERR_ALREADYCHANOPRIVS(nick, channel)									(IRC_MSG("482 " + nick + " " + channel + " :You're already a channel operator"))
+# define ERR_CHANOPRIVSNEEDED(nick, channel)									(IRC_MSG("482 " + nick + " " + channel + " :You're not a channel operator"))
 # define ERR_LASTCHANOP(nick, channel)											(IRC_MSG("485 " + nick + " " + channel + " :You're the last channel operator"))
 # define ERR_UMODEUNKNOWNFLAG(nick)												(IRC_MSG("501 " + nick + " :Unknown MODE flag"))
 # define ERR_INVALIDMODEPARAM(nick, channel, mode, error_msg)					(IRC_MSG("696 " + nick + " " + channel + " " + mode + " :" + error_msg))

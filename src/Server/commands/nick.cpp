@@ -16,39 +16,26 @@ void Server::cmd_NICK(User* user, IRCMessage& msg)
 {
     const std::vector<std::string>& params = msg.getParams();
     
-    // 1. Vérifier la présence du nickname
     if (params.empty())
-    {
-        sendToUser(user->getSocketFd(), ERR_NONICKNAMEGIVEN(user->getNick()));
-        return;
-    }
+        return sendToUser(user->getSocketFd(), ERR_NONICKNAMEGIVEN(user->getNick()));
 
     std::string newNick = params[0];
 
-    // 2. Valider le format du nickname
     if (!isValidNickname(newNick))
-    {
-        sendToUser(user->getSocketFd(), ERR_ERRONEUSNICKNAME(user->getNick(), newNick));
-        return;
-    }
+        return sendToUser(user->getSocketFd(), ERR_ERRONEUSNICKNAME(user->getNick(), newNick));
 
-    // 3. Vérifier la disponibilité du nickname
     if (isNicknameInUse(newNick))
-    {
-        sendToUser(user->getSocketFd(), ERR_NICKNAMEINUSE(user->getNick(), newNick));
-        return;
-    }
+        return sendToUser(user->getSocketFd(), ERR_NICKNAMEINUSE(user->getNick(), newNick));
 
-    // 4. Mise à jour du nickname
     std::string oldNick = user->getNick();
     user->setNick(newNick);
 
-    // 5. Notifier le changement si déjà enregistré
     if (user->isAuthentified())
     {
-        std::string nickChangeMsg = ":" + oldNick + "!" + user->getUsername() + "@localhost NICK :" + newNick + "\r\n";
+        std::string nickChangeMsg = ":" + oldNick + "!" + user->getUsername() + "@localhost NICK :" + newNick + "\r\n"; // TODO RPL message
         broadcastToAllChannels(user, nickChangeMsg);
     }
 
-    endRegister(user);
+	// end authentification if possible
+    endAuthentification(user);
 }
