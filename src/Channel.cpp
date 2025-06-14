@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 04:34:27 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 04:36:44 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -315,7 +315,7 @@ void	Channel::applyModes(User* user, IRCMessage &msg)
 		Server::sendToUser(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));
 }
 
-void	Channel::sendModesToUser(User* user) // TODO mettre dans channel
+void	Channel::sendModesToUser(User* user)
 {
 	std::string modes = "+";
 	std::string args = "";

@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:48:09 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 02:55:17 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 04:36:16 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void Server::cmd_PRIVMSG(User* user, IRCMessage& msg)
 
 	// Vérifie qu'il y a au moins 2 paramètres (cible + message)
 	if (params.size() < 1)
-		return sendToUser(user->getSocketFd(), ERR_NORECIPIENT(user->getNick(), "PRIVMSG")); // TODO changer en sendToUser
+		return sendToUser(user->getSocketFd(), ERR_NORECIPIENT(user->getNick(), "PRIVMSG"));
 
 	if ((params.size() < 2) || params[1].empty())
 		return sendToUser(user->getSocketFd(), ERR_NOTEXTTOSEND(user->getNick()));
