@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:51:18 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 04:09:56 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 19:24:28 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,11 @@ void	Server::userJoinChannel(User *user, const std::string &channelName, unsigne
 {	
 	Channel* channel = getChannelByName(channelName);
 	if (!channel)
+	{
 		channel = createChannel(channelName, user);
+		if (!channel)
+			return ;
+	}
 	else
 	{
 		if (channel->hasKey() && (key_index < keys.size()))

@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 18:59:03 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 19:29:32 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,15 @@ Channel* Server::getChannelByName(const std::string& name)
     return (it->second);
 }
 
-Channel	*Server::createChannel(const std::string &name, User *user)
+Channel	*Server::createChannel(const std::string &channelName, User *user)
 {
-	Channel *channel = new Channel(name, *this);
+	if (!isValidChannelPrefix(channelName))
+		return (sendToUser(user->getSocketFd(), ERR_BADCHANNAME(user->getNick(), channelName)), (Channel *)NULL);
+	if (!isValidChannelName(channelName))
+		return (sendToUser(user->getSocketFd(), ERR_BADCHANMASK(user->getNick(), channelName)), (Channel *)NULL);
+	Channel *channel = new Channel(channelName, *this);
 	channel->addOperator(user);
-	_channels[name] = channel;
+	_channels[channelName] = channel;
 	return (channel);
 }
 

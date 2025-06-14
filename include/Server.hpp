@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 18:58:26 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 19:25:31 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,13 @@ class Server
 	
 		
 		static bool	isValidChannelName(const std::string &channelName);
+		static bool	isValidChannelPrefix(const std::string &channelName);
 		static std::string	isValidKey(const std::string &key);
 		static bool	isValidNickname(const std::string& nick);
 		bool	isNicknameInUse(const std::string& nick) const;
 		
 		void 	setmdp(const std::string& password) { _mdp = password; }
-		Channel	*createChannel(const std::string &name, User *user);
+		Channel	*createChannel(const std::string &channelName, User *user);
 		
 		
 		//////////////////////////////////////////////////////////////////////////////////////////

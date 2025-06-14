@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 21:27:51 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 19:07:36 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 19:25:15 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 bool	Server::isValidChannelName(const std::string &channelName)
 {	
-	if (channelName.empty() || (channelName[0] != '#'))
-		return (false);
-
 	std::string notAllowed = "\a ,";
 	unsigned int i = 0;
 	while (i < channelName.size())
@@ -26,6 +23,12 @@ bool	Server::isValidChannelName(const std::string &channelName)
 	}
 	return (true);
 }
+
+bool	Server::isValidChannelPrefix(const std::string &channelName)
+{	
+	return (channelName.empty() || (channelName[0] != '#'));
+}
+
 
 
 std::string	Server::isValidKey(const std::string &key)

@@ -60,6 +60,8 @@
 # define ERR_INVITEONLYCHAN(nick, channel)										(IRC_MSG("473 " + nick + " " + channel + " :Cannot join channel (+i)"))
 # define ERR_BADCHANNELKEY(nick, channel)										(IRC_MSG("475 " + nick + " " + channel + " :Cannot join channel (+k) - Invalid channel key"))
 # define ERR_INVALIDKEY(nick, channel, reason)									(IRC_MSG("475 " + nick + " " + channel + " :Invalid channel key (" + reason + ")"))
+# define ERR_BADCHANMASK(nick, channel)											(IRC_MSG("476 " + nick + " " + channel + " :Bad Channel Mask"))
+# define ERR_BADCHANNAME(nick, channel)											(IRC_MSG("479 " + nick + " " + channel + " :Invalid channel prefix"))
 # define ERR_ALREADYCHANOPRIVS(nick, channel)									(IRC_MSG("482 " + nick + " " + channel + " :You're already a channel operator"))
 # define ERR_CHANOPRIVSNEEDED(nick, channel)									(IRC_MSG("482 " + nick + " " + channel + " :You're not a channel operator"))
 # define ERR_LASTCHANOP(nick, channel)											(IRC_MSG("485 " + nick + " " + channel + " :You're the last channel operator"))
