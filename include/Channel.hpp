@@ -78,6 +78,7 @@ class Channel
 		void  	removeOperator(User* user);
 
 		
+		void	addToInviteList(User *user) { _inviteList.insert(user); }
 		void	rmFromInviteList(User *user) { _inviteList.erase(user); }
 		bool	canUserJoin(User *user, const std::string *password);
 		bool 	userJoin(User *user, std::string *password = NULL);

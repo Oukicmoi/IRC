@@ -42,6 +42,7 @@ void Server::cmd_INVITE(User* user, IRCMessage& msg)
     // Notify sender that invite succeeded
     sendToUser(user->getSocketFd(), RPL_INVITING(user->getNick(), targetNick, channelName));
 
+	channel->addToInviteList(target);
     // Send INVITE to target
     sendToUser(target->getSocketFd(), RPL_INVITE(user->getFullNameMask(), targetNick, channelName));
 }
