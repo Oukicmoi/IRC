@@ -38,6 +38,8 @@ void	Server::clientQuits(int client_fd, std::string reason)
                 continue;
             }
         }
+		else if (chan->userOnInviteList(_users[client_fd]))
+			chan->rmFromInviteList(_users[client_fd]);
         it ++;
     }
 

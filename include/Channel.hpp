@@ -100,6 +100,7 @@ class Channel
 		
 		void	printOperatorse() const;
 		void	printMembers() const;
+		void	printInviteList() const;
 };
 
 #endif

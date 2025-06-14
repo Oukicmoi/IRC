@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 20:35:33 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 20:47:19 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,10 @@ bool	Channel::canUserJoin(User *user, const std::string *password)
 			return (Server::sendToUser(user->getSocketFd(), ERR_BADCHANNELKEY(user->getNick(), _name)), false);
 	}
 	if (_inviteOnly && !userOnInviteList(user))
+	{
+		
 		return (Server::sendToUser(user->getSocketFd(), ERR_INVITEONLYCHAN(user->getNick(), _name)), false);
+	}
 	if ((_userLimit >= 0) && (_userLimit <= getSize()))
 		return (Server::sendToUser(user->getSocketFd(), ERR_CHANNELISFULL(user->getNick(), _name)), false);
 	return (true);
@@ -131,6 +134,13 @@ void Channel::printMembers() const
 {
     std::cout << "Members on channel " << _name << " (“ _members.size() = " << _members.size() << "):\n";
     for (std::set<User*>::const_iterator it = _members.begin(); it != _members.end(); ++it)
+        std::cout << "  - " << (*it)->getNick() << "\n";
+}
+
+void Channel::printInviteList() const
+{
+    std::cout << "Invite users on channel " << _name << " (“ _inviteList.size() = " << _inviteList.size() << "):\n";
+    for (std::set<User*>::const_iterator it = _inviteList.begin(); it != _inviteList.end(); ++it)
         std::cout << "  - " << (*it)->getNick() << "\n";
 }
 
