@@ -45,6 +45,7 @@
 // PRIVMSG -> no target found to send msg
 # define ERR_NORECIPIENT(nick, cmd)												(IRC_MSG("411 " + nick + " :No recipient given (" + cmd + ")"))
 # define ERR_NOTEXTTOSEND(nick)													(IRC_MSG("412 " + nick + " :No text to send"))
+# define ERR_INPUTTOOLONG(nick)													(IRC_MSG("417 " + nick + " :Input line was too long"))
 # define ERR_UNKNOWNCOMMAND(nick, cmd)											(IRC_MSG("421 " + nick + " " + cmd + " :Unknown command"))
 # define ERR_NOMOTD(nick)														(IRC_MSG("422 " + nick + " :MOTD File is missing"))
 # define ERR_NONICKNAMEGIVEN(nick)												(IRC_MSG("431 " + nick + ":No nickname given"))

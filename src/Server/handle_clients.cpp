@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 04:14:48 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 21:17:11 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,10 @@ void Server::handleClient(const epoll_event& ev)
         while (true)
         {
             int n = recv(fd, buf, 4096, 0);
-            if (n > 0 && n < 513)
-                _users[ev.data.fd]->_recvBuffer.append(buf, n);
+            if ((n > 0) && (n < 513))
+                _users[fd]->_recvBuffer.append(buf, n);
             else if (n > 512)
-                write(fd,"Hola ! Message trop long la team",33); // TODO change ca
+                return sendToUser(fd, ERR_INPUTTOOLONG(_users[fd]->getNick()));
             else if (n == 0)
 				return clientQuits(fd, "connection lost");
             else
@@ -93,7 +93,7 @@ void Server::handleClient(const epoll_event& ev)
                 }
             }
         }
-		std::string& buffer = _users[ev.data.fd]->_recvBuffer;
+		std::string& buffer = _users[fd]->_recvBuffer;
 		std::cout << "⤷ Recv: '" << BYELLOW << buffer << R << "'" << std::endl;
 		size_t pos;
 		std::string endline = "\r\n";
