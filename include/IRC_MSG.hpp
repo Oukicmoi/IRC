@@ -17,6 +17,8 @@
 # define RPL_QUIT(userFullName, reason)											(":" + userFullName + " QUIT :" + reason + "\r\n")
 # define RPL_MODE(userFullName, channel, change)								(":" + userFullName + " MODE " + channel + " " + change + "\r\n")
 # define RPL_MODE_WITH_ARG(userFullName, channel, change, change_args)			(":" + userFullName + " MODE " + channel + " " + change + " " + change_args + "\r\n")
+# define RPL_TOPIC_SET(userFullName, channel, topic)							(":" + userFullName + " TOPIC " + channel + " :" + newTopic + "\r\n")
+# define RPL_NICK(userFullName, newNick)										(":" + userFullName + " NICK :" + newNick + "\r\n")
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////:
 

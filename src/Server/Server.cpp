@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 19:29:32 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 20:14:38 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	Server::loadCmds(void)
 {
 	_cmds["JOIN"] = &Server::cmd_JOIN;
-	_cmds["PART"] = &Server::cmd_PART;
 	_cmds["PRIVMSG"] = &Server::cmd_PRIVMSG;
 	_cmds["TOPIC"] = &Server::cmd_TOPIC;
 	_cmds["KICK"] = &Server::cmd_KICK;

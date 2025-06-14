@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:21:41 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 03:17:54 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 20:07:15 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ class User
 		bool				hasUsername() const { return (!_Username.empty()); }
 		const std::string	&getHost() const { return (_Host); };
 		std::string			getFullNameMask() const { return (_Nickname + "!~" + _Username + "@" + _HostMask); };
+		std::string			getOldFullNameMask(const std::string &oldNick) const { return (oldNick + "!~" + _Username + "@" + _HostMask); };
 		
 		void	setNick(const std::string& nick) { _Nickname = nick; };
 		void	setUsername(const std::string& username) {_Username = username; }

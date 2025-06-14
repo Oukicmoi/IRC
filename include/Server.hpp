@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 19:25:31 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 20:14:29 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,6 @@ class Server
 		// COMMANDS //////////////////////////////////////////////////////////////////////////////////////////
 	
 		void	cmd_JOIN(User* user, IRCMessage &msg);
-		void	cmd_PART(User* user, IRCMessage &msg);
 		void	cmd_PRIVMSG(User* user, IRCMessage &msg);
 		void	cmd_TOPIC(User* user, IRCMessage &msg);
 		void	cmd_PASS(User* user, IRCMessage &msg);

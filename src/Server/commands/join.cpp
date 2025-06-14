@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:51:18 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 19:24:28 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 19:40:16 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ void	Server::userJoinChannel(User *user, const std::string &channelName, unsigne
 		else if (!channel->userJoin(user))
 			return ;
 	}
-
-	// TODO : checker nom de channels avant creation, et mot de passes (jsp opur nick et user checker aussi)
 
 	// notif du JOIN a tous les membres du channel
 	channel->broadcast(RPL_JOIN(user->getFullNameMask(), channelName));

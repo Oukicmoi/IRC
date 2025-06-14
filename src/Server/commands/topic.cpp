@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:49:00 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 03:42:05 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 20:12:12 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,5 @@ void Server::cmd_TOPIC(User* user, IRCMessage& msg)
 	channel->setTopic(newTopic);
 	channel->setTopicSetter(user->getNick());
 	channel->setTopicSetTime(std::time(NULL));
-	channel->broadcast(":" + user->getFullNameMask() + " TOPIC " + channelName + " :" + newTopic + "\r\n"); // TODO faire RPL_TOPIC
+	channel->broadcast(RPL_TOPIC_SET(user->getFullNameMask(), channel->getName(), newTopic));
 }

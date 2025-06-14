@@ -30,7 +30,6 @@ void Server::cmd_MODE(User* user, IRCMessage& msg)
 
     if (!channel->isOperator(user))
         return sendToUser(user->getSocketFd(), ERR_CHANOPRIVSNEEDED(user->getNick(), params[0]));
-	// TODO: laisser admin serveur changer 
 
     channel->applyModes(user, msg);
 }

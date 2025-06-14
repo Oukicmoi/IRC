@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:48:09 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 04:36:16 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 20:13:17 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void Server::cmd_PRIVMSG(User* user, IRCMessage& msg)
 	const std::string& message = params[1];
 
 	// Envoi vers un canal
-	if (!target.empty() && ((target[0] == '#') || (target[0] == '&'))) // TODO : regarder signification esperluette
+	if (!target.empty() && ((target[0] == '#') || (target[0] == '&')))
 		sendMsgToChannel(user, message, target);
 	else // Envoi vers un utilisateur
 		sendMsgToUser(user, message, target);

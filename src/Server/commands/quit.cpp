@@ -42,7 +42,7 @@ void	Server::clientQuits(int client_fd, std::string reason)
     }
 
     // Optionnel : envoyer un message d'erreur localement (pas obligatoire)
-    send(_users[client_fd]->getSocketFd(), ("ERROR :" + reason + "\r\n").c_str(), reason.length() + 9, 0); // TODO changer tous les send en sendToUser
+    sendToUser(_users[client_fd]->getSocketFd(), ("ERROR :" + reason + "\r\n"));
 
     delete _users[client_fd];
     _users.erase(client_fd);

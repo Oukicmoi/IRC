@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 21:27:51 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 19:25:15 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 20:09:55 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,8 @@ void Server::broadcastToAllChannels(User* user, const std::string& message)
 	for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
 	{
 		if (it->second->isMember(user))
-		{
 			it->second->broadcast(message);
-		}
+
 	}
 }
 

@@ -31,10 +31,7 @@ void Server::cmd_NICK(User* user, IRCMessage& msg)
     user->setNick(newNick);
 
     if (user->isAuthentified())
-    {
-        std::string nickChangeMsg = ":" + oldNick + "!" + user->getUsername() + "@localhost NICK :" + newNick + "\r\n"; // TODO RPL message
-        broadcastToAllChannels(user, nickChangeMsg);
-    }
+        broadcastToAllChannels(user, RPL_NICK(user->getOldFullNameMask(oldNick), newNick));
 
 	// end authentification if possible
     endAuthentification(user);
