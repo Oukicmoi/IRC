@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:22:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 03:28:27 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 18:51:46 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,15 @@ T	typeOfString(const std::string &str)
 		throw std::runtime_error(str + " can't be converted to desired type");
     return (value);
 }
+
+template <typename T>
+std::string	stringOfType(const T &value)
+{
+	std::ostringstream oss;
+    oss << value;
+    return (oss.str());
+}
+
 
 # include "config.hpp"
 

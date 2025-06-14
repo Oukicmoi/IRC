@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:22:52 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 03:28:35 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 18:52:38 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 
 # define NICKLEN 9
 # define USERLEN 9
+# define MAX_KEYLEN 30
+# define MIN_KEYLEN 5
 
 # define SERVER_VERSION "1.0"
 # define SERVER_NAME "localhost"

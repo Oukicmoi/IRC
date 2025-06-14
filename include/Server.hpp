@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 04:19:25 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 18:58:26 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,10 @@ class Server
 	    User*	getUserByNick(const std::string& nick);
 	    Channel* getChannelByName(const std::string& name);
 	
-		bool	isValidNickname(const std::string& nick) const;
+		
+		static bool	isValidChannelName(const std::string &channelName);
+		static std::string	isValidKey(const std::string &key);
+		static bool	isValidNickname(const std::string& nick);
 		bool	isNicknameInUse(const std::string& nick) const;
 		
 		void 	setmdp(const std::string& password) { _mdp = password; }
@@ -119,7 +122,6 @@ class Server
 		void	cmd_MODE(User* user, IRCMessage& msg);
 		void	cmd_KICK(User* user, IRCMessage& msg);
 		void	cmd_INVITE(User* user, IRCMessage& msg);
-		// void	cmd_CAP(User *user, IRCMessage &msg); // TODO
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -6,16 +6,51 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 21:27:51 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 02:37:57 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 19:07:36 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.hpp"
 
-// Validation du format du nickname selon RFC
-bool Server::isValidNickname(const std::string& nick) const
+bool	Server::isValidChannelName(const std::string &channelName)
+{	
+	if (channelName.empty() || (channelName[0] != '#'))
+		return (false);
+
+	std::string notAllowed = "\a ,";
+	unsigned int i = 0;
+	while (i < channelName.size())
+	{
+		if (notAllowed.find(channelName[i ++]) != std::string::npos)
+			return (false);
+	}
+	return (true);
+}
+
+
+std::string	Server::isValidKey(const std::string &key)
 {
-	if (nick.empty() || nick.size() > NICKLEN)
+	std::string allowed = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{};:'\",.<>/?";
+	std::string notAllowed = " ";
+	
+	if ((key.size() < MIN_KEYLEN) || (key.size() > MAX_KEYLEN))
+		return ("Key must be between " + stringOfType<int>(MIN_KEYLEN) + "-" + stringOfType<int>(MAX_KEYLEN) + " characters");
+	unsigned int i = 0;
+	while (i < key.size())
+	{
+		if ((notAllowed.find(key[i]) != std::string::npos)
+			|| (std::iscntrl(static_cast<unsigned char>(key[i]))))
+			return ("Key contains invalid characters");
+		i ++;
+	}
+	return ("");
+}
+
+
+// Validation du format du nickname selon RFC
+bool Server::isValidNickname(const std::string& nick)
+{
+	if (nick.empty() || (nick.size() > NICKLEN))
 		return false;
 	if (std::string("#: ").find(nick[0]) != std::string::npos)
 		return false;

@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 04:36:44 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 19:06:23 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,16 @@ bool Channel::userJoin(User *user, std::string *password)
 
 bool	Channel::canUserJoin(User *user, const std::string *password)
 {
-	if (_hasKey && (!password || (_key != *password)))
-		return (Server::sendToUser(user->getSocketFd(), ERR_BADCHANNELKEY(user->getNick(), _name)), false); // ERR_INVALIDKEY -> valid password check TODO
+	if (_hasKey)
+	{
+		if (!password)
+			return (Server::sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "JOIN")), false);
+		std::string invalidKeyReason = Server::isValidKey(*password);
+		if (!invalidKeyReason.empty())
+			return (Server::sendToUser(user->getSocketFd(), ERR_INVALIDKEY(user->getNick(), _name, invalidKeyReason)), false);
+		if (*password != _key)
+			return (Server::sendToUser(user->getSocketFd(), ERR_BADCHANNELKEY(user->getNick(), _name)), false);
+	}
 	if (_inviteOnly && !userOnInviteList(user))
 		return (Server::sendToUser(user->getSocketFd(), ERR_INVITEONLYCHAN(user->getNick(), _name)), false);
 	if ((_userLimit >= 0) && (_userLimit <= getSize()))
@@ -148,20 +156,23 @@ void	Channel::mode_topicRestriction(bool sign, std::string &userPrefix)
 }
 
 // Set/remove the channel key (password)
-void	Channel::mode_key(bool sign, std::string &userPrefix, std::string *password)
+void	Channel::mode_key(bool sign, User *user, std::string *password)
 {
-	_hasKey = sign;
 	std::cout << "MODE k: sign " << sign << *password << std::endl;
-	if (_hasKey && password)
+	if (sign && !password)
+		return Server::sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "MODE"));
+		
+	if (sign)
 	{
-		_key = *password;
-		broadcast(RPL_MODE_WITH_ARG(userPrefix, _name, (sign? "+" : "-") + "k", _key));
+		std::string invalidKeyReason = Server::isValidKey(*password);
+		if (!invalidKeyReason.empty())
+			return Server::sendToUser(user->getSocketFd(), ERR_INVALIDKEY(user->getNick(), _name, invalidKeyReason));
+		_key = *password;	
+		broadcast(RPL_MODE_WITH_ARG(user->getFullNameMask(), _name, (sign? "+" : "-") + "k", _key));
 	}
 	else
-	{
-		_hasKey = false;
-		broadcast(RPL_MODE(userPrefix, _name, "-k"));
-	}
+		broadcast(RPL_MODE(user->getFullNameMask(), _name, "-k"));
+	_hasKey = sign;
 }
 
 // Give/take channel operator privilege
@@ -236,12 +247,12 @@ void	Channel::applyMode(char mode, bool sign, User *user, IRCMessage &msg)
 				Server::sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(user->getNick(), _name, "k", "You must specify a parameter for the key mode"));
 			else
 			{
-				mode_key(sign, userPrefix, &(*password));
+				mode_key(sign, user, &(*password));
 				params.erase(password);
 			}
 		}
 		else
-			mode_key(sign, userPrefix);
+			mode_key(sign, user);
 	}
 	else if (mode == 'o')
 	{

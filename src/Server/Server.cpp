@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 04:29:21 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 18:59:03 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ void	Server::loadCmds(void)
 
 void	Server::init(void)
 {
+	std::string invalidKeyReason = isValidKey(_mdp);
+	if (!invalidKeyReason.empty())
+		throw std::invalid_argument(invalidKeyReason);
 	_socket_fd = -1;
 	_epoll_fd = -1;
 	std::memset(&_server_addr, 0, sizeof(_server_addr)); // mise à 0 de tout l'espace de l'addresse serveur pour éviter des bugs futurs
