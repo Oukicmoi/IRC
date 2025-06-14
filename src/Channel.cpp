@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 19:06:23 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 20:35:33 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,10 @@ void Channel::removeMember(User* user)
 }
 
 
-bool Channel::addOperator(User* u)
+void Channel::addOperator(User* u)
 {
-    if (!isMember(u))
-		return (false);
+	_members.insert(u);
 	_operators.insert(u);
-	return (true);
 }
 void Channel::removeOperator(User* user) { _operators.erase(user); }
 

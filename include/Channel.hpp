@@ -74,7 +74,7 @@ class Channel
 
 		bool  	addMember(User* user);
 		void  	removeMember(User* user);
-		bool  	addOperator(User* user);
+		void  	addOperator(User* user);
 		void  	removeOperator(User* user);
 
 		
