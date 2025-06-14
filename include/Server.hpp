@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 04:11:21 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 04:19:25 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,6 @@ class Server
 		std::map<int, User *>			_users;
 		std::map<std::string, Channel *> _channels;
 		std::map<std::string, void (Server::*)(User *, IRCMessage &)>	_cmds;
-		
-		std::vector<std::string>::iterator	getFirstNonModeArg(std::vector <std::string> &params);
-
 		
 		void	init(void);
 		void	shutdown(void);
@@ -100,10 +97,7 @@ class Server
 		void	userJoinChannel(User *user, const std::string &channelName, unsigned int key_index, std::vector<std::string> &keys);
 		void	sendMsgToChannel(User *user, const std::string &message, const std::string &channelName);
 		void	broadcastToAllChannels(User* user, const std::string& message);
-			
-		void	applyChannelMode(char mode, bool sign, User *user, Channel *channel, std::vector<std::string> &params);
-		void	sendChannelModesToUser(User* user, Channel* channel, const std::vector<std::string>& params);
-		void	applyChannelModes(User* user, Channel* channel, std::vector<std::string>& params);
+
 
 		void	kickOneUser(User* kicker, Channel* chan, const std::string& targetNick, const std::string& reason);
 

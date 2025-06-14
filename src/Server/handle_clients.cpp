@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 01:16:33 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 04:14:48 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void Server::handleClient(const epoll_event& ev)
         {
             int n = recv(fd, buf, 4096, 0);
             if (n > 0 && n < 513)
-                _users[ev.data.fd]->_recvBuffer.append(buf, n);    // On stocke dans un buffer associé à ce client
+                _users[ev.data.fd]->_recvBuffer.append(buf, n);
             else if (n > 512)
                 write(fd,"Hola ! Message trop long la team",33); // TODO change ca
             else if (n == 0)

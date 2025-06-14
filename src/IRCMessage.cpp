@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 23:33:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 01:36:46 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 04:17:08 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,19 @@ void IRCMessage::printParams() const
 {
 	for (size_t i = 0; i < _params.size(); ++i)
 		std::cout << "Param[" << i << "]: \"" << _params[i] << "\"" << std::endl;
+}
+
+std::vector<std::string>::iterator	IRCMessage::getFirstNonModeArg()
+{
+	std::vector<std::string>::iterator it = _params.begin();
+	it ++;
+	while (it != _params.end())
+	{
+		if ((*it).empty())
+			return (it);
+		else if (((*it)[0] != '-') && ((*it)[0] != '+'))
+			return (it);
+		it ++;
+	}
+	return (it);
 }

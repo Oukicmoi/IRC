@@ -89,6 +89,10 @@ class Channel
 		void	mode_operators(bool sign, User* user, User *target);
 		void	mode_userLimit(bool sign, User *user, std::string *limit = NULL);
 		
+		void	applyMode(char mode, bool sign, User *user, IRCMessage &msg);
+		void	applyModes(User* user, IRCMessage &msg);
+		void	sendModesToUser(User* user);
+
 		void	sendWelcomeInfo(User *user);
 		void  	broadcast(const std::string& message, User* except = NULL) const;
 		

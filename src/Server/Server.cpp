@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 04:10:45 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 04:29:21 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,9 @@ User* Server::getUserByNick(const std::string& nick)
 {
     for (std::map<int, User*>::iterator it = _users.begin(); it != _users.end(); ++it)
     {
-        User* u = it->second;
-        if (u->getNick() == nick)
-            return (u);
+        User* user = it->second;
+        if (user->getNick() == nick)
+            return (user);
     }
     return (NULL);
 }

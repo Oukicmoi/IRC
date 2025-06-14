@@ -51,7 +51,7 @@
 # define ERR_USERNOTINCHANNEL(nick, target_nick, channel)						(IRC_MSG("441 " + nick + " " + target_nick + " " + channel + " :They aren't on that channel"))
 # define ERR_NOTONCHANNEL(nick, channel)										(IRC_MSG("442 " + nick + " " + channel + " :You're not on that channel"))
 # define ERR_USERONCHANNEL(nick, target_nick, channel)							(IRC_MSG("443 " + nick + " " + target_nick + " " + channel + " :is already on channel"))
-# define ERR_ALREADYJOINED(nick, channel)										(IRC_MSG("443 " + nick + " " + channel + " :is already on channel")) // TODO NON EXISTANTE
+# define ERR_ALREADYJOINED(nick, channel)										(IRC_MSG("443 " + nick + " " + channel + " :is already on channel"))
 # define ERR_NOTREGISTERED(cmd)													(IRC_MSG("451 " + cmd + " :You have not registered"))
 # define ERR_NEEDMOREPARAMS(nick, cmd)											(IRC_MSG("461 " + nick + " " + cmd + " :Not enough parameters"))
 # define ERR_ALREADYREGISTERED(nick)											(IRC_MSG("462 " + nick + " :You may not reregister"))

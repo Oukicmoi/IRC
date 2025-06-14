@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:26:09 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 01:38:54 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 04:17:24 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ class IRCMessage
 		const std::vector<std::string>&  getParams() const { return (_params); };
 		std::vector<std::string>&  getParams() { return (_params); };
 		std::string getCmd() const { return (_cmd); };
+
+		std::vector<std::string>::iterator	getFirstNonModeArg();
 		
 		void printParams() const;
 };
