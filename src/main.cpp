@@ -6,13 +6,21 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:57:35 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 01:31:08 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 21:46:10 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "all.hpp"
 
 volatile bool g_running = true;
+
+std::string formatTime(time_t timestamp)
+{
+    char buffer[80];
+    struct tm* timeinfo = localtime(&timestamp);
+    strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
+    return std::string(buffer);
+}
 
 std::vector<std::string> split(const std::string& s, char delim)
 {

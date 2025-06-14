@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 21:27:51 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 20:27:03 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 21:38:13 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,16 +100,14 @@ void Server::endAuthentification(User* user)
 
 // Envoi des messages de bienvenue
 void Server::sendWelcomeMessages(User* user)
-{
-	//const std::string datetime = "May 2024"; // À remplacer par la date réelle de création
-	
+{	
 	const std::string &nick = user->getNick();
 	sendToUser(user->getSocketFd(), RPL_WELCOME(nick, user->getFullNameMask()));
 	sendToUser(user->getSocketFd(), RPL_YOURHOST(nick));
-	// sendToUser(user->getSocketFd(), RPL_CREATED(nick, datetime)); // TODO
-	sendToUser(user->getSocketFd(), RPL_MYINFO(nick, "", "ti", "kol"));	// Channel modes avec paramètres
-	sendToUser(user->getSocketFd(), RPL_ISUPPORT(nick, "NICKLEN=9 CHANTYPES=# PREFIX=(ov)@+ :are supported by this server")); // TODO reregarder ce moreceau ce que ca fait
-	// Erreur MOTD manquant (à remplacer par l'implémentation complète si besoin) -> TODO
+	
+	sendToUser(user->getSocketFd(), RPL_CREATED(nick, formatTime(_creationTime)));
+	sendToUser(user->getSocketFd(), RPL_MYINFO(nick, "", "ti", "kol"));	// Channel modes sans et avec paramètres
+	sendToUser(user->getSocketFd(), RPL_ISUPPORT(nick, "NICKLEN=9 CHANTYPES=# PREFIX=(o)@"));
 	sendToUser(user->getSocketFd(), ERR_NOMOTD(nick));
 }
 
@@ -120,7 +118,6 @@ void Server::broadcastToAllChannels(User* user, const std::string& message)
 	{
 		if (it->second->isMember(user))
 			it->second->broadcast(message);
-
 	}
 }
 

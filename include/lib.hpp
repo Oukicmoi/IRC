@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:22:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 18:51:46 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 21:46:20 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@
 # define ERR_SYS(msg) std::cerr << BRED << "error " << msg << ": " << R << std::strerror(errno) << std::endl
 
 std::vector<std::string> split(const std::string& s, char delim);
+std::string formatTime(time_t timestamp);
+
 
 template <typename T>
 T	typeOfString(const std::string &str)
@@ -90,7 +92,6 @@ std::string	stringOfType(const T &value)
     oss << value;
     return (oss.str());
 }
-
 
 # include "config.hpp"
 

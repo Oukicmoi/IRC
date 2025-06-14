@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 20:14:29 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 21:44:49 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ class Server
 		int								_epoll_fd;
 		unsigned int					_port;
 		struct sockaddr_in				_server_addr;
+		time_t	  						_creationTime;
 		std::string						_server_name;
 		std::string						_mdp;
 		std::map<int, User *>			_users;
@@ -64,6 +65,7 @@ class Server
 		User*   getUser(int fd) const;
 	    User*	getUserByNick(const std::string& nick);
 	    Channel* getChannelByName(const std::string& name);
+		time_t getCreationTime() const { return (_creationTime); }
 	
 		
 		static bool	isValidChannelName(const std::string &channelName);

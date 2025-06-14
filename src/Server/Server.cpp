@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 20:35:11 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 21:26:17 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ void	Server::init(void)
 	loadCmds();
 }
 
-Server::Server(void) : _port(DEFAULT_PORT), _server_name(NETWORK_NAME), _mdp("admin") { init(); }
-Server::Server(unsigned int port) : _port(port), _server_name(NETWORK_NAME), _mdp("admin") { init(); }
-Server::Server(const std::string &password) : _port(DEFAULT_PORT), _server_name(NETWORK_NAME), _mdp(password) { init(); }
-Server::Server(unsigned int port, const std::string& password) : _port(port), _server_name(NETWORK_NAME), _mdp(password) { init(); }
+Server::Server(void) : _port(DEFAULT_PORT), _creationTime(std::time(NULL)), _server_name(NETWORK_NAME), _mdp("admin") { init(); }
+Server::Server(unsigned int port) : _port(port), _creationTime(std::time(NULL)), _server_name(NETWORK_NAME), _mdp("admin") { init(); }
+Server::Server(const std::string &password) : _port(DEFAULT_PORT), _creationTime(std::time(NULL)), _server_name(NETWORK_NAME), _mdp(password) { init(); }
+Server::Server(unsigned int port, const std::string& password) : _port(port), _creationTime(std::time(NULL)), _server_name(NETWORK_NAME), _mdp(password) { init(); }
 
 void	Server::shutdown(void)
 {
