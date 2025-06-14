@@ -43,6 +43,7 @@ class Channel
 		
 	public:
 		Channel(const std::string& name, Server &server);
+		~Channel() {}
 
 		const std::string	&getName() const { return (_name); };
 		const std::string	&getTopic() const { return (_topic); };

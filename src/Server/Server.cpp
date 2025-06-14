@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 20:16:30 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 20:29:48 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ Server::Server(unsigned int port, const std::string& password) : _port(port), _s
 void	Server::shutdown(void)
 {
 	for (std::map<int, User *>::iterator it = _users.begin(); it != _users.end(); it++)
+		delete it->second;
+	for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
 		delete it->second;
 
 	_users.clear();
