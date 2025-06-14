@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:37:11 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/06 22:19:21 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 19:38:00 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,12 @@ bool	Server::init_socket(void)
     }
 	std::cout << BCYAN << "Server Socket" << R << " (TCP/IPv4) created on " << B << "fd " << _socket_fd << R << std::endl;
 	
-	// if (setsockopt(_server_socket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &optval, sizeof(optval)) < 0){
-	// 	std::cout << "Error:\tCreation socket failed." << std::endl;
-	// 	return ; // TODO gérer ce caca
-	// }
+	int optval = 1;
+	if (setsockopt(_socket_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) < 0)
+	{
+		ERR_SYS("setsockopt");
+		return (false);
+	}
 
 	if (!set_non_blocking_socket(_socket_fd))
 		return (false);
