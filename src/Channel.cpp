@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 20:47:19 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/14 22:25:56 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,9 @@ bool Channel::userJoin(User *user, std::string *password)
 		
 	if (_inviteOnly)
 		rmFromInviteList(user);
-	if (_members.find(user) != _members.end())
+	if (!addMember(user))
 		return (Server::sendToUser(user->getSocketFd(), ERR_ALREADYJOINED(user->getNick(), _name)), false);
+
 	return (true);
 }
 
