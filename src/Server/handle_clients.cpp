@@ -6,13 +6,11 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/15 14:05:31 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/15 14:43:49 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-
-
 
 void	Server::handleNewClients(void)
 {
@@ -37,7 +35,7 @@ void	Server::handleNewClients(void)
 			else
 			{
 				_users[client_fd] = user;
-				std::cout << "\tnew " << B << "connection " << BGREEN << "accepted" << R << " on " << B << "fd " << client_fd << R << std::endl;
+				std::cout << "\tnew " << B << "connection " << BGREEN << "accepted" << R << " on " << B << "fd " << client_fd << R << " on " << B << "IP " << user->getHost() << std::endl;
 			}
 		}
 		else
