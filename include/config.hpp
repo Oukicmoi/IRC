@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:22:52 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 18:52:38 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/15 16:33:09 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,6 @@
 # define NETWORK_NAME "jeffrey"
 # define HOSTNAME "localhost"
 
-# define TEST_WITH_NC true
+# define TEST_WITH_NC false
 
 #endif
