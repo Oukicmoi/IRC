@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 21:17:11 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/15 14:05:31 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,17 @@ void	Server::handleNewClients(void)
 			if (!add_to_epoll(client_fd, EPOLLIN | EPOLLET | EPOLLOUT | EPOLLRDHUP))
 				continue;
 			User* user = new User(client_fd);
-			_users[client_fd] = user;
-			std::cout << "\tnew " << B << "connection " << BGREEN << "accepted" << R << " on " << B << "fd " << client_fd << R << std::endl;
+			if (!user)
+			{
+				ERR_SYS("new");
+				std::cout << "\tnew " << B << "connection " << BRED << "refused" << R << " on " << B << "fd " << client_fd << R << std::endl;
+				close(client_fd);
+			}
+			else
+			{
+				_users[client_fd] = user;
+				std::cout << "\tnew " << B << "connection " << BGREEN << "accepted" << R << " on " << B << "fd " << client_fd << R << std::endl;
+			}
 		}
 		else
 			acceptBool = false;

@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/15 03:04:05 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/15 14:13:18 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ Channel	*Server::createChannel(const std::string &channelName, User *user)
 	if (!isValidChannelName(channelName))
 		return (sendToUser(user->getSocketFd(), ERR_BADCHANMASK(user->getNick(), channelName)), (Channel *)NULL);
 	Channel *channel = new Channel(channelName, *this);
+	if (!channel)
+		return (sendToUser(user->getSocketFd(), ERR_UNKNOWNERROR(user->getNick(), "JOIN", "Cannot create channel")), (Channel *)NULL);
 	channel->addOperator(user);
 	_channels[channelName] = channel;
 	return (channel);

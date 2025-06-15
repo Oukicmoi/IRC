@@ -40,6 +40,7 @@
 // JOIN -> send user all users on channel
 # define RPL_NAMREPLY(nick, symbol, channel, nicklist)							(IRC_MSG("353 " + nick + " " + symbol + " " + channel + " :" + nicklist))
 # define RPL_ENDOFNAMES(nick, channel)											(IRC_MSG("366 " + nick + " " + channel + " :End of /NAMES list"))
+# define ERR_UNKNOWNERROR(nick, cmd, info)										(IRC_MSG("400 " + nick + " " + cmd + " :" + info))
 # define ERR_NOSUCHNICK(nick, target_nick)										(IRC_MSG("401 " + nick + " " + target_nick + " :No such nick/channel"))
 # define ERR_NOSUCHCHANNEL(nick, channel)										(IRC_MSG("403 " + nick + " " + channel + " :No such channel"))
 # define ERR_CANNOTSENDTOCHAN(nick, channel)									(IRC_MSG("404 " + nick + " " + channel + " :Cannot send to channel"))
@@ -71,7 +72,5 @@
 # define ERR_LASTCHANOP(nick, channel)											(IRC_MSG("485 " + nick + " " + channel + " :You're the last channel operator"))
 # define ERR_UMODEUNKNOWNFLAG(nick)												(IRC_MSG("501 " + nick + " :Unknown MODE flag"))
 # define ERR_INVALIDMODEPARAM(nick, channel, mode, error_msg)					(IRC_MSG("696 " + nick + " " + channel + " " + mode + " :" + error_msg))
-
-// # define RPL_INVITING(nick, invited_nick, channel) (IRC_MSG("341 " + nick + " " + invited_nick + " " + channel)) -> si jamais RPL_INVITING marche pas
 
 #endif
