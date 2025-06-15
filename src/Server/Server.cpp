@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/15 14:13:18 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/15 14:23:23 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	Server::shutdown(void)
 	for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
 		delete it->second;
 
-	_users.clear();
 	if (_epoll_fd >= 0)
 	{
 		close(_epoll_fd);

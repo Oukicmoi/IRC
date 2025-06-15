@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:37:11 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 19:38:00 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/15 14:24:19 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,7 @@ bool	Server::init_socket(void)
 	
 	int optval = 1;
 	if (setsockopt(_socket_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) < 0)
-	{
 		ERR_SYS("setsockopt");
-		return (false);
-	}
 
 	if (!set_non_blocking_socket(_socket_fd))
 		return (false);
