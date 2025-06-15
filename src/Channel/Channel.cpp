@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/15 14:19:12 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/15 15:48:16 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,10 @@ void Channel::removeMember(User* user)
 	{
 		if (it->second == user)
 		{
-			_membersJoinOrder.erase(it->first);
+			_membersJoinOrder.erase(it);
 			break;
 		}
+		it ++;
 	}
 	if (_operators.empty() && !(_membersJoinOrder.empty()))
 	{
