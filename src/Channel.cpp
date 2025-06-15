@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 22:52:41 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/15 03:19:40 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,22 @@ void Channel::removeMember(User* user)
 {
     _members.erase(user);
     _operators.erase(user);
+	std::map<time_t, User *>::iterator it = _membersJoinOrder.begin();
+	while (it != _membersJoinOrder.end())
+	{
+		if (it->second == user)
+		{
+			_membersJoinOrder.erase(it->first);
+			break;
+		}
+	}
+	if (_operators.empty() && !(_membersJoinOrder.empty()))
+	{
+		User *newOperator = _membersJoinOrder.begin()->second;
+		_operators.insert(newOperator);
+		broadcast(RPL_SERVER_MODE(_name,  "+o", newOperator->getNick()), user);
+	}
+	
 }
 
 
@@ -42,6 +58,7 @@ void Channel::addOperator(User* u)
 {
 	_members.insert(u);
 	_operators.insert(u);
+	_membersJoinOrder[std::time(NULL)] = u;
 }
 void Channel::removeOperator(User* user) { _operators.erase(user); }
 
@@ -83,7 +100,7 @@ bool Channel::userJoin(User *user, std::string *password)
 		rmFromInviteList(user);
 	if (!addMember(user))
 		return (Server::sendToUser(user->getSocketFd(), ERR_ALREADYJOINED(user->getNick(), _name)), false);
-
+	_membersJoinOrder[std::time(NULL)] = user;
 	return (true);
 }
 

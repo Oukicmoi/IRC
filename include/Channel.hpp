@@ -38,6 +38,7 @@ class Channel
 		std::set<User*>  _members;
 		std::set<User*>  _operators;
 		std::set<User*>  _inviteList;
+		std::map<time_t, User *> _membersJoinOrder;
 		Server			&_server;
 
 		
