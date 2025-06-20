@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/21 00:17:37 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/21 01:34:22 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,4 +159,6 @@ void	Server::set_epollout_for_client(User *user, bool add)
 	event.data.fd = user->getSocketFd();
     if (epoll_ctl(_epoll_fd, EPOLL_CTL_MOD, user->getSocketFd(), &event) == -1)
 		ERR_SYS("epoll_ctl");
+	else
+		user->setWaitingToRecv(add);
 }
