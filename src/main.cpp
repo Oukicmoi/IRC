@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:57:35 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 21:46:10 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/20 23:14:08 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,23 @@ std::string formatTime(time_t timestamp)
     struct tm* timeinfo = localtime(&timestamp);
     strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
     return std::string(buffer);
+}
+
+std::string	cleanIRCLine(const std::string &line, int n = -1)
+{
+	std::string copy = "";
+	long unsigned int i = 0;
+	while ((i < line.size()) && ((n < 0) || (i < (long unsigned int)n)))
+	{
+		if (line[i] == '\n')
+			copy += "\\n";
+		else if (line[i] == '\r')
+			copy += "\\r";
+		else
+			copy += line[i];
+		i ++;
+	}
+	return (copy);
 }
 
 std::vector<std::string> split(const std::string& s, char delim)
