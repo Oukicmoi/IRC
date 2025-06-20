@@ -190,7 +190,7 @@ void	Channel::sendModesToUser(User* user)
         modes += "i";
 	if (isTopicRestricted())
         modes += "t";
-	if (!hasKey())
+	if (hasKey())
     {
         modes += "k";
 		if (!args.empty())
