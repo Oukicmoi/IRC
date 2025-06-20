@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 21:27:51 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/20 22:33:19 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:44:28 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,8 +123,8 @@ void Server::broadcastToAllChannels(User* user, const std::string& message)
 
 void	Server::sendToUser(const int fd)
 {
-	std::queue<std::string> &msgsToSend = _users[fd].getToSend();
-	int n;
+	std::queue<std::string> &msgsToSend = (_users[fd])->getToSend();
+	long unsigned int n;
 	while (!msgsToSend.empty())
 	{
 		std::string msg = msgsToSend.front();
@@ -156,6 +156,6 @@ void	Server::sendToUser(const int fd)
 
 void	Server::sendWhenReady(const int fd, std::string msg)
 {
-	_users[fd].addToSend(msg);
+	(_users[fd])->addToSend(msg);
 	sendToUser(fd);
 }

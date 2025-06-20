@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:21:41 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/20 22:35:44 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:42:22 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class User
 		std::string	_Host;
 		std::string	_HostMask;
 
-		std::queue<std::string> _toSend; 
+		std::queue<std::string> _toSend;
 		
 		std::string getIPFromSocket(int socket_fd);
 		

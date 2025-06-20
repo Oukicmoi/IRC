@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:22:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 21:46:20 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:42:44 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <string>       // std::string
 #include <vector>       // std::vector
 #include <map>          // std::map
+#include <queue>
 #include <set>          // std::set
 #include <sstream>      // std::istringstream, std::ostringstream
 #include <algorithm>    // std::find, std::remove_if…
