@@ -17,8 +17,8 @@ void Server::cmd_PING(User* user, IRCMessage& msg)
 	const std::vector<std::string>& params = msg.getParams();
 
 	if (params.empty())
-		return sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "PING"));
+		return sendWhenReady(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "PING"));
 
 	std::string token = params[0];
-	sendToUser(user->getSocketFd(), RPL_PONG(token));
+	sendWhenReady(user->getSocketFd(), RPL_PONG(token));
 }

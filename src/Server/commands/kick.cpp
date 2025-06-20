@@ -17,7 +17,7 @@ void Server::kickOneUser(User* kicker, Channel* chan, const std::string& targetN
     User* target = getUserByNick(targetNick);
    
     if ((target == NULL) || !chan->isMember(target))
-    	return sendToUser(kicker->getSocketFd(), ERR_USERNOTINCHANNEL(kicker->getNick(), targetNick, chan->getName()));
+    	return sendWhenReady(kicker->getSocketFd(), ERR_USERNOTINCHANNEL(kicker->getNick(), targetNick, chan->getName()));
     
     if(reason.empty())
         chan->broadcast(RPL_KICK(kicker->getFullNameMask(), chan->getName(), targetNick, "No reason"), NULL);
@@ -30,7 +30,7 @@ void Server::cmd_KICK(User* user, IRCMessage& msg)
 {
     const std::vector<std::string>& params = msg.getParams();
     if (params.size() < 2)
-        return sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "KICK"));
+        return sendWhenReady(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "KICK"));
 
     const std::string& channelName = params[0];
     std::string userList = params[1];
@@ -41,11 +41,11 @@ void Server::cmd_KICK(User* user, IRCMessage& msg)
     // Vérifier que le channel existe
     std::map<std::string, Channel*>::iterator itChan = _channels.find(channelName);
     if (itChan == _channels.end())
-        return sendToUser(user->getSocketFd(), ERR_NOSUCHCHANNEL(user->getNick(), channelName));
+        return sendWhenReady(user->getSocketFd(), ERR_NOSUCHCHANNEL(user->getNick(), channelName));
 	
     Channel* chan = itChan->second;
     if (!chan->isOperator(user))
-        return sendToUser(user->getSocketFd(), ERR_CHANOPRIVSNEEDED(user->getNick(), channelName));
+        return sendWhenReady(user->getSocketFd(), ERR_CHANOPRIVSNEEDED(user->getNick(), channelName));
 
     // Découper la liste des cibles séparées par ','
     std::vector<std::string> targets = split(userList, ',');

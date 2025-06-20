@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:54:36 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/15 15:48:16 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:38:41 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void Channel::broadcast(const std::string& message, User* except) const
         if (u == except)
             continue;
         // envoie le message à chaque membre (sauf « except »)
-        Server::sendToUser(u->getSocketFd(), message);
+        _server.sendWhenReady(u->getSocketFd(), message);
     }
 } 
 

@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 21:27:51 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 21:38:13 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:33:19 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,13 +102,13 @@ void Server::endAuthentification(User* user)
 void Server::sendWelcomeMessages(User* user)
 {	
 	const std::string &nick = user->getNick();
-	sendToUser(user->getSocketFd(), RPL_WELCOME(nick, user->getFullNameMask()));
-	sendToUser(user->getSocketFd(), RPL_YOURHOST(nick));
+	sendWhenReady(user->getSocketFd(), RPL_WELCOME(nick, user->getFullNameMask()));
+	sendWhenReady(user->getSocketFd(), RPL_YOURHOST(nick));
 	
-	sendToUser(user->getSocketFd(), RPL_CREATED(nick, formatTime(_creationTime)));
-	sendToUser(user->getSocketFd(), RPL_MYINFO(nick, "", "ti", "kol"));	// Channel modes sans et avec paramètres
-	sendToUser(user->getSocketFd(), RPL_ISUPPORT(nick, "NICKLEN=9 CHANTYPES=# PREFIX=(o)@"));
-	sendToUser(user->getSocketFd(), ERR_NOMOTD(nick));
+	sendWhenReady(user->getSocketFd(), RPL_CREATED(nick, formatTime(_creationTime)));
+	sendWhenReady(user->getSocketFd(), RPL_MYINFO(nick, "", "ti", "kol"));	// Channel modes sans et avec paramètres
+	sendWhenReady(user->getSocketFd(), RPL_ISUPPORT(nick, "NICKLEN=9 CHANTYPES=# PREFIX=(o)@"));
+	sendWhenReady(user->getSocketFd(), ERR_NOMOTD(nick));
 }
 
 // Diffusion dans tous les canaux du user
@@ -121,15 +121,41 @@ void Server::broadcastToAllChannels(User* user, const std::string& message)
 	}
 }
 
-void	Server::sendToUser(int const client_fd, std::string client_buffer)
+void	Server::sendToUser(const int fd)
 {
-	std::istringstream	buf(client_buffer);
-	std::string			reply;
-	
-	send(client_fd, client_buffer.c_str(), client_buffer.size(), 0);
-	while (getline(buf, reply))
+	std::queue<std::string> &msgsToSend = _users[fd].getToSend();
+	int n;
+	while (!msgsToSend.empty())
 	{
-		std::cout << "║\t[Server] Message sent to client " \
-				  << B << client_fd << R << "       >> " << BCYAN << reply << R << std::endl;
+		std::string msg = msgsToSend.front();
+		n = send(fd, msg.c_str(), msg.size(), MSG_NOSIGNAL);
+		if (n <= 0)
+		{
+			msgsToSend.push(msg);
+			std::cout << "║\t[Server] Has yet to send to client " << B << fd << R \
+							<< "       >> " << BCYAN << msg << R << std::endl;
+			return ;
+		}
+		else if (n < msg.size())
+		{
+			msgsToSend.pop();
+			std::string yetToSend = msg.substr(n, msg.size() - n);
+			msgsToSend.push(yetToSend);
+		
+			std::cout << "║\t[Server] Message sent to client " << B << fd << R \
+							<< "       >> " << BCYAN << msg.substr(n) << R << std::endl;
+			std::cout << "║\t[Server] Has yet to send to client " << B << fd << R \
+							<< "       >> " << BCYAN << yetToSend << R << std::endl;
+			return ;
+		}
+		std::cout << "║\t[Server] Message sent to client " << B << fd << R \
+							<< "       >> " << BCYAN << msg << R << std::endl;
+		msgsToSend.pop();
 	}
+}
+
+void	Server::sendWhenReady(const int fd, std::string msg)
+{
+	_users[fd].addToSend(msg);
+	sendToUser(fd);
 }

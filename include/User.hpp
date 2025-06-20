@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:21:41 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 20:07:15 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:35:44 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ class User
 		std::string	_password;
 		std::string	_Host;
 		std::string	_HostMask;
+
+		std::queue<std::string> _toSend; 
 		
 		std::string getIPFromSocket(int socket_fd);
 		
@@ -41,11 +43,13 @@ class User
 		const std::string	&getPassword() const { return (_password); }
 		bool				isAuthentified() const { return (_authentified); }
 		bool				isPasswordValid() const { return _passValid; }
+		std::queue<std::string>	&getToSend() { return (_toSend); }
 		bool				hasUsername() const { return (!_Username.empty()); }
 		const std::string	&getHost() const { return (_Host); };
 		std::string			getFullNameMask() const { return (_Nickname + "!~" + _Username + "@" + _HostMask); };
 		std::string			getOldFullNameMask(const std::string &oldNick) const { return (oldNick + "!~" + _Username + "@" + _HostMask); };
 		
+		void	addToSend(std::string msg) { _toSend.push(msg); }
 		void	setNick(const std::string& nick) { _Nickname = nick; };
 		void	setUsername(const std::string& username) {_Username = username; }
 		void	setPassword(const std::string& pass) { _password = pass; }

@@ -18,13 +18,13 @@ void	Channel::mode_topicRestriction(bool sign, std::string &userPrefix)
 void	Channel::mode_key(bool sign, User *user, std::string *password)
 {
 	if (sign && !password)
-		return Server::sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "MODE"));
+		return _server.sendWhenReady(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "MODE"));
 		
 	if (sign)
 	{
 		std::string invalidKeyReason = Server::isValidKey(*password);
 		if (!invalidKeyReason.empty())
-			return Server::sendToUser(user->getSocketFd(), ERR_INVALIDKEY(user->getNick(), _name, invalidKeyReason));
+			return _server.sendWhenReady(user->getSocketFd(), ERR_INVALIDKEY(user->getNick(), _name, invalidKeyReason));
 		_key = *password;	
 		broadcast(RPL_MODE_WITH_ARG(user->getFullNameMask(), _name, (sign? "+" : "-") + "k", _key));
 	}
@@ -37,14 +37,14 @@ void	Channel::mode_key(bool sign, User *user, std::string *password)
 void	Channel::mode_operators(bool sign, User *user, User *target)
 {
 	if (_members.find(target) == _members.end())
-		Server::sendToUser(user->getSocketFd(), ERR_USERNOTINCHANNEL(user->getNick(), target->getNick(), _name));
+		_server.sendWhenReady(user->getSocketFd(), ERR_USERNOTINCHANNEL(user->getNick(), target->getNick(), _name));
 	else
 	{
 		bool is_operator = (_operators.find(target) != _operators.end());
 		if (sign && is_operator)
-			Server::sendToUser(user->getSocketFd(), ERR_ALREADYCHANOPRIVS(user->getNick(), _name));
+			_server.sendWhenReady(user->getSocketFd(), ERR_ALREADYCHANOPRIVS(user->getNick(), _name));
 		else if (!sign && !is_operator)
-			Server::sendToUser(user->getSocketFd(), ERR_CHANOPRIVSNEEDED(user->getNick(), _name));
+			_server.sendWhenReady(user->getSocketFd(), ERR_CHANOPRIVSNEEDED(user->getNick(), _name));
 		else
 		{
 			if (sign)
@@ -52,7 +52,7 @@ void	Channel::mode_operators(bool sign, User *user, User *target)
 			else
 			{
 				if (_operators.size() == 1)
-					return Server::sendToUser(user->getSocketFd(), ERR_LASTCHANOP(user->getNick(), _name));
+					return _server.sendWhenReady(user->getSocketFd(), ERR_LASTCHANOP(user->getNick(), _name));
 				else
 					_operators.erase(target);
 			}
@@ -75,7 +75,7 @@ void	Channel::mode_userLimit(bool sign, User *user, std::string *limit)
 		}
 		catch (std::exception &e)
 		{
-			Server::sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(user->getNick(), _name, "l", "Invalid limit parameter (must be a positive number)"));
+			_server.sendWhenReady(user->getSocketFd(), ERR_INVALIDMODEPARAM(user->getNick(), _name, "l", "Invalid limit parameter (must be a positive number)"));
 		}
 	}
 	else
@@ -99,7 +99,7 @@ void	Channel::applyMode(char mode, bool sign, User *user, IRCMessage &msg)
 		{
 			std::vector<std::string>::iterator password = msg.getFirstNonModeArg();
 			if (password == params.end())
-				Server::sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(user->getNick(), _name, "k", "You must specify a parameter for the key mode"));
+				_server.sendWhenReady(user->getSocketFd(), ERR_INVALIDMODEPARAM(user->getNick(), _name, "k", "You must specify a parameter for the key mode"));
 			else
 			{
 				mode_key(sign, user, &(*password));
@@ -113,12 +113,12 @@ void	Channel::applyMode(char mode, bool sign, User *user, IRCMessage &msg)
 	{
 		std::vector<std::string>::iterator targetNick = msg.getFirstNonModeArg();
 		if (targetNick == params.end())
-			Server::sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(user->getNick(), _name, "l", "You must specify a parameter for the operator mode"));
+			_server.sendWhenReady(user->getSocketFd(), ERR_INVALIDMODEPARAM(user->getNick(), _name, "l", "You must specify a parameter for the operator mode"));
 		else
 		{
 			User *target = _server.getUserByNick(*targetNick);
 			if (!target)
-				Server::sendToUser(user->getSocketFd(), ERR_NOSUCHNICK(user->getNick(), *targetNick));
+				_server.sendWhenReady(user->getSocketFd(), ERR_NOSUCHNICK(user->getNick(), *targetNick));
 			else
 				mode_operators(sign, user, target);
 			params.erase(targetNick);
@@ -130,7 +130,7 @@ void	Channel::applyMode(char mode, bool sign, User *user, IRCMessage &msg)
 		{
 			std::vector<std::string>::iterator limit = msg.getFirstNonModeArg();
 			if (limit == params.end())
-				Server::sendToUser(user->getSocketFd(), ERR_INVALIDMODEPARAM(user->getNick(), _name, "l", "You must specify a parameter for the limit mode"));
+				_server.sendWhenReady(user->getSocketFd(), ERR_INVALIDMODEPARAM(user->getNick(), _name, "l", "You must specify a parameter for the limit mode"));
 			else
 			{
 				mode_userLimit(sign, user, &(*limit));
@@ -141,7 +141,7 @@ void	Channel::applyMode(char mode, bool sign, User *user, IRCMessage &msg)
 			mode_userLimit(sign, user);
 	}
 	else
-		Server::sendToUser(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));
+		_server.sendWhenReady(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));
 }
 
 // waits for any arg that starts with + or - and check all char inside to see if they are a known mode : ktoli
@@ -177,7 +177,7 @@ void	Channel::applyModes(User* user, IRCMessage &msg)
 		params.erase(params.begin());
 	}
 	if (!oneValid)
-		Server::sendToUser(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));
+		_server.sendWhenReady(user->getSocketFd(), ERR_UMODEUNKNOWNFLAG(user->getNick()));
 }
 
 void	Channel::sendModesToUser(User* user)
@@ -206,5 +206,5 @@ void	Channel::sendModesToUser(User* user)
 			args += " ";
         args += ss.str();
 	}
-    Server::sendToUser(user->getSocketFd(), RPL_CHANNELMODEIS(user->getNick(), _name, modes, args));
+    _server.sendWhenReady(user->getSocketFd(), RPL_CHANNELMODEIS(user->getNick(), _name, modes, args));
 }

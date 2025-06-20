@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:51:18 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 22:52:55 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/20 21:56:04 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void Server::cmd_JOIN(User* user, IRCMessage& msg)
 {
 	const std::vector<std::string>& params = msg.getParams();
 	if (params.empty())
-		return sendToUser(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "JOIN"));
+		return sendWhenReady(user->getSocketFd(), ERR_NEEDMOREPARAMS(user->getNick(), "JOIN"));
 
 	std::vector<std::string> chans = split(params[0], ',');
 	std::vector<std::string> keys;

@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/15 14:43:49 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:37:29 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,16 +60,16 @@ bool	Server::handleMsg(int fd, const std::string& line)
 	{
 		void (Server::*cmd)(User*, IRCMessage&) = it->second;
 		if ((cmd != &Server::cmd_PASS) && !user->isPasswordValid())
-			return (sendToUser(fd, ERR_NOTREGISTERED(msg.getCmd())), false);
+			return (sendWhenReady(fd, ERR_NOTREGISTERED(msg.getCmd())), false);
 		else if (!user->isAuthentified() && (cmd != &Server::cmd_PASS) && (cmd != &Server::cmd_NICK) && (cmd != &Server::cmd_USER))
-			return (sendToUser(fd, ERR_NOTREGISTERED(msg.getCmd())), false);
+			return (sendWhenReady(fd, ERR_NOTREGISTERED(msg.getCmd())), false);
 			
 		(this->*cmd)(user, msg);
 		return (cmd == &Server::cmd_QUIT);
 		
 	}
 	else
-        return (sendToUser(fd, ERR_UNKNOWNCOMMAND(user->getNick(), msg.getCmd())), false);
+        return (sendWhenReady(fd, ERR_UNKNOWNCOMMAND(user->getNick(), msg.getCmd())), false);
 }
 
 void Server::handleClient(const epoll_event& ev)
@@ -84,7 +84,7 @@ void Server::handleClient(const epoll_event& ev)
             if ((n > 0) && (n < 513))
                 _users[fd]->_recvBuffer.append(buf, n);
             else if (n > 512)
-                return sendToUser(fd, ERR_INPUTTOOLONG(_users[fd]->getNick()));
+                return sendWhenReady(fd, ERR_INPUTTOOLONG(_users[fd]->getNick()));
             else if (n == 0)
 				return clientQuits(fd, "connection lost");
             else
@@ -117,6 +117,8 @@ void Server::handleClient(const epoll_event& ev)
 			std::cout << "╚══════════" << std::endl << std::endl;
 		}
     }
+	else if (ev.events & EPOLLOUT)
+		sendToUser(fd);
     else if (ev.events & (EPOLLHUP|EPOLLRDHUP))
 		clientQuits(fd, "connection hang up");
 	else if (ev.events & EPOLLERR)

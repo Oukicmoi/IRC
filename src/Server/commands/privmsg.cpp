@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:48:09 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/14 22:29:12 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/20 21:56:04 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ void	Server::sendMsgToChannel(User *user, const std::string &message, const std:
 	std::map<std::string, Channel*>::iterator it = _channels.find(channelName);
 	
 	if (it == _channels.end())
-		return sendToUser(user->getSocketFd(), ERR_NOSUCHNICK(user->getNick(), channelName));
+		return sendWhenReady(user->getSocketFd(), ERR_NOSUCHNICK(user->getNick(), channelName));
 
 	Channel* channel = it->second;
 
 	if (!(channel->isMember(user)))
-		return sendToUser(user->getSocketFd(), ERR_CANNOTSENDTOCHAN(user->getNick(), channelName));
+		return sendWhenReady(user->getSocketFd(), ERR_CANNOTSENDTOCHAN(user->getNick(), channelName));
 
 	channel->broadcast(RPL_PRIVMSG(user->getFullNameMask(), channelName, message), user);
 }
@@ -31,9 +31,9 @@ void	Server::sendMsgToUser(User *user, const std::string &message, const std::st
 {
 	User* destUser = getUserByNick(target);
 	if (!destUser)
-		return sendToUser(user->getSocketFd(), ERR_NOSUCHNICK(user->getNick(), target));
+		return sendWhenReady(user->getSocketFd(), ERR_NOSUCHNICK(user->getNick(), target));
 
-	sendToUser(destUser->getSocketFd(), RPL_PRIVMSG(user->getFullNameMask(), target, message));
+	sendWhenReady(destUser->getSocketFd(), RPL_PRIVMSG(user->getFullNameMask(), target, message));
 }
 
 void Server::cmd_PRIVMSG(User* user, IRCMessage& msg)
@@ -42,10 +42,10 @@ void Server::cmd_PRIVMSG(User* user, IRCMessage& msg)
 
 	// Vérifie qu'il y a au moins 2 paramètres (cible + message)
 	if (params.size() < 1)
-		return sendToUser(user->getSocketFd(), ERR_NORECIPIENT(user->getNick(), "PRIVMSG"));
+		return sendWhenReady(user->getSocketFd(), ERR_NORECIPIENT(user->getNick(), "PRIVMSG"));
 
 	if ((params.size() < 2) || params[1].empty())
-		return sendToUser(user->getSocketFd(), ERR_NOTEXTTOSEND(user->getNick()));
+		return sendWhenReady(user->getSocketFd(), ERR_NOTEXTTOSEND(user->getNick()));
 	
 	const std::string& target = params[0];
 	const std::string& message = params[1];

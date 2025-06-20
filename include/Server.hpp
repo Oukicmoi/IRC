@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:58:21 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/14 21:44:49 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:12:58 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ class Server
 		void	clientQuits(int client_fd, std::string reason);
 
 		void	sendMsgToUser(User *user, const std::string &message, const std::string target);
-		static void	sendToUser(int const client_fd, std::string client_buffer);
+		void	sendWhenReady(const int fd, std::string msg);
+		void	sendToUser(const int fd);
 		
 		
 		////////////////////////////////////////////////////////////////////////////////////////
