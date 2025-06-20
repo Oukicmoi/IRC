@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 21:27:51 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/20 22:44:28 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/20 23:14:01 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ void	Server::sendToUser(const int fd)
 		{
 			msgsToSend.push(msg);
 			std::cout << "║\t[Server] Has yet to send to client " << B << fd << R \
-							<< "       >> " << BCYAN << msg << R << std::endl;
+							<< "       >> " << BCYAN << cleanIRCLine(msg) << R << std::endl;
 			return ;
 		}
 		else if (n < msg.size())
@@ -143,13 +143,13 @@ void	Server::sendToUser(const int fd)
 			msgsToSend.push(yetToSend);
 		
 			std::cout << "║\t[Server] Message sent to client " << B << fd << R \
-							<< "       >> " << BCYAN << msg.substr(n) << R << std::endl;
+							<< "       >> " << BCYAN << cleanIRCLine(msg, n) << R << std::endl;
 			std::cout << "║\t[Server] Has yet to send to client " << B << fd << R \
-							<< "       >> " << BCYAN << yetToSend << R << std::endl;
+							<< "       >> " << BCYAN << cleanIRCLine(yetToSend) << R << std::endl;
 			return ;
 		}
 		std::cout << "║\t[Server] Message sent to client " << B << fd << R \
-							<< "       >> " << BCYAN << msg << R << std::endl;
+							<< "       >> " << BCYAN << cleanIRCLine(msg) << R << std::endl;
 		msgsToSend.pop();
 	}
 }

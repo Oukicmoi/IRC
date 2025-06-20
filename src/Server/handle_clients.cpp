@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/20 22:37:29 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/20 23:13:47 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void Server::handleClient(const epoll_event& ev)
 		while (!hasQuit && ((pos = buffer.find(endline)) != std::string::npos))
 		{
 			std::string line = buffer.substr(0, pos);
-			std::cout << "╔════ Msg: " << BYELLOW << line << R << std::endl;
+			std::cout << "╔════ Msg: " << BYELLOW << cleanIRCLine(line) << R << std::endl;
 			buffer.erase(0, pos + 2);
 			// traitez 'line' comme une commande IRC complète
 			hasQuit = handleMsg(fd, line);
