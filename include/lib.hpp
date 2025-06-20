@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:22:52 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/20 22:42:44 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/21 00:15:01 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@
 
 std::vector<std::string> split(const std::string& s, char delim);
 std::string formatTime(time_t timestamp);
+std::string	cleanIRCLine(const std::string &line, int n = -1);
 
 
 template <typename T>

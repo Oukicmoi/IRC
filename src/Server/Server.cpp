@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 23:36:48 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/20 21:56:04 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/21 00:17:37 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,4 +141,22 @@ bool	Server::add_to_epoll(int socket_fd, uint32_t event_type)
 		return (false);
     }
 	return (true);
+}
+
+void	Server::set_epollout_for_client(User *user, bool add)
+{
+	if (user->isWaitingToRecv() && add)
+		return ;
+	if (!user->isWaitingToRecv() && !add)
+		return ;
+	struct epoll_event	event;
+    memset(&event, 0, sizeof(event));
+	if (add)
+    	event.events = EPOLLIN | EPOLLOUT | EPOLLRDHUP;
+    else
+		event.events = EPOLLIN | EPOLLRDHUP;
+    
+	event.data.fd = user->getSocketFd();
+    if (epoll_ctl(_epoll_fd, EPOLL_CTL_MOD, user->getSocketFd(), &event) == -1)
+		ERR_SYS("epoll_ctl");
 }

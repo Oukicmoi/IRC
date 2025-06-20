@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:57:35 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/20 23:14:08 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/21 00:15:11 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ std::string formatTime(time_t timestamp)
     return std::string(buffer);
 }
 
-std::string	cleanIRCLine(const std::string &line, int n = -1)
+std::string	cleanIRCLine(const std::string &line, int n)
 {
 	std::string copy = "";
 	long unsigned int i = 0;

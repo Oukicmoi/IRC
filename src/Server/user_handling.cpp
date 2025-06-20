@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 21:27:51 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/20 23:14:01 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/21 00:12:38 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,8 @@ void	Server::sendToUser(const int fd)
 			msgsToSend.push(msg);
 			std::cout << "║\t[Server] Has yet to send to client " << B << fd << R \
 							<< "       >> " << BCYAN << cleanIRCLine(msg) << R << std::endl;
+			
+			set_epollout_for_client(_users[fd], true);
 			return ;
 		}
 		else if (n < msg.size())
@@ -146,12 +148,15 @@ void	Server::sendToUser(const int fd)
 							<< "       >> " << BCYAN << cleanIRCLine(msg, n) << R << std::endl;
 			std::cout << "║\t[Server] Has yet to send to client " << B << fd << R \
 							<< "       >> " << BCYAN << cleanIRCLine(yetToSend) << R << std::endl;
+
+			set_epollout_for_client(_users[fd], true);
 			return ;
 		}
 		std::cout << "║\t[Server] Message sent to client " << B << fd << R \
 							<< "       >> " << BCYAN << cleanIRCLine(msg) << R << std::endl;
 		msgsToSend.pop();
 	}
+	set_epollout_for_client(_users[fd], false);
 }
 
 void	Server::sendWhenReady(const int fd, std::string msg)

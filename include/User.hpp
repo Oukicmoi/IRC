@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:21:41 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/20 22:42:22 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/21 00:13:43 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ class User
 	protected:
 		bool		_authentified;
 		bool		_passValid;
+		bool		_isWaitingToRecv;
 		char		_buffer[MAX_MSG_SIZE + 1];
 		int			_socket_fd;
 		std::string	_Nickname;
@@ -37,6 +38,7 @@ class User
 		User(int socket_fd);
 		~User();
 		
+		bool				isWaitingToRecv() const { return (_isWaitingToRecv); }
 		int					getSocketFd() const { return (_socket_fd); }
 		const std::string	&getNick() const { return (_Nickname); }
 		const std::string	&getUsername() const { return (_Username); }

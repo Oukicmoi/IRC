@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:01:07 by octoross          #+#    #+#             */
-/*   Updated: 2025/06/20 23:13:47 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/21 00:59:28 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,33 +15,27 @@
 void	Server::handleNewClients(void)
 {
 	socklen_t	addrlen = sizeof(_server_addr);
-	bool	acceptBool = true;
-	while (acceptBool)
+	int	client_fd = accept(_socket_fd, (struct sockaddr *)&_server_addr, &addrlen);
+	if (client_fd >= 0)
 	{
-		int	client_fd = accept(_socket_fd, (struct sockaddr *)&_server_addr, &addrlen);
-		if (client_fd >= 0)
+		if (!set_non_blocking_socket(client_fd))
+			return ;
+		if (!add_to_epoll(client_fd, EPOLLIN | EPOLLRDHUP))
+			return ;
+		User* user = new User(client_fd);
+		if (!user)
 		{
-			if (!set_non_blocking_socket(client_fd))
-				continue;
-			if (!add_to_epoll(client_fd, EPOLLIN | EPOLLET | EPOLLOUT | EPOLLRDHUP))
-				continue;
-			User* user = new User(client_fd);
-			if (!user)
-			{
-				ERR_SYS("new");
-				std::cout << "\tnew " << B << "connection " << BRED << "refused" << R << " on " << B << "fd " << client_fd << R << std::endl;
-				close(client_fd);
-			}
-			else
-			{
-				_users[client_fd] = user;
-				std::cout << "\tnew " << B << "connection " << BGREEN << "accepted" << R << " on " << B << "fd " << client_fd << R << " on " << B << "IP " << user->getHost() << std::endl;
-			}
+			ERR_SYS("new user");
+			std::cout << "\tnew " << B << "connection " << BRED << "refused" << R << " on " << B << "fd " << client_fd << R << std::endl;
+			close(client_fd);
 		}
 		else
-			acceptBool = false;
+		{
+			_users[client_fd] = user;
+			std::cout << "\tnew " << B << "connection " << BGREEN << "accepted" << R << " on " << B << "fd " << client_fd << R << " on " << B << "IP " << user->getHost() << std::endl;
+		}
 	}
-	if ((errno != EAGAIN) && (errno != EWOULDBLOCK))
+	else
 	{
 		std::cout << "\t";
 		ERR_SYS("accept");
@@ -74,32 +68,19 @@ bool	Server::handleMsg(int fd, const std::string& line)
 
 void Server::handleClient(const epoll_event& ev)
 {
-    int fd = ev.data.fd;
+	int fd = ev.data.fd;
+	if (!isSocketActive(fd))
+		return ;
     if (ev.events & EPOLLIN)
     {
         char buf[4096];
-        while (true)
-        {
-            int n = recv(fd, buf, 4096, 0);
-            if ((n > 0) && (n < 513))
-                _users[fd]->_recvBuffer.append(buf, n);
-            else if (n > 512)
-                return sendWhenReady(fd, ERR_INPUTTOOLONG(_users[fd]->getNick()));
-            else if (n == 0)
-				return clientQuits(fd, "connection lost");
-            else
-			{
-                if (errno == EAGAIN || errno == EWOULDBLOCK)
-                    break;
-				else
-				{
-					if (errno == EBADF)
-						return ;
-					clientQuits(fd, "connection error");
-					return ;
-                }
-            }
-        }
+        
+		int n = recv(fd, buf, 4096, 0);
+		if (n > 0)
+			_users[fd]->_recvBuffer.append(buf, n);
+		else if (n <= 0)
+			return clientQuits(fd, "connection lost");
+		
 		std::string& buffer = _users[fd]->_recvBuffer;
 		std::cout << "⤷ Recv: '" << BYELLOW << buffer << R << "'" << std::endl;
 		size_t pos;
@@ -113,7 +94,11 @@ void Server::handleClient(const epoll_event& ev)
 			std::cout << "╔════ Msg: " << BYELLOW << cleanIRCLine(line) << R << std::endl;
 			buffer.erase(0, pos + 2);
 			// traitez 'line' comme une commande IRC complète
-			hasQuit = handleMsg(fd, line);
+			
+			if (line.size() > 510)
+				sendWhenReady(fd, ERR_INPUTTOOLONG(_users[fd]->getNick()));
+			else
+				hasQuit = handleMsg(fd, line);
 			std::cout << "╚══════════" << std::endl << std::endl;
 		}
     }

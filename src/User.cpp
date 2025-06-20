@@ -32,7 +32,7 @@ std::string maskIPOfIp(const std::string& ip)
 
 
 User::User(int socket_fd) :
-	_authentified(false), _passValid(false),
+	_authentified(false), _passValid(false), _isWaitingToRecv(false),
 	_socket_fd(socket_fd),
 	_Nickname(""), _Username(""), _password(""),
 	_Host(getIPFromSocket(socket_fd)),
