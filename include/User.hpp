@@ -6,7 +6,7 @@
 /*   By: octoross <octoross@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:21:41 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/06/21 00:13:43 by octoross         ###   ########.fr       */
+/*   Updated: 2025/06/21 12:42:38 by octoross         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ class User
 		std::string			getFullNameMask() const { return (_Nickname + "!~" + _Username + "@" + _HostMask); };
 		std::string			getOldFullNameMask(const std::string &oldNick) const { return (oldNick + "!~" + _Username + "@" + _HostMask); };
 		
+		void	setWaitingToRecv(bool is) { _isWaitingToRecv = is; }
 		void	addToSend(std::string msg) { _toSend.push(msg); }
 		void	setNick(const std::string& nick) { _Nickname = nick; };
 		void	setUsername(const std::string& username) {_Username = username; }
